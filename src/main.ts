@@ -1,5 +1,5 @@
 import Game from "./Wolfie2D/Loop/Game";
-import MainMenu from "./hw3/Scenes/MainMenu";
+import MainMenu from "./ChainOfFury/Scenes/MainMenu";
 import { HW3Controls } from "./hw3/HW3Controls";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.

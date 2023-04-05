@@ -1,10 +1,10 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import LevelSelect from "./LevelSelect";
 import SplashScreen from "./SplashScreen";
 
 // Layers for the main menu scene

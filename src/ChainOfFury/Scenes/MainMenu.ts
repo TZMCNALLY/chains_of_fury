@@ -124,7 +124,7 @@ export default class MainMenu extends Scene {
         }
 
         levelSelect.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(LevelSelect);
         }
 
         controls.onClick = () => {

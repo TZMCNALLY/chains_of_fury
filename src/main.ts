@@ -1,6 +1,6 @@
 import Game from "./Wolfie2D/Loop/Game";
-import { HW3Controls } from "./hw3/HW3Controls";
-import SplashScreen from "./ChainOfFury/Scenes/SplashScreen";
+import { AzazelControls } from "./ChainsOfFury/Player/AzazelControls";
+import SplashScreen from "./ChainsOfFury/Scenes/SplashScreen";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -10,10 +10,10 @@ import SplashScreen from "./ChainOfFury/Scenes/SplashScreen";
         canvasSize: {x: 1200, y: 800},          // The size of the game
         clearColor: {r: 34, g: 32, b: 52},   // The color the game clears to
         inputs: [
-            {name: HW3Controls.MOVE_LEFT, keys: ["a"]},
-            {name: HW3Controls.MOVE_RIGHT, keys: ["d"]},
-            {name: HW3Controls.JUMP, keys: ["w", "space"]},
-            {name: HW3Controls.ATTACK, keys: ["x"]}
+            {name: AzazelControls.MOVE_LEFT, keys: ["a"]},
+            {name: AzazelControls.MOVE_RIGHT, keys: ["d"]},
+            {name: AzazelControls.MOVE_UP, keys: ["w"]},
+            {name: AzazelControls.MOVE_DOWN, keys: ["s"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

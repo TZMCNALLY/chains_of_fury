@@ -83,7 +83,7 @@ export default class HW3Level extends Scene {
     /**
      * @see Scene.update()
      */
-    public override loadScene() {
+    public loadScene(): void {
         // Load the player and enemy spritesheets
         this.load.spritesheet("azazel", "cof_assets/spritesheets/chain_devil.json");
 

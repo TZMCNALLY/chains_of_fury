@@ -34,8 +34,9 @@ export default class SplashScreen extends Scene {
         // Create a play button
         let playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y+200), text: "Click anywhere to start"});
         playBtn.backgroundColor = Color.TRANSPARENT;
-        playBtn.borderColor = Color.WHITE;
+        playBtn.borderColor = Color.RED;
         playBtn.borderRadius = 0;
+        playBtn.textColor = Color.RED;
 
         // TODO: Add logo and maybe background image.
 

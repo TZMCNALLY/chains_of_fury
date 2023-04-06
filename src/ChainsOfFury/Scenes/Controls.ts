@@ -171,6 +171,8 @@ export default class Controls extends Scene {
     public unloadScene(): void {
         // The scene is being destroyed, so we can stop playing the song
         // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
+
+        this.load.unloadAllResources();
     }
 
     // Creates a text label and appends it onto main layer.

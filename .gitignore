@@ -1,4 +1,4 @@
 # Exclude node modules
 node_modules
 
-vector_sequence[i]
+dist/bundle.js

@@ -1,6 +1,6 @@
 import Game from "./Wolfie2D/Loop/Game";
 import { HW3Controls } from "./hw3/HW3Controls";
-import SplashScreen from "./ChainOfFury/Scenes/SplashScreen";
+import SplashScreen from "./ChainsOfFury/Scenes/SplashScreen";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){

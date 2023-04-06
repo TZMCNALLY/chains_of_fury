@@ -5,7 +5,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
-import SplashScreen from "./SplashScreen";
+import COFLevel from "./COFLevel";
 import Help from "./Help";
 import Controls from "./Controls";
 
@@ -59,7 +59,7 @@ export default class MainMenu extends Scene {
         // Scene transitions:
 
         startGame.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(COFLevel);
         }
 
         levelSelect.onClick = () => {

@@ -5,7 +5,8 @@ import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 // import Fall from "./PlayerStates/Fall";
 import Idle from "./AzazelStates/Idle";
 import Run from "./AzazelStates/Run";
-// import Walk from "./PlayerStates/Walk";
+import Swing from "./AzazelStates/Swing";
+import Hurl from "./AzazelStates/Hurl";
 
 //import PlayerWeapon from "./PlayerWeapon";
 import Input from "../../Wolfie2D/Input/Input";
@@ -32,8 +33,8 @@ export const AzazelAnimations = {
     DYING_LEFT: "DYING_LEFT",
     DEAD_RIGHT: "DEAD_RIGHT",
     DEAD_LEFT: "DEAD_LEFT",
-    COMBO_RIGHT: "COMBO_RIGHT",
-    COMBO_LEFT: "COMBO_LEFT",
+    CHARGE_RIGHT: "CHARGE_RIGHT",
+    CHARGE_LEFT: "CHARGE_LEFT",
 } as const
 
 /**
@@ -43,7 +44,8 @@ export const AzazelStates = {
     IDLE: "IDLE",
     RUN: "RUN",
 	DAMAGED: "DAMAGED",
-    ATTACK: "ATTACK",
+    SWING: "SWING",
+    HURL: "HURL",
     DEAD: "DEAD"
 } as const
 
@@ -51,8 +53,8 @@ export const AzazelStates = {
  * The controller that controls the player.
  */
 export default class AzazelController extends StateMachineAI {
-    public readonly MAX_SPEED: number = 200;
-    public readonly MIN_SPEED: number = 100;
+    //public readonly MAX_SPEED: number = 200;
+    //public readonly MIN_SPEED: number = 100;
 
     /** Health and max health for the player */
     protected _health: number;
@@ -75,8 +77,7 @@ export default class AzazelController extends StateMachineAI {
        // this.weapon = options.weaponSystem;
 
         //this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
-        this.speed = 400;
-        this.velocity = Vec2.ZERO;
+        this.speed = 1000;
 
         // this.health = 5;
         // this.maxHealth = 5;
@@ -84,6 +85,8 @@ export default class AzazelController extends StateMachineAI {
         // Add the different states the player can be in to the PlayerController 
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
         this.addState(AzazelStates.RUN, new Run(this, this.owner));
+        this.addState(AzazelStates.SWING, new Swing(this, this.owner));
+        this.addState(AzazelStates.HURL, new Hurl(this, this.owner))
 		// this.addState(AzazelStates.RUN, new Walk(this, this.owner));
         // this.addState(AzazelStates.DAMAGED, new Jump(this, this.owner));
         // this.addState(AzazelStates.Attack, new Fall(this, this.owner));

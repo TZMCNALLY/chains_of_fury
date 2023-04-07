@@ -1,5 +1,5 @@
 /**
- * Controls for game.
+ * Keyboard and mouse bindings for game.
  */
 
 export const AzazelControls = {
@@ -8,8 +8,7 @@ export const AzazelControls = {
     MOVE_UP: "MOVE_UP",
     MOVE_DOWN: "MOVE_DOWN",
     SWING: "SWING",
-    COMBO: "COMBO",
     GUARD: "GUARD",
-    CHARGE: "CHARGE",
+    HURL: "HURL",
     RELEASE: "RELEASE",
 } as const;

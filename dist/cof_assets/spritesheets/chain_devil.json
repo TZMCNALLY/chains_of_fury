@@ -112,7 +112,7 @@
         },
         {
             "name": "ATTACK_RIGHT",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 22,
@@ -439,8 +439,8 @@
             ]
         },
         {
-            "name": "DANCE_RIGHT",
-            "repeat": true,
+            "name": "CHARGE_RIGHT",
+            "repeat": false,
             "frames": [
                 {
                     "index": 132,
@@ -477,7 +477,7 @@
             ]
         },
         {
-            "name": "DANCE_LEFT",
+            "name": "CHARGE_LEFT",
             "repeat": true,
             "frames": [
                 {

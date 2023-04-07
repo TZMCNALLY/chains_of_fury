@@ -13,7 +13,8 @@ import SplashScreen from "./ChainsOfFury/Scenes/SplashScreen";
             {name: AzazelControls.MOVE_LEFT, keys: ["a"]},
             {name: AzazelControls.MOVE_RIGHT, keys: ["d"]},
             {name: AzazelControls.MOVE_UP, keys: ["w"]},
-            {name: AzazelControls.MOVE_DOWN, keys: ["s"]}
+            {name: AzazelControls.MOVE_DOWN, keys: ["s"]},
+            {name: AzazelControls.HURL, keys: ["e"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

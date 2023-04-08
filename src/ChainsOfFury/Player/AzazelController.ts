@@ -1,6 +1,7 @@
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import Map from "../../Wolfie2D/DataTypes/Map";
 
 // import Fall from "./PlayerStates/Fall";
 import Idle from "./AzazelStates/Idle";
@@ -149,4 +150,9 @@ export default class AzazelController extends StateMachineAI {
     //         this.changeState(AzazelStates.DEAD); 
     //     }
     // }
+
+    // Exposes controller emitter to fire events.
+    public fireEvent(eventType: string, data: Map<any> | Record<string, any> = null) {
+        this.emitter.fireEvent(eventType, data);
+    }
 }

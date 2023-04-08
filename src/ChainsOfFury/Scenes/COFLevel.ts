@@ -264,11 +264,8 @@ export default class COFLevel extends Scene {
         // Add the tilemap to the scene
         this.add.tilemap("level", new Vec2(2, 2));
 
-        // TODO: Remove this return after wall layer is implemented.
-        return;
-
         // Get the wall and destructible layers 
-        this.walls = this.getTilemap("wall") as OrthogonalTilemap;
+        this.walls = this.getTilemap("Barrier") as OrthogonalTilemap;
 
         // Add physics to the wall layer
         this.walls.setGroup(COFPhysicsGroups.WALL);
@@ -327,7 +324,7 @@ export default class COFLevel extends Scene {
      * @param position the player's spawn position
      */
     protected initializePlayer(key: string): void {
-        this.playerSpawn = new Vec2(100, 100)
+        this.playerSpawn = new Vec2(300, 250)
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);

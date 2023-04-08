@@ -133,7 +133,6 @@ export default class HW3Level extends Scene {
         // while (this.receiver.hasNextEvent()) {
         //     this.handleEvent(this.receiver.getNextEvent());
         // }
-        console.log("lego")
     }
 
     /**
@@ -363,7 +362,7 @@ export default class HW3Level extends Scene {
         }
         this.viewport.follow(this.player);
         this.viewport.setZoomLevel(2);
-        this.viewport.setBounds(0, 0, 512, 512);
+        this.viewport.setBounds(0, 0, 1280, 960);
     }
     /**
      * Initializes the level end area

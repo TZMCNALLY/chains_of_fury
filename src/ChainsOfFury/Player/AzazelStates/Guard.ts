@@ -22,10 +22,9 @@ export default class Idle extends PlayerState {
 
         else if(Input.isMouseJustPressed(0))
             this.finished(AzazelStates.SWING)
-        
+
         else
             this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-		
 	}
 
 	public onExit(): Record<string, any> {

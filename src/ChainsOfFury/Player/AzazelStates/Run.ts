@@ -2,43 +2,45 @@ import { AzazelStates, AzazelAnimations } from "../AzazelController";
 import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
 import PlayerState from "./PlayerState";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 
 export default class Run extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
-		this.parent.speed = this.parent.MIN_SPEED;
+		this.parent.speed = 150;
 
-        let dir = this.parent.inputDir;
-
-        if(dir.x == -1)
+        if(Input.isPressed(AzazelControls.MOVE_LEFT))
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
 
         else
-            console.log("HERE")
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
-
-        
 	}
 
 	update(deltaT: number): void {
-        // Call the update method in the parent class - updates the direction the player is facing
-        super.update(deltaT);
 
-        // Get the input direction from the player controller
-		let dir = this.parent.inputDir;
+        // Get the player's input direction 
+		let forwardAxis = (Input.isPressed(AzazelControls.MOVE_UP) ? 1 : 0) + (Input.isPressed(AzazelControls.MOVE_DOWN) ? -1 : 0);
+		let horizontalAxis = (Input.isPressed(AzazelControls.MOVE_LEFT) ? -1 : 0) + (Input.isPressed(AzazelControls.MOVE_RIGHT) ? 1 : 0);
+        
+        // Updates animation based on which key, if any, was pressed
+        if(forwardAxis == 0 && horizontalAxis == 0)
+            this.finished(AzazelStates.IDLE)
 
-        // If the player is not moving - transition to the Idle state
-		// if(dir.isZero()){
-		// 	this.finished(AzazelStates.IDLE);
-		// } 
-        // // Otherwise, move the player
-        // else if(Input.isJustPressed(AzazelControls.MOVE_RIGHT)){
-            // Update the vertical velocity of the player
-            this.owner.position.x++
-            //this.owner.move(this.parent.velocity.scaled(deltaT));
-            //this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
-        //}
+        else if(Input.isJustPressed(AzazelControls.HURL))
+            this.finished(AzazelStates.HURL)
 
+        else if(Input.isMouseJustPressed(0))
+            this.finished(AzazelStates.SWING)
+
+        else if(horizontalAxis == -1)
+            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
+
+        else
+            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
+
+        // Updates player position accordingly
+        let movement = Vec2.UP.scaled(forwardAxis * this.parent.speed).add(new Vec2(horizontalAxis * this.parent.speed, 0)); 
+        this.owner.position.add(movement.scaled(deltaT));
 	}
 
 	onExit(): Record<string, any> {

@@ -7,37 +7,23 @@ export default class Idle extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
         this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
-		this.parent.speed = this.parent.MIN_SPEED;
-        this.parent.velocity.x = 0;
-        this.parent.velocity.y = 0;
 	}
 
 	public update(deltaT: number): void {
         // Adjust the direction the player is facing
 		super.update(deltaT);
 
-        // Get the direction of the player's movement
-		let dir = this.parent.inputDir;
-
-        // If the player is moving along the x-axis, transition to the walking state
-		if (!dir.isZero() && dir.y === 0){
-			//this.finished(PlayerStates.WALK);
-		} 
-        // If the player is jumping, transition to the jumping state
-        else if (Input.isJustPressed(AzazelControls.MOVE_RIGHT)) {
+        if (Input.isPressed(AzazelControls.MOVE_RIGHT) || Input.isPressed(AzazelControls.MOVE_LEFT) 
+            || Input.isPressed(AzazelControls.MOVE_UP) || Input.isPressed(AzazelControls.MOVE_DOWN))
             this.finished(AzazelStates.RUN);
-        }
-        // If the player is not on the ground, transition to the falling state
-        else if (!this.owner.onGround && this.parent.velocity.y > 0) {
-            //this.finished(PlayerStates.FALL);
-        }
-        // Otherwise, do nothing (keep idling)
-        else {
-            // Update the vertical velocity of the player
-            //this.parent.velocity.y += this.gravity*deltaT;
-            // Move the player
-            //this.owner.move(this.parent.velocity.scaled(deltaT));
-        }
+        else if(Input.isPressed(AzazelControls.HURL))
+            this.finished(AzazelStates.HURL)
+        else if(Input.isMouseJustPressed(2))
+            this.finished(AzazelStates.GUARD)
+        else if (Input.isMouseJustPressed(0))
+            this.finished(AzazelStates.SWING)
+        else
+            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
 		
 	}
 

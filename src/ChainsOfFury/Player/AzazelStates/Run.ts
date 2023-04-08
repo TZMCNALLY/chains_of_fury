@@ -40,7 +40,7 @@ export default class Run extends PlayerState {
 
         // Updates player position accordingly
         let movement = Vec2.UP.scaled(forwardAxis * this.parent.speed).add(new Vec2(horizontalAxis * this.parent.speed, 0)); 
-        this.owner.position.add(movement.scaled(deltaT));
+        this.owner.move(movement.scaled(deltaT));
 	}
 
 	onExit(): Record<string, any> {

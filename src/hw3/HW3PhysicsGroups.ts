@@ -10,7 +10,7 @@ export const HW3PhysicsGroups = {
         embedded in the tilemap layer data by a property called "Group". This lets you
         set the physics group for a particular tilemap layer.
     */
-    WALL: "WALL",
+    GROUND: "GROUND",
     DESTRUCTABLE: "DESTRUCTABLE"
     
 } as const;

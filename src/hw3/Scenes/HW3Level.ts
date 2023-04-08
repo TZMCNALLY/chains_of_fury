@@ -93,15 +93,15 @@ export default abstract class HW3Level extends Scene {
     protected tileDestroyedAudioKey: string;
     protected dyingAudioKey: string;
 
-    public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
-        let groupNames : string[] = [HW3PhysicsGroups.GROUND, HW3PhysicsGroups.PLAYER, HW3PhysicsGroups.PLAYER_WEAPON, HW3PhysicsGroups.DESTRUCTABLE];
-        let collisions : number[][] = [[0,1,1,0],[1,0,0,1],[1,0,0,1],[0,1,1,0]];
-        super(viewport, sceneManager, renderingManager, {...options, physics: {
-            // TODO configure the collision groups and collision map
-            groupNames, collisions
-         }});
-        this.add = new HW3FactoryManager(this, this.tilemaps);
-    }
+    // public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
+    //     //let groupNames : string[] = [HW3PhysicsGroups.GROUND, HW3PhysicsGroups.PLAYER, HW3PhysicsGroups.PLAYER_WEAPON, HW3PhysicsGroups.DESTRUCTABLE];
+    //     // let collisions : number[][] = [[0,1,1,0],[1,0,0,1],[1,0,0,1],[0,1,1,0]];
+    //     // super(viewport, sceneManager, renderingManager, {...options, physics: {
+    //     //     // TODO configure the collision groups and collision map
+    //     //     groupNames, collisions
+    //     //  }});
+    //     // this.add = new HW3FactoryManager(this, this.tilemaps);
+    // }
 
     public startScene(): void {
         // Initialize the layers

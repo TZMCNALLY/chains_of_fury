@@ -72,13 +72,13 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x+270, size.y-200, 500, 150);
 
-        this.createText(size.x+80, size.y-245, "Hold E -")
-        this.createText(size.x+135, size.y-215, "Charges up a projectile")
-        this.createText(size.x+110, size.y-185, "Release E - Fires")
-        this.createText(size.x+170, size.y-155, "projectile in direction of mouse")
+        this.createText(size.x+135, size.y-245, "E -")
+        this.createText(size.x+135, size.y-215, "Charges up and fires")
+        this.createText(size.x+135, size.y-185, "a fireball in the")
+        this.createText(size.x+135, size.y-155, "direction of the mouse")
 
         // TODO: Charge and shoot animation
-        this.createSprite(size.x*2-160, size.y-200, 1, 1, "player", "DANCE_RIGHT");
+        this.createSprite(size.x*2-160, size.y-200, 1, 1, "player", "CHARGE_RIGHT");
 
 
         // Projectile Section
@@ -114,12 +114,12 @@ export default class Controls extends Scene {
         // ================================================================================
         // Combo Attack Section
 
-        this.createBackground(size.x-270, size.y+200, 500, 150);
+        // this.createBackground(size.x-270, size.y+200, 500, 150);
 
-        this.createText(size.x-420, size.y+190, "Hold Left-Click -")
-        this.createText(size.x-420, size.y+210, "Combo Swing")
+        // this.createText(size.x-420, size.y+190, "Hold Left-Click -")
+        // this.createText(size.x-420, size.y+210, "Combo Swing")
 
-        this.createSprite(size.x-120, size.y+200, 1, 1, "player", "DANCE_RIGHT");
+        // this.createSprite(size.x-120, size.y+200, 1, 1, "player", "CHARGE_RIGHT");
 
         // Combo Attack Section
         // ================================================================================
@@ -127,12 +127,12 @@ export default class Controls extends Scene {
         // ================================================================================
         // Escape Section
 
-        this.createBackground(size.x+270, size.y+200, 500, 150);
+        this.createBackground(size.x, size.y+200, 1050, 150);
 
-        this.createText(size.x+130, size.y+190, "Esc -")
-        this.createText(size.x+130, size.y+210, "Pauses the game")
+        this.createText(size.x, size.y+190, "Esc -")
+        this.createText(size.x, size.y+210, "Pauses the game")
 
-        this.createSprite(size.x*2-160, size.y+200, 1, 1, "player", "IDLE_RIGHT");
+        //this.createSprite(size.x*2-160, size.y+200, 1, 1, "player", "IDLE_RIGHT");
 
         // Escape Section
         // ================================================================================
@@ -188,7 +188,7 @@ export default class Controls extends Scene {
     public createBackground(x : number, y : number, l : number, w : number): void {
         let background = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:""})
         background.size.set(l, w);
-        background.borderWidth = 10;
+        background.borderWidth = 5;
         background.borderColor = Color.RED;
         background.backgroundColor = Color.BLACK;
     }

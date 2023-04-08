@@ -27,6 +27,8 @@ import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 
+import { COFPhysicsGroups } from "../COFPhysicsGroups";
+
 /**
  * A const object for the layer names
  */
@@ -83,8 +85,21 @@ export default class COFLevel extends Scene {
     protected dyingAudioKey: string;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
-        //let groupNames : string[] = [HW3PhysicsGroups.GROUND, HW3PhysicsGroups.PLAYER, HW3PhysicsGroups.PLAYER_WEAPON, HW3PhysicsGroups.DESTRUCTABLE];
-        super(viewport, sceneManager, renderingManager, options);
+
+        let groupNames : string[] = [
+            COFPhysicsGroups.PLAYER, 
+            COFPhysicsGroups.ENEMY, 
+        ]
+        
+        let collisions : number[][] = [
+            [0,1],
+            [1,0],
+        ];
+
+
+        super(viewport, sceneManager, renderingManager, {...options, physics: {
+            groupNames, collisions
+        }});
         //this.add = new HW3FactoryManager(this, this.tilemaps);
     }
 
@@ -135,10 +150,6 @@ export default class COFLevel extends Scene {
         //     // After the level end timer ends, fade to black and then go to the next scene
         //     this.levelTransitionScreen.tweens.play("fadeIn");
         // });
-
-
-
-        //this.player.setGroup(HW3PhysicsGroups.PLAYER);
     }
 
     /* Update method for the scene */
@@ -364,6 +375,8 @@ export default class COFLevel extends Scene {
 
         // Give the player it's AI
         this.player.addAI(AzazelController);
+
+        this.player.setGroup(COFPhysicsGroups.PLAYER);
     }
 
 
@@ -376,6 +389,8 @@ export default class COFLevel extends Scene {
 
         // Give enemy boss it's AI
         this.enemyBoss.addAI(MoonDogController);
+
+        this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
     }
 
 

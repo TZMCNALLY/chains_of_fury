@@ -27,4 +27,11 @@ export const COFEvents = {
      * Has data: { id: number, damage: number }
      */
     ENEMY_TOOK_DAMAGE: "ENEMY_TOOK_DAMAGE",
+
+    /**
+     * Event trigger when player swing.
+     * 
+     * Has data: { faceDir: numeber (-1 or 1) }
+     */
+    PLAYER_SWING: "PLAYER_SWING",
 }

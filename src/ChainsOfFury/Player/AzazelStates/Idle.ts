@@ -16,13 +16,12 @@ export default class Idle extends PlayerState {
         if (Input.isPressed(AzazelControls.MOVE_RIGHT) || Input.isPressed(AzazelControls.MOVE_LEFT) 
             || Input.isPressed(AzazelControls.MOVE_UP) || Input.isPressed(AzazelControls.MOVE_DOWN))
             this.finished(AzazelStates.RUN);
-
         else if(Input.isPressed(AzazelControls.HURL))
             this.finished(AzazelStates.HURL)
-
-        else if(Input.isMouseJustPressed(0))
+        else if(Input.isMouseJustPressed(2))
+            this.finished(AzazelStates.GUARD)
+        else if (Input.isMouseJustPressed(0))
             this.finished(AzazelStates.SWING)
-        
         else
             this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
 		

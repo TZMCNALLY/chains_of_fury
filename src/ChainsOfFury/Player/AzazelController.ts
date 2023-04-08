@@ -15,6 +15,7 @@ import { AzazelControls } from "./AzazelControls";
 import COFAnimatedSprite from "../Nodes/COFAnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { COFEvents } from "../COFEvents";
+import Guard from "./AzazelStates/Guard";
 //import Dead from "./PlayerStates/Dead";
 
 /**
@@ -46,7 +47,8 @@ export const AzazelStates = {
 	DAMAGED: "DAMAGED",
     SWING: "SWING",
     HURL: "HURL",
-    DEAD: "DEAD"
+    DEAD: "DEAD",
+    GUARD: "GUARD"
 } as const
 
 /**
@@ -86,7 +88,8 @@ export default class AzazelController extends StateMachineAI {
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
         this.addState(AzazelStates.RUN, new Run(this, this.owner));
         this.addState(AzazelStates.SWING, new Swing(this, this.owner));
-        this.addState(AzazelStates.HURL, new Hurl(this, this.owner))
+        this.addState(AzazelStates.HURL, new Hurl(this, this.owner));
+        this.addState(AzazelStates.GUARD, new Guard(this, this.owner));
 		// this.addState(AzazelStates.RUN, new Walk(this, this.owner));
         // this.addState(AzazelStates.DAMAGED, new Jump(this, this.owner));
         // this.addState(AzazelStates.Attack, new Fall(this, this.owner));

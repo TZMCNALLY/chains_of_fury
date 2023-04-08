@@ -328,14 +328,14 @@ export default class COFLevel extends Scene {
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-        this.player.scale.set(.25, .25);
+        this.player.scale.set(.3, .3);
         this.player.position.copy(this.playerSpawn);
 
         // Give the player it's AI
         this.player.addAI(AzazelController);
 
         let playerHitbox = this.player.boundary.getHalfSize().clone();
-        playerHitbox.x = playerHitbox.x - 20;
+        playerHitbox.x = playerHitbox.x - 10;
 
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);

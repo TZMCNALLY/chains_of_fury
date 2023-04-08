@@ -23,10 +23,12 @@ import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 
+import { COFPhysicsGroups } from "../COFPhysicsGroups";
+
 /**
  * A const object for the layer names
  */
-export const HW3Layers = {
+export const COFLayers = {
     // The primary layer
     PRIMARY: "PRIMARY",
     // The UI layer
@@ -34,7 +36,7 @@ export const HW3Layers = {
 } as const;
 
 // The layers as a type
-export type HW3Layer = typeof HW3Layers[keyof typeof HW3Layers]
+export type COFLAyer = typeof COFLayers[keyof typeof COFLayers]
 
 export default class COFLevel extends Scene {
 
@@ -56,6 +58,14 @@ export default class COFLevel extends Scene {
     private healthLabel: Label;
 	private healthBar: Label;
 	private healthBarBg: Label;
+
+    private manaLabel: Label;
+    private manaBar: Label;
+    private manaBarBg: Label;
+
+    private staminaLabel: Label;
+    private staminaBar: Label;
+    private staminaBarBg: Label;
 
     private enemyHealthLabel: Label;
     private enemyHealthBar: Label;
@@ -79,8 +89,22 @@ export default class COFLevel extends Scene {
     protected dyingAudioKey: string;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
-        //let groupNames : string[] = [HW3PhysicsGroups.GROUND, HW3PhysicsGroups.PLAYER, HW3PhysicsGroups.PLAYER_WEAPON, HW3PhysicsGroups.DESTRUCTABLE];
-        super(viewport, sceneManager, renderingManager, options);
+
+        let groupNames : string[] = [
+            COFPhysicsGroups.PLAYER, 
+            COFPhysicsGroups.ENEMY, 
+        ]
+        
+        let collisions : number[][] = [
+            [0,0,1],
+            [0,0,1],
+            [1,1,0]
+        ];
+
+
+        super(viewport, sceneManager, renderingManager, {...options, physics: {
+            groupNames, collisions
+        }});
         //this.add = new HW3FactoryManager(this, this.tilemaps);
     }
 
@@ -92,7 +116,7 @@ export default class COFLevel extends Scene {
         this.load.spritesheet("azazel", "cof_assets/spritesheets/chain_devil.json");
 
         // Load the tilemap
-        this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo1.json");
+        this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
 
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
@@ -137,10 +161,6 @@ export default class COFLevel extends Scene {
         //     // After the level end timer ends, fade to black and then go to the next scene
         //     this.levelTransitionScreen.tweens.play("fadeIn");
         // });
-
-
-
-        //this.player.setGroup(HW3PhysicsGroups.PLAYER);
     }
 
     /* Update method for the scene */
@@ -191,41 +211,6 @@ export default class COFLevel extends Scene {
         }
     }
 
-    /* Handlers for the different events the scene is subscribed to */
-
-    /**
-     * Handle particle hit events
-     * @param particleId the id of the particle
-     */
-    protected handleParticleHit(particleId: number): void {
-        //let particles = this.playerWeaponSystem.getPool();
-
-        //let particle = particles.find(particle => particle.id === particleId);
-        // if (particle !== undefined) {
-        //     // Get the destructable tilemap
-        //     let tilemap = this.destructable;
-
-        //     let min = new Vec2(particle.sweptRect.left, particle.sweptRect.top);
-        //     let max = new Vec2(particle.sweptRect.right, particle.sweptRect.bottom);
-
-        //     // Convert the min/max x/y to the min and max row/col in the tilemap array
-        //     let minIndex = tilemap.getColRowAt(min);
-        //     let maxIndex = tilemap.getColRowAt(max);
-
-        //     // Loop over all possible tiles the particle could be colliding with 
-        //     for(let col = minIndex.x; col <= maxIndex.x; col++){
-        //         for(let row = minIndex.y; row <= maxIndex.y; row++){
-        //             // If the tile is collideable -> check if this particle is colliding with the tile
-        //             if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
-        //                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
-        //                 // TODO Destroy the tile
-        //                 tilemap.setTileAtRowCol(new Vec2(col,row), 0);
-        //             }
-        //         }
-        //     }
-        // }
-    }
-
     /**
      * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
      * 
@@ -240,19 +225,9 @@ export default class COFLevel extends Scene {
         return true;
     }
 
+
     /**
-     * Handle the event when the player enters the level end area.
-     */
-    // protected handleEnteredLevelEnd(): void {
-    //     // If the timer hasn't run yet, start the end level animation
-    //     if (!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()) {
-    //         this.levelEndTimer.start();
-    //         this.levelEndLabel.tweens.play("slideIn");
-    //     }
-    // }
-    /**
-     * This is the same healthbar I used for hw2. I've adapted it slightly to account for the zoom factor. Other than that, the
-     * code is basically the same.
+     * 
      * 
      * @param currentHealth the current health of the player
      * @param maxHealth the maximum health of the player
@@ -266,6 +241,8 @@ export default class COFLevel extends Scene {
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
 	}
 
+
+
     /* Initialization methods for everything in the scene */
 
     /**
@@ -273,9 +250,9 @@ export default class COFLevel extends Scene {
      */
     protected initLayers(): void {
         // Add a layer for UI
-        this.addUILayer(HW3Layers.UI);
+        this.addUILayer(COFLayers.UI);
         // Add a layer for players and enemies
-        this.addLayer(HW3Layers.PRIMARY);
+        this.addLayer(COFLayers.PRIMARY);
     }
     /**
      * Initializes the tilemaps
@@ -289,20 +266,12 @@ export default class COFLevel extends Scene {
         // Add the tilemap to the scene
         this.add.tilemap("level", new Vec2(2, 2));
 
-        // if (this.destructibleLayerKey === undefined || this.wallsLayerKey === undefined) {
-        //     throw new Error("Make sure the keys for the destuctible layer and wall layer are both set");
-        // }
+        // Get the wall and destructible layers 
+        this.walls = this.getTilemap("Barrier") as OrthogonalTilemap;
 
-        // // Get the wall and destructible layers 
-        // this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
-        // this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
-
-        // // Add physics to the wall layer
-        // this.walls.addPhysics();
-        // // Add physics to the destructible layer of the tilemap
-        // this.destructable.addPhysics();
-
-        // this.destructable.setTrigger(HW3PhysicsGroups.PLAYER_WEAPON,HW3Events.HIT_TILE,null);
+        // Add physics to the wall layer
+        this.walls.setGroup(COFPhysicsGroups.WALL);
+        this.walls.addPhysics();
     }
     /**
      * Handles all subscriptions to events
@@ -320,64 +289,73 @@ export default class COFLevel extends Scene {
      */
     protected initializeUI(): void {
 
-        // HP Label
-		this.healthLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(205, 20), text: "HP "});
-		this.healthLabel.size.set(300, 30);
-		this.healthLabel.fontSize = 24;
-		this.healthLabel.font = "Courier";
+        function createBar(bar: Label, barBg: Label, barLabel: Label, x: number, y: number, sx: number, sy: number, color: Color, font?: number) {
+            barBg = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(x, y), text: ""});
+            barBg.size = new Vec2(sx, sy);
+            barBg.backgroundColor = Color.BLACK;
 
-        // HealthBar
-		this.healthBar = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(250, 20), text: ""});
-		this.healthBar.size = new Vec2(300, 25);
-		this.healthBar.backgroundColor = Color.GREEN;
+            bar = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(x, y), text: ""});
+            bar.size = new Vec2(sx, sy);
+            bar.backgroundColor = color;
+            console.log(bar.backgroundColor);
 
-        // HealthBar Border
-		this.healthBarBg = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, {position: new Vec2(250, 20), text: ""});
-		this.healthBarBg.size = new Vec2(300, 25);
-		this.healthBarBg.borderColor = Color.BLACK;
+            barLabel = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(x, y), text: "placeholder"});
+            barLabel.size.set(sx, sy);
+            font ? barLabel.fontSize = font : barLabel.fontSize = 14;
+            barLabel.font = "PixelSimple"
+            barLabel.textColor = Color.WHITE;
+        }
 
-        // End of level label (start off screen)
-        // this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, HW3Layers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
-        // this.levelEndLabel.size.set(1200, 60);
-        // this.levelEndLabel.borderRadius = 0;
-        // this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
-        // this.levelEndLabel.textColor = Color.WHITE;
-        // this.levelEndLabel.fontSize = 48;
-        // this.levelEndLabel.font = "PixelSimple";
+        createBar.apply(this, [this.healthBar, this.healthBarBg, this.healthLabel, 120, 20, 300, 20, Color.RED]);
+        createBar.apply(this, [this.staminaBar, this.staminaBarBg, this.staminaLabel, 120, 40, 300, 20, Color.GREEN]);
+        createBar.apply(this, [this.manaBar, this.manaBarBg, this.manaLabel, 120, 60, 300, 20, Color.BLUE]);
+
+        createBar.apply(this, [this.enemyHealthBar, this.enemyHealthBarBg, this.enemyHealthLabel, 400, 500, 800, 40, Color.RED, 28]);
+
+        // TODO: Call healthbar update to change text and mroe.
     }
     /**
      * Initializes the particles system used by the player's weapon.
      */
     // protected initializeWeaponSystem(): void {
     //     this.playerWeaponSystem = new PlayerWeapon(30, Vec2.ZERO, 1000, 3, 0, 30);
-    //     this.playerWeaponSystem.initializePool(this, HW3Layers.PRIMARY);
+    //     this.playerWeaponSystem.initializePool(this, COFLayers.PRIMARY);
     // }
     /**
      * Initializes the player, setting the player's initial position to the given position.
      * @param position the player's spawn position
      */
     protected initializePlayer(key: string): void {
-        this.playerSpawn = new Vec2(100, 100)
+        this.playerSpawn = new Vec2(300, 250)
 
         // Add the player to the scene
-        this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-        this.player.scale.set(.5, .5);
+        this.player = this.add.animatedSprite(key, COFLayers.PRIMARY);
+        this.player.scale.set(.4, .4);
         this.player.position.copy(this.playerSpawn);
 
         // Give the player it's AI
         this.player.addAI(AzazelController);
+
+        let playerHitbox = this.player.boundary.getHalfSize().clone();
+        playerHitbox.x = playerHitbox.x-12;
+
+        this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
+        this.player.setGroup(COFPhysicsGroups.PLAYER);
     }
 
 
     protected initializeEnemyBoss(key: string): void {
         let enemySpawn = new Vec2(800,500);
 
-        this.enemyBoss = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-        this.enemyBoss.scale.set(2,2);
+        this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
+        this.enemyBoss.scale.set(1,1);
         this.enemyBoss.position.copy(enemySpawn);
 
         // Give enemy boss it's AI
         this.enemyBoss.addAI(MoonDogController);
+
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), this.enemyBoss.boundary.getHalfSize().clone()));
+        this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
     }
 
 
@@ -389,21 +367,8 @@ export default class COFLevel extends Scene {
             throw new Error("Player must be initialized before setting the viewport to folow the player");
         }
         this.viewport.follow(this.player);
-        this.viewport.setZoomLevel(1);
+        this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
     }
-    /**
-     * Initializes the level end area
-     */
-    // protected initializeLevelEnds(): void {
-    //     if (!this.layers.has(HW3Layers.PRIMARY)) {
-    //         throw new Error("Can't initialize the level ends until the primary layer has been added to the scene!");
-    //     }
-        
-    //     this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, HW3Layers.PRIMARY, { position: this.levelEndPosition, size: this.levelEndHalfSize });
-    //     this.levelEndArea.addPhysics(undefined, undefined, false, true);
-    //     this.levelEndArea.setTrigger(HW3PhysicsGroups.PLAYER, HW3Events.PLAYER_ENTERED_LEVEL_END, null);
-    //     this.levelEndArea.color = new Color(255, 0, 255, .20);
-        
-    // }
+
 }

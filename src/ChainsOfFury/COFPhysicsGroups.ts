@@ -5,6 +5,8 @@
 export const COFPhysicsGroups = {
     
     PLAYER: "PLAYER",
+    ENEMY: "ENEMY",
+    WALL: "WALL",
     PLAYER_WEAPON: "WEAPON", // player attack hit box.
 
     // TODO: add terrain and enemy, projectiles etc...

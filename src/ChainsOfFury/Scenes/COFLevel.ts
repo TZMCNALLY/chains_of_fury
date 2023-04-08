@@ -92,8 +92,9 @@ export default class COFLevel extends Scene {
         ]
         
         let collisions : number[][] = [
-            [1,1],
-            [1,1],
+            [0,0,1],
+            [0,0,1],
+            [1,1,0]
         ];
 
 
@@ -263,20 +264,15 @@ export default class COFLevel extends Scene {
         // Add the tilemap to the scene
         this.add.tilemap("level", new Vec2(2, 2));
 
-        // if (this.destructibleLayerKey === undefined || this.wallsLayerKey === undefined) {
-        //     throw new Error("Make sure the keys for the destuctible layer and wall layer are both set");
-        // }
+        // TODO: Remove this return after wall layer is implemented.
+        return;
 
-        // // Get the wall and destructible layers 
-        // this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
-        // this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
+        // Get the wall and destructible layers 
+        this.walls = this.getTilemap("wall") as OrthogonalTilemap;
 
-        // // Add physics to the wall layer
-        // this.walls.addPhysics();
-        // // Add physics to the destructible layer of the tilemap
-        // this.destructable.addPhysics();
-
-        // this.destructable.setTrigger(HW3PhysicsGroups.PLAYER_WEAPON,HW3Events.HIT_TILE,null);
+        // Add physics to the wall layer
+        this.walls.setGroup(COFPhysicsGroups.WALL);
+        this.walls.addPhysics();
     }
     /**
      * Handles all subscriptions to events

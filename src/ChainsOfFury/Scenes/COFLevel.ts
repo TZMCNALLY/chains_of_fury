@@ -347,7 +347,7 @@ export default class HW3Level extends Scene {
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-        this.player.scale.set(0.25, 0.25);
+        this.player.scale.set(0.5, 0.5);
         this.player.position.copy(this.playerSpawn);
 
         // Give the player it's AI
@@ -361,7 +361,7 @@ export default class HW3Level extends Scene {
             throw new Error("Player must be initialized before setting the viewport to folow the player");
         }
         this.viewport.follow(this.player);
-        this.viewport.setZoomLevel(2);
+        this.viewport.setZoomLevel(1);
         this.viewport.setBounds(0, 0, 1280, 960);
     }
     /**

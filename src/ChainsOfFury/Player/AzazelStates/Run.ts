@@ -7,7 +7,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 export default class Run extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
-		this.parent.speed = 150;
+		this.parent.speed = 200;
 
         if(Input.isPressed(AzazelControls.MOVE_LEFT))
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)

@@ -139,7 +139,7 @@ export default class Help extends Scene {
     public createBackground(x : number, y : number, l : number, w : number): void {
         let background = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:""})
         background.size.set(l, w);
-        background.borderWidth = 10;
+        background.borderWidth = 5;
         background.borderColor = Color.RED;
         background.backgroundColor = Color.BLACK;
     }

@@ -18,11 +18,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController from "../Player/AzazelController";
-//import PlayerWeapon from "../Player/PlayerWeapon";
-
-//import { HW3Events } from "../HW3Events";
-//import { HW3PhysicsGroups } from "../HW3PhysicsGroups";
-//import HW3FactoryManager from "../Factory/HW3FactoryManager";
+import BubbleShaderType from "../Shaders/BubbleShaderType";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
@@ -100,6 +96,12 @@ export default class COFLevel extends Scene {
 
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
+
+        this.load.shader(
+			BubbleShaderType.KEY,
+			BubbleShaderType.VSHADER,
+			BubbleShaderType.FSHADER
+		);
     }
 
     public startScene(): void {
@@ -359,11 +361,7 @@ export default class COFLevel extends Scene {
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-<<<<<<< HEAD
-        this.player.scale.set(0.5, 0.5);
-=======
         this.player.scale.set(.5, .5);
->>>>>>> b16d9295a80296af349b3d78c1aee23d03e2b1a4
         this.player.position.copy(this.playerSpawn);
 
         // Give the player it's AI

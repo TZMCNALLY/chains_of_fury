@@ -6,12 +6,14 @@ import { AzazelControls } from "../AzazelControls";
 export default class Idle extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
+        if (this.parent.lastFace == -1) {
+            this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
+        } else {
+            this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
+        }
 	}
 
 	public update(deltaT: number): void {
-        // Adjust the direction the player is facing
-		super.update(deltaT);
 
         if (Input.isPressed(AzazelControls.MOVE_RIGHT) || Input.isPressed(AzazelControls.MOVE_LEFT) 
             || Input.isPressed(AzazelControls.MOVE_UP) || Input.isPressed(AzazelControls.MOVE_DOWN))
@@ -22,9 +24,13 @@ export default class Idle extends PlayerState {
             this.finished(AzazelStates.GUARD)
         else if (Input.isMouseJustPressed(0))
             this.finished(AzazelStates.SWING)
-        else
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-		
+        else {
+            if (this.parent.lastFace == -1) {
+                this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
+            } else {
+                this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
+            }
+        }	
 	}
 
 	public onExit(): Record<string, any> {

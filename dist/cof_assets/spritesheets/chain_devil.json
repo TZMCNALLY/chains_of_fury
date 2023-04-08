@@ -142,7 +142,7 @@
         },
         {
             "name": "ATTACK_LEFT",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 33,

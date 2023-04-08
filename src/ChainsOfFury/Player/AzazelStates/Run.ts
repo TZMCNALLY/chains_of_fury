@@ -7,40 +7,44 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 export default class Run extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
-		this.parent.speed = 200;
-
-        if(Input.isPressed(AzazelControls.MOVE_LEFT))
+		this.parent.speed = 150;
+        if(Input.isPressed(AzazelControls.MOVE_LEFT)) {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
-
-        else
+        } else {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
+        }
 	}
 
 	update(deltaT: number): void {
 
-        // Get the player's input direction 
-		let forwardAxis = (Input.isPressed(AzazelControls.MOVE_UP) ? 1 : 0) + (Input.isPressed(AzazelControls.MOVE_DOWN) ? -1 : 0);
-		let horizontalAxis = (Input.isPressed(AzazelControls.MOVE_LEFT) ? -1 : 0) + (Input.isPressed(AzazelControls.MOVE_RIGHT) ? 1 : 0);
-        
-        // Updates animation based on which key, if any, was pressed
-        if(forwardAxis == 0 && horizontalAxis == 0)
+        // Call getter to update last face.
+        this.parent.lastFace;
+
+        // Switch state.
+        if(this.parent.inputDir.isZero()) {
+            // No movement
             this.finished(AzazelStates.IDLE)
-
-        else if(Input.isJustPressed(AzazelControls.HURL))
+        } else if(Input.isJustPressed(AzazelControls.HURL)) {
+            // Hurl key
             this.finished(AzazelStates.HURL)
-
-        else if(Input.isMouseJustPressed(0))
+        } else if (Input.isMouseJustPressed(2)) {
+            // Right click
+            this.finished(AzazelStates.GUARD);
+        } else if(Input.isMouseJustPressed(0)) {
+            // Left click
             this.finished(AzazelStates.SWING)
 
-        else if(horizontalAxis == -1)
+        // Play animation if no state switch.
+        } else if(this.parent.inputDir.x == -1) {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
-
-        else
+        } else {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
+        }
 
-        // Updates player position accordingly
-        let movement = Vec2.UP.scaled(forwardAxis * this.parent.speed).add(new Vec2(horizontalAxis * this.parent.speed, 0)); 
-        this.owner.move(movement.scaled(deltaT));
+        // Move player
+        this.owner.move(
+            this.parent.inputDir.scale(this.parent.speed).scale(deltaT)
+        )
 	}
 
 	onExit(): Record<string, any> {

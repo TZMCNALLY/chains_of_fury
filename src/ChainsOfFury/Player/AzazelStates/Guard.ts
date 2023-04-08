@@ -3,7 +3,7 @@ import PlayerState from "./PlayerState";
 import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
 
-export default class Idle extends PlayerState {
+export default class Guard extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
         this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
@@ -13,18 +13,9 @@ export default class Idle extends PlayerState {
         // Adjust the direction the player is facing
 		super.update(deltaT);
 
-        if (Input.isPressed(AzazelControls.MOVE_RIGHT) || Input.isPressed(AzazelControls.MOVE_LEFT) 
-            || Input.isPressed(AzazelControls.MOVE_UP) || Input.isPressed(AzazelControls.MOVE_DOWN))
-            this.finished(AzazelStates.RUN);
+        console.log('Guard trigger');
 
-        else if(Input.isPressed(AzazelControls.HURL))
-            this.finished(AzazelStates.HURL)
-
-        else if(Input.isMouseJustPressed(0))
-            this.finished(AzazelStates.SWING)
-
-        else
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
+        this.finished(AzazelStates.IDLE);
 	}
 
 	public onExit(): Record<string, any> {

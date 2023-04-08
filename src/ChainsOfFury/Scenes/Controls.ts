@@ -1,4 +1,5 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
@@ -10,7 +11,8 @@ import SplashScreen from "./SplashScreen";
 
 // Layers for the main menu scene
 export const MenuLayers = {
-    MAIN: "MAIN"
+    MAIN: "MAIN",
+    SPRITES: "SPRITES"
 } as const;
 
 export default class Controls extends Scene {
@@ -26,10 +28,13 @@ export default class Controls extends Scene {
     public loadScene(): void {
         // Load the menu song
         // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+
+        this.load.spritesheet("player", "cof_assets/spritesheets/chain_devil.json");  
     }
 
     public startScene(): void {
         this.addUILayer(MenuLayers.MAIN);
+        this.addUILayer(MenuLayers.SPRITES);
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
@@ -57,6 +62,8 @@ export default class Controls extends Scene {
         this.createText(size.x-420, size.y-185, "S - Move Down")
         this.createText(size.x-420, size.y-155, "D - Move Right")
 
+        this.createSprite(size.x-120, size.y-200, 1, 1, "player", "RUN_RIGHT");
+
         // Movement Section
         // ================================================================================
 
@@ -70,6 +77,10 @@ export default class Controls extends Scene {
         this.createText(size.x+110, size.y-185, "Release E - Fires")
         this.createText(size.x+170, size.y-155, "projectile in direction of mouse")
 
+        // TODO: Charge and shoot animation
+        this.createSprite(size.x*2-160, size.y-200, 1, 1, "player", "DANCE_RIGHT");
+
+
         // Projectile Section
         // ================================================================================
 
@@ -80,6 +91,8 @@ export default class Controls extends Scene {
 
         this.createText(size.x-420, size.y-10, "Left-Click -")
         this.createText(size.x-420, size.y+10, "Basic Swing")
+
+        this.createSprite(size.x-120, size.y, 1, 1, "player", "ATTACK_RIGHT");
 
         // Basic Attack Section
         // ================================================================================
@@ -92,6 +105,9 @@ export default class Controls extends Scene {
         this.createText(size.x+130, size.y-10, "Hold Right-Click -")
         this.createText(size.x+130, size.y+10, "Guard")
 
+        // TODO: Guard animation
+        this.createSprite(size.x*2-160, size.y, 1, 1, "player", "IDLE_RIGHT");
+
         // Guard Section
         // ================================================================================
 
@@ -103,6 +119,8 @@ export default class Controls extends Scene {
         this.createText(size.x-420, size.y+190, "Hold Left-Click -")
         this.createText(size.x-420, size.y+210, "Combo Swing")
 
+        this.createSprite(size.x-120, size.y+200, 1, 1, "player", "DANCE_RIGHT");
+
         // Combo Attack Section
         // ================================================================================
 
@@ -113,6 +131,8 @@ export default class Controls extends Scene {
 
         this.createText(size.x+130, size.y+190, "Esc -")
         this.createText(size.x+130, size.y+210, "Pauses the game")
+
+        this.createSprite(size.x*2-160, size.y+200, 1, 1, "player", "IDLE_RIGHT");
 
         // Escape Section
         // ================================================================================
@@ -150,6 +170,8 @@ export default class Controls extends Scene {
     public unloadScene(): void {
         // The scene is being destroyed, so we can stop playing the song
         // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
+
+        this.load.unloadAllResources();
     }
 
     // Creates a text label and appends it onto main layer.
@@ -169,5 +191,14 @@ export default class Controls extends Scene {
         background.borderWidth = 10;
         background.borderColor = Color.RED;
         background.backgroundColor = Color.BLACK;
+    }
+
+    // Create animated sprite at x,y.
+    // s: scale, key: key of sprite.
+    public createSprite(x: number, y: number, sx: number, sy: number, key: string, animation: string) {
+        let sprite = this.add.animatedSprite(key, MenuLayers.SPRITES);
+        sprite.scale.set(sx, sy);
+        sprite.position.set(x, y);
+        sprite.animation.play(animation, true);
     }
 }

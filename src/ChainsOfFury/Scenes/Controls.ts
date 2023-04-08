@@ -29,8 +29,7 @@ export default class Controls extends Scene {
         // Load the menu song
         // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
 
-        // TODO: Change sprite location
-        this.load.spritesheet("player", "chain_devil/chain_devil.json");
+        this.load.spritesheet("player", "cof_assets/spritesheets/chain_devil.json");  
     }
 
     public startScene(): void {

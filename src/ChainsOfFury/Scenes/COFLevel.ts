@@ -24,6 +24,7 @@ import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 
 import { COFPhysicsGroups } from "../COFPhysicsGroups";
+import { COFEvents } from "../COFEvents";
 
 /**
  * A const object for the layer names
@@ -51,6 +52,9 @@ export default class COFLevel extends Scene {
     protected player: AnimatedSprite;
     /** The player's spawn position */
     protected playerSpawn: Vec2;
+
+    /** Collision sprite for weapon */
+    protected playerWeapon: AnimatedSprite;
 
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
@@ -92,13 +96,16 @@ export default class COFLevel extends Scene {
 
         let groupNames : string[] = [
             COFPhysicsGroups.PLAYER, 
-            COFPhysicsGroups.ENEMY, 
+            COFPhysicsGroups.ENEMY,
+            COFPhysicsGroups.WALL,
+            COFPhysicsGroups.PLAYER_WEAPON
         ]
         
         let collisions : number[][] = [
-            [0,0,1],
-            [0,0,1],
-            [1,1,0]
+            [0,0,1,0],
+            [0,0,1,1],
+            [1,1,0,0],
+            [0,1,0,0]
         ];
 
 
@@ -135,14 +142,10 @@ export default class COFLevel extends Scene {
         // Initialize the tilemaps
         this.initializeTilemap();
 
-        // Initialize the sprite and particle system for the players weapon 
-        //this.initializeWeaponSystem();
-
         this.initializeUI();
 
         // Initialize the player 
         this.initializePlayer("azazel");
-        //this.playerWeaponSystem.setController = this.player.ai;
 
         // Initially disable player movement
         Input.enableInput();
@@ -167,9 +170,9 @@ export default class COFLevel extends Scene {
 
     public updateScene(deltaT: number) {
         // Handle all game events
-        // while (this.receiver.hasNextEvent()) {
-        //     this.handleEvent(this.receiver.getNextEvent());
-        // }
+        while (this.receiver.hasNextEvent()) {
+            this.handleEvent(this.receiver.getNextEvent());
+        }
     }
 
     /**
@@ -178,10 +181,14 @@ export default class COFLevel extends Scene {
      */
     protected handleEvent(event: GameEvent): void {
         switch (event.type) {
-            // case HW3Events.PLAYER_ENTERED_LEVEL_END: {
-            //     this.handleEnteredLevelEnd();
-            //     break;
-            // }
+            case COFEvents.PLAYER_SWING: {
+                this.handlePlayerSwing(event.data.get("faceDir"));
+                break;
+            }
+            case COFEvents.ENEMY_TOOK_DAMAGE: {
+                console.log("Hit enemy");
+                break;
+            }
             // // When the level starts, reenable user input
             // case HW3Events.LEVEL_START: {
             //     Input.enableInput();
@@ -208,6 +215,25 @@ export default class COFLevel extends Scene {
             default: {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
             }
+        }
+    }
+
+    /**
+     * Handles when player swings.
+     * 
+     * @param faceDir direction player is facing, -1 for left, 1 for right
+     */
+    protected handlePlayerSwing(faceDir: number) {
+        let playerSwingHitbox = this.player.boundary.getHalfSize().clone();
+        playerSwingHitbox.x = playerSwingHitbox.x-16;
+        
+        let swingPosition = this.player.position.clone();
+        swingPosition.x += faceDir*14;
+
+
+        // This should loop through all hitable object? and fire event.
+        if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            console.log("weapon hit");
         }
     }
 
@@ -277,12 +303,8 @@ export default class COFLevel extends Scene {
      * Handles all subscriptions to events
      */
     protected subscribeToEvents(): void {
-        // this.receiver.subscribe(HW3Events.PLAYER_ENTERED_LEVEL_END);
-        // this.receiver.subscribe(HW3Events.LEVEL_START);
-        // this.receiver.subscribe(HW3Events.LEVEL_END);
-        // this.receiver.subscribe(HW3Events.HEALTH_CHANGE);
-        // this.receiver.subscribe(HW3Events.PLAYER_DEAD);
-        // this.receiver.subscribe(HW3Events.HIT_TILE);
+        this.receiver.subscribe(COFEvents.PLAYER_SWING);
+        this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
     }
     /**
      * Adds in any necessary UI to the game
@@ -314,12 +336,10 @@ export default class COFLevel extends Scene {
 
         // TODO: Call healthbar update to change text and mroe.
     }
-    /**
-     * Initializes the particles system used by the player's weapon.
-     */
+    // /**
+    //  * Initializes the particles system used by the player's weapon.
+    //  */
     // protected initializeWeaponSystem(): void {
-    //     this.playerWeaponSystem = new PlayerWeapon(30, Vec2.ZERO, 1000, 3, 0, 30);
-    //     this.playerWeaponSystem.initializePool(this, COFLayers.PRIMARY);
     // }
     /**
      * Initializes the player, setting the player's initial position to the given position.

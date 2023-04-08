@@ -23,6 +23,8 @@ import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 
+import { COFPhysicsGroups } from "../COFPhysicsGroups";
+
 /**
  * A const object for the layer names
  */
@@ -79,8 +81,22 @@ export default class COFLevel extends Scene {
     protected dyingAudioKey: string;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
-        //let groupNames : string[] = [HW3PhysicsGroups.GROUND, HW3PhysicsGroups.PLAYER, HW3PhysicsGroups.PLAYER_WEAPON, HW3PhysicsGroups.DESTRUCTABLE];
-        super(viewport, sceneManager, renderingManager, options);
+
+        let groupNames : string[] = [
+            COFPhysicsGroups.PLAYER, 
+            COFPhysicsGroups.ENEMY, 
+        ]
+        
+        let collisions : number[][] = [
+            [0,0,1],
+            [0,0,1],
+            [1,1,0]
+        ];
+
+
+        super(viewport, sceneManager, renderingManager, {...options, physics: {
+            groupNames, collisions
+        }});
         //this.add = new HW3FactoryManager(this, this.tilemaps);
     }
 
@@ -137,10 +153,6 @@ export default class COFLevel extends Scene {
         //     // After the level end timer ends, fade to black and then go to the next scene
         //     this.levelTransitionScreen.tweens.play("fadeIn");
         // });
-
-
-
-        //this.player.setGroup(HW3PhysicsGroups.PLAYER);
     }
 
     /* Update method for the scene */
@@ -189,41 +201,6 @@ export default class COFLevel extends Scene {
                 throw new Error(`Unhandled event caught in scene with type ${event.type}`)
             }
         }
-    }
-
-    /* Handlers for the different events the scene is subscribed to */
-
-    /**
-     * Handle particle hit events
-     * @param particleId the id of the particle
-     */
-    protected handleParticleHit(particleId: number): void {
-        //let particles = this.playerWeaponSystem.getPool();
-
-        //let particle = particles.find(particle => particle.id === particleId);
-        // if (particle !== undefined) {
-        //     // Get the destructable tilemap
-        //     let tilemap = this.destructable;
-
-        //     let min = new Vec2(particle.sweptRect.left, particle.sweptRect.top);
-        //     let max = new Vec2(particle.sweptRect.right, particle.sweptRect.bottom);
-
-        //     // Convert the min/max x/y to the min and max row/col in the tilemap array
-        //     let minIndex = tilemap.getColRowAt(min);
-        //     let maxIndex = tilemap.getColRowAt(max);
-
-        //     // Loop over all possible tiles the particle could be colliding with 
-        //     for(let col = minIndex.x; col <= maxIndex.x; col++){
-        //         for(let row = minIndex.y; row <= maxIndex.y; row++){
-        //             // If the tile is collideable -> check if this particle is colliding with the tile
-        //             if(tilemap.isTileCollidable(col, row) && this.particleHitTile(tilemap, particle, col, row)){
-        //                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: this.tileDestroyedAudioKey, loop: false, holdReference: false });
-        //                 // TODO Destroy the tile
-        //                 tilemap.setTileAtRowCol(new Vec2(col,row), 0);
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     /**
@@ -289,20 +266,12 @@ export default class COFLevel extends Scene {
         // Add the tilemap to the scene
         this.add.tilemap("level", new Vec2(2, 2));
 
-        // if (this.destructibleLayerKey === undefined || this.wallsLayerKey === undefined) {
-        //     throw new Error("Make sure the keys for the destuctible layer and wall layer are both set");
-        // }
+        // Get the wall and destructible layers 
+        this.walls = this.getTilemap("Barrier") as OrthogonalTilemap;
 
-        // // Get the wall and destructible layers 
-        // this.walls = this.getTilemap(this.wallsLayerKey) as OrthogonalTilemap;
-        // this.destructable = this.getTilemap(this.destructibleLayerKey) as OrthogonalTilemap;
-
-        // // Add physics to the wall layer
-        // this.walls.addPhysics();
-        // // Add physics to the destructible layer of the tilemap
-        // this.destructable.addPhysics();
-
-        // this.destructable.setTrigger(HW3PhysicsGroups.PLAYER_WEAPON,HW3Events.HIT_TILE,null);
+        // Add physics to the wall layer
+        this.walls.setGroup(COFPhysicsGroups.WALL);
+        this.walls.addPhysics();
     }
     /**
      * Handles all subscriptions to events
@@ -357,7 +326,7 @@ export default class COFLevel extends Scene {
      * @param position the player's spawn position
      */
     protected initializePlayer(key: string): void {
-        this.playerSpawn = new Vec2(100, 100)
+        this.playerSpawn = new Vec2(300, 250)
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
@@ -366,6 +335,12 @@ export default class COFLevel extends Scene {
 
         // Give the player it's AI
         this.player.addAI(AzazelController);
+
+        let playerHitbox = this.player.boundary.getHalfSize().clone();
+        playerHitbox.x = playerHitbox.x - 20;
+
+        this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
+        this.player.setGroup(COFPhysicsGroups.PLAYER);
     }
 
 
@@ -378,6 +353,9 @@ export default class COFLevel extends Scene {
 
         // Give enemy boss it's AI
         this.enemyBoss.addAI(MoonDogController);
+
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), this.enemyBoss.boundary.getHalfSize().clone()));
+        this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
     }
 
 

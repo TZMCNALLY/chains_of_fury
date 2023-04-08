@@ -96,7 +96,7 @@ export default class COFLevel extends Scene {
         this.load.spritesheet("azazel", "cof_assets/spritesheets/chain_devil.json");
 
         // Load the tilemap
-        this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo1.json");
+        this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
 
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
@@ -359,7 +359,7 @@ export default class COFLevel extends Scene {
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-        this.player.scale.set(.5, .5);
+        this.player.scale.set(.25, .25);
         this.player.position.copy(this.playerSpawn);
 
         // Give the player it's AI
@@ -371,7 +371,7 @@ export default class COFLevel extends Scene {
         let enemySpawn = new Vec2(800,500);
 
         this.enemyBoss = this.add.animatedSprite(key, HW3Layers.PRIMARY);
-        this.enemyBoss.scale.set(2,2);
+        this.enemyBoss.scale.set(1,1);
         this.enemyBoss.position.copy(enemySpawn);
 
         // Give enemy boss it's AI
@@ -387,7 +387,7 @@ export default class COFLevel extends Scene {
             throw new Error("Player must be initialized before setting the viewport to folow the player");
         }
         this.viewport.follow(this.player);
-        this.viewport.setZoomLevel(1);
+        this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
     }
     /**

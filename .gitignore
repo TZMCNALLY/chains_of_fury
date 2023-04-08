@@ -1,4 +1,6 @@
 # Exclude node modules
 node_modules
 
+dist/bundle.js
 
+**/.DS_Store

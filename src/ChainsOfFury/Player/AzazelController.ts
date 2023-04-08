@@ -68,6 +68,8 @@ export default class AzazelController extends StateMachineAI {
     protected _velocity: Vec2;
 	protected _speed: number;
 
+    protected _lastFace: number; // Could be -1 for left, or 1 for right.
+
     protected tilemap: OrthogonalTilemap;
     // protected cannon: Sprite;
     // protected weapon: PlayerWeapon;
@@ -105,7 +107,7 @@ export default class AzazelController extends StateMachineAI {
     public get inputDir(): Vec2 {
         let direction = Vec2.ZERO;
 		direction.x = (Input.isPressed(AzazelControls.MOVE_LEFT) ? -1 : 0) + (Input.isPressed(AzazelControls.MOVE_RIGHT) ? 1 : 0);
-		direction.y = (Input.isPressed(AzazelControls.MOVE_DOWN) ? -1 : 0) + (Input.isPressed(AzazelControls.MOVE_UP) ? 1 : 0);
+		direction.y = (Input.isPressed(AzazelControls.MOVE_DOWN) ? 1 : 0) + (Input.isPressed(AzazelControls.MOVE_UP) ? -1 : 0);
 		return direction;
     }
     /** 
@@ -115,14 +117,6 @@ export default class AzazelController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
-
-        // If the player hits the attack button and the weapon system isn't running, restart the system and fire!
-        // if (Input.isPressed(HW3Controls.ATTACK) && !this.weapon.isSystemRunning()) {
-        //     // Start the particle system at the player's current position
-        //     this.weapon.startSystem(500, 0, this.owner.position);
-        //     this.owner.animation.play(AzazelAnimations.ATTACK);
-        // }
-
 	}
 
     public get velocity(): Vec2 { return this._velocity; }
@@ -130,6 +124,13 @@ export default class AzazelController extends StateMachineAI {
 
     public get speed(): number { return this._speed; }
     public set speed(speed: number) { this._speed = speed; }
+
+    public get lastFace(): number { 
+        if (this.inputDir.x != 0) {
+            this._lastFace = this.inputDir.x;
+        }
+        return this._lastFace;
+    }
 
     public get maxHealth(): number { return this._maxHealth; }
     // public set maxHealth(maxHealth: number) { 

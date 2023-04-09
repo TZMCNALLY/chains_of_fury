@@ -374,7 +374,10 @@ export default class COFLevel extends Scene {
         // Give enemy boss it's AI
         this.enemyBoss.addAI(MoonDogController);
 
-        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), this.enemyBoss.boundary.getHalfSize().clone()));
+        let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
+        enemyHitbox.x = enemyHitbox.x - 6
+
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
     }
 

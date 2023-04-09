@@ -7,9 +7,9 @@ export default class Idle extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
         if (this.parent.lastFace == -1) {
-            this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
+            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
         } else {
-            this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
+            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
         }
 	}
 
@@ -26,9 +26,9 @@ export default class Idle extends PlayerState {
             this.finished(AzazelStates.SWING)
         else {
             if (this.parent.lastFace == -1) {
-                this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
+                this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
             } else {
-                this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
+                this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
             }
         }	
 	}

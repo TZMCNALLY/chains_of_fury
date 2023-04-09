@@ -62,6 +62,8 @@ export default class AzazelController extends StateMachineAI {
     /** Health and max health for the player */
     protected _health: number;
     protected _maxHealth: number;
+    protected _mana: number;
+    protected _maxMana: number;
 
     /** The players game node */
     protected owner: COFAnimatedSprite;
@@ -134,22 +136,10 @@ export default class AzazelController extends StateMachineAI {
     }
 
     public get maxHealth(): number { return this._maxHealth; }
-    // public set maxHealth(maxHealth: number) { 
-    //     this._maxHealth = maxHealth; 
-    //     // When the health changes, fire an event up to the scene.
-    //     this.emitter.fireEvent(HW3Events.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
-    // }
-
     public get health(): number { return this._health; }
-    // public set health(health: number) { 
-    //     this._health = MathUtils.clamp(health, 0, this.maxHealth);
-    //     // When the health changes, fire an event up to the scene.
-    //     this.emitter.fireEvent(HW3Events.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
-    //     // If the health hit 0, change the state of the player
-    //     if (this.health === 0) {
-    //         this.changeState(AzazelStates.DEAD); 
-    //     }
-    // }
+
+    public get maxMana(): number { return this._maxMana; }
+    public get mana(): number { return this._mana; }
 
     // Exposes controller emitter to fire events.
     public fireEvent(eventType: string, data: Map<any> | Record<string, any> = null) {

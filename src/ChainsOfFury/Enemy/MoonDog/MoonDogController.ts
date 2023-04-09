@@ -40,6 +40,9 @@ export default class MoonDogController extends EnemyController {
         this.addState(MoonDogState.IDLE, new Idle(this, this.owner));
 
         this.initialize(MoonDogState.IDLE);
+
+        this.maxHealth = 500;
+        this.health = this.maxHealth;
     }    
 
 }

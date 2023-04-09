@@ -19,6 +19,9 @@ import { COFEvents } from "../COFEvents";
 import Guard from "./AzazelStates/Guard";
 //import Dead from "./PlayerStates/Dead";
 
+import Receiver from "../../Wolfie2D/Events/Receiver";
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 /**
  * Animation keys for the Azazel spritesheet
  */
@@ -63,6 +66,14 @@ export default class AzazelController extends StateMachineAI {
     protected _health: number;
     protected _maxHealth: number;
 
+    /** Stamina and max stamina for the player */
+    protected _stamina: number;
+    protected _maxStamina: number;
+
+    /** Mana and max mana for the player */
+    protected _mana: number;
+    protected _maxMana: number;
+
     /** The players game node */
     protected owner: COFAnimatedSprite;
 
@@ -75,6 +86,9 @@ export default class AzazelController extends StateMachineAI {
     // protected cannon: Sprite;
     // protected weapon: PlayerWeapon;
 
+    // A receiver and emitter to hook into the event queue
+	public receiver: Receiver;
+	public emitter: Emitter;
     
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>){
         this.owner = owner;
@@ -84,8 +98,12 @@ export default class AzazelController extends StateMachineAI {
         //this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
         this.speed = 1000;
 
-        // this.health = 5;
-        // this.maxHealth = 5;
+        this.maxHealth = 100;
+        this.health = this.maxHealth;
+        this.maxStamina = 100;
+        this.stamina = this.maxStamina;
+        this.maxMana = 100;
+        this.mana = this.maxMana;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
@@ -100,6 +118,14 @@ export default class AzazelController extends StateMachineAI {
         
         // Start the player in the Idle state
         this.initialize(AzazelStates.IDLE);
+
+        this.receiver = new Receiver();
+        this.emitter = new Emitter();
+        this.receiver.subscribe(COFEvents.PLAYER_HIT);
+        this.receiver.subscribe(COFEvents.PLAYER_FIRE_PROJECTILE);
+        this.receiver.subscribe(COFEvents.PLAYER_RUN);
+        this.receiver.subscribe(COFEvents.PLAYER_SWING);
+        this.receiver.subscribe(COFEvents.REGENERATE_STAMINA)
     }
 
     /** 
@@ -120,6 +146,37 @@ export default class AzazelController extends StateMachineAI {
 		super.update(deltaT);
 	}
 
+    public handleEvent(event: GameEvent): void {
+		switch(event.type) {
+			case COFEvents.PLAYER_HIT: {
+				//this.handlePlayerHit(event);
+				break;
+			}
+            case COFEvents.PLAYER_FIRE_PROJECTILE: {
+				this.handlePlayerFireProjectile(event);
+				break;
+			}
+            case COFEvents.PLAYER_RUN: {
+				this.handlePlayerRun(event);
+				break;
+			}
+            case COFEvents.PLAYER_SWING: {
+				this.handlePlayerSwing(event);
+				break;
+			}
+            case COFEvents.REGENERATE_STAMINA: {
+				this.handlePlayerRegenerateStamina(event);
+				break;
+			}
+			default: {
+				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
+			}
+		}
+	}
+
+    // ======================================================================
+    // Setters and getters
+
     public get velocity(): Vec2 { return this._velocity; }
     public set velocity(velocity: Vec2) { this._velocity = velocity; }
 
@@ -134,25 +191,83 @@ export default class AzazelController extends StateMachineAI {
     }
 
     public get maxHealth(): number { return this._maxHealth; }
-    // public set maxHealth(maxHealth: number) { 
-    //     this._maxHealth = maxHealth; 
-    //     // When the health changes, fire an event up to the scene.
-    //     this.emitter.fireEvent(HW3Events.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
-    // }
+    public set maxHealth(maxHealth: number) { 
+        this._maxHealth = maxHealth; 
+    }
 
     public get health(): number { return this._health; }
-    // public set health(health: number) { 
-    //     this._health = MathUtils.clamp(health, 0, this.maxHealth);
-    //     // When the health changes, fire an event up to the scene.
-    //     this.emitter.fireEvent(HW3Events.HEALTH_CHANGE, {curhp: this.health, maxhp: this.maxHealth});
-    //     // If the health hit 0, change the state of the player
-    //     if (this.health === 0) {
-    //         this.changeState(AzazelStates.DEAD); 
-    //     }
-    // }
 
-    // Exposes controller emitter to fire events.
-    public fireEvent(eventType: string, data: Map<any> | Record<string, any> = null) {
-        this.emitter.fireEvent(eventType, data);
+    public set health(health: number) { 
+        this._health = MathUtils.clamp(health, 0, this.maxHealth);
+        // If the health hit 0, change the state of the player
+        if (this.health === 0) {
+            this.changeState(AzazelStates.DEAD); 
+        }
     }
+
+    public get maxStamina(): number { return this._maxStamina; }
+    public set maxStamina(maxStamina: number) { 
+        this._maxStamina = maxStamina; 
+    }
+
+    public get stamina(): number { return this._stamina; }
+    public set stamina(stamina: number) { 
+        this._stamina = MathUtils.clamp(stamina, 0, this.maxStamina);
+        // TODO: If the stamina hit 0, player input should be disabled until stamina regenerates
+        // if (this.health === 0) {
+        //     this.changeState(AzazelStates.DEAD); 
+        // }
+    }
+
+    public get maxMana(): number { return this._maxMana; }
+    public set maxMana(maxMana: number) { 
+        this._maxMana = maxMana; 
+    }
+
+    public get mana(): number { return this._mana; }
+    public set mana(mana: number) { 
+        this._mana = MathUtils.clamp(mana, 0, this.maxMana);
+        // TODO: If the mana hit 0, player should not be able to throw fireballs until mana regenerates
+        // if (this.health === 0) {
+        //     this.changeState(AzazelStates.DEAD); 
+        // }
+    }
+
+    // Setters and getters
+    // ======================================================================
+
+
+    // ======================================================================
+    // Event handlers
+
+    public handlePlayerHit(event: GameEvent): void {
+    //     this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : maxHealth : });
+    }
+
+    public handlePlayerFireProjectile(event: GameEvent): void {
+        this.mana -= 10;
+        this.emitter.fireEvent(COFEvents.CHANGE_MANA, {currMana : this.mana, maxMana : this.maxMana});
+    }
+
+    public handlePlayerRun(event : GameEvent) : void {
+        this.stamina -= 0.05;
+        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+    }
+
+    public handlePlayerSwing(event : GameEvent) : void {
+        this.stamina -= 10;
+        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+    }
+
+    public handlePlayerRegenerateStamina(event : GameEvent) : void {
+        this.stamina += 0.5;
+
+        if (this.stamina > this.maxStamina)
+            this.stamina = this.maxStamina;
+
+        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+    }
+
+    // Event handlers
+    // ======================================================================
 }

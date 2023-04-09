@@ -1,10 +1,12 @@
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
@@ -18,7 +20,8 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController from "../Player/AzazelController";
-import BubbleShaderType from "../Shaders/BubbleShaderType";
+// import FireballShaderType from "../Shaders/FireballShaderType";
+// import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
@@ -37,7 +40,7 @@ export const COFLayers = {
 } as const;
 
 // The layers as a type
-export type COFLAyer = typeof COFLayers[keyof typeof COFLayers]
+export type COFLayer = typeof COFLayers[keyof typeof COFLayers]
 
 export default class COFLevel extends Scene {
 
@@ -55,6 +58,9 @@ export default class COFLevel extends Scene {
 
     /** Collision sprite for weapon */
     protected playerWeapon: AnimatedSprite;
+
+    /** Object pool for fire projectiles */
+    // private fireballs: Array<Graphic>
 
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
@@ -128,11 +134,11 @@ export default class COFLevel extends Scene {
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
 
-        this.load.shader(
-			BubbleShaderType.KEY,
-			BubbleShaderType.VSHADER,
-			BubbleShaderType.FSHADER
-		);
+        // this.load.shader(
+		// 	FireballShaderType.KEY,
+		// 	FireballShaderType.VSHADER,
+		// 	FireballShaderType.FSHADER
+		// );
     }
 
     public startScene(): void {
@@ -143,6 +149,8 @@ export default class COFLevel extends Scene {
         this.initializeTilemap();
 
         this.initializeUI();
+
+        // this.initObjectPools();
 
         // Initialize the player 
         this.initializePlayer("azazel");
@@ -197,6 +205,10 @@ export default class COFLevel extends Scene {
                 this.handlePlayerStaminaChange(event.data.get("currStamina"), event.data.get("maxStamina"));
                 break;
             }
+            // case COFEvents.PLAYER_HURL: {
+            //     this.spawnFireball(event.data.get("faceDir"), event.data.get("pos"));
+            //     break;
+            // }
             // // When the level starts, reenable user input
             // case HW3Events.LEVEL_START: {
             //     Input.enableInput();
@@ -227,7 +239,7 @@ export default class COFLevel extends Scene {
     }
 
     /**
-     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
+     * Handles when player swings.
      * 
      * @param faceDir direction player is facing, -1 for left, 1 for right
      */
@@ -238,11 +250,66 @@ export default class COFLevel extends Scene {
         let swingPosition = this.player.position.clone();
         swingPosition.x += faceDir*14;
 
+
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
-            this.emitter.fireEvent(COFEvents.ENEMY_HIT);
+            console.log("weapon hit");
         }
     }
+
+    // protected initObjectPools(): void {
+		
+	// 	// Init bubble object pool
+	// 	this.fireballs = new Array(3);
+	// 	for (let i = 0; i < this.fireballs.length; i++) {
+	// 		this.fireballs[i] = this.add.graphic(GraphicType.RECT, COFLayers.PRIMARY, {position: new Vec2(200, 200), size: new Vec2(50, 50)});
+            
+    //         // Give the bubbles a custom shader
+	// 		this.fireballs[i].useCustomShader(FireballShaderType.KEY);
+	// 		this.fireballs[i].visible = false;
+	// 		this.fireballs[i].color = Color.BLUE;
+
+    //         // Give the bubbles AI
+	// 		this.fireballs[i].addAI(FireballAI);
+
+    //         // Give the bubbles a collider
+	// 		let collider = new Circle(Vec2.ZERO, 25);
+	// 		this.fireballs[i].setCollisionShape(collider);
+	// 	}
+    // }
+
+    /**
+     * Displays a mine on the tilemap.
+     * 
+     * @param tilemap the tilemap
+     * @param particle the particle
+     * @param col the column the 
+     * @param row the row 
+     * @returns true of the particle hit the tile; false otherwise
+     */
+    protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
+        // TODO detect whether a particle hit a tile
+        return true;
+    }
+   
+    /**
+    * Displays a fire projectile on the map
+    * 
+    * @param faceDir the direction the player is facing
+    */
+
+    // protected spawnFireball(faceDir: number, pos: Vec2) {
+
+    //     // Find first visible fireball
+    //     let fireball: Graphic = this.fireballs.find((fireball: Graphic) => { return !fireball.visible });
+
+    //     if(fireball)
+    //     {
+    //         fireball.visible = true;
+    //         fireball.position.copy(pos.clone())
+    //         fireball.setAIActive(true, {})
+    //     }
+    // }
 
     /**
      * 
@@ -342,6 +409,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA)
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
+        //this.receiver.subscribe(COFEvents.PLAYER_HURL)
     }
     /**
      * Adds in any necessary UI to the game
@@ -403,6 +471,10 @@ export default class COFLevel extends Scene {
         // Give enemy boss it's AI
         this.enemyBoss.addAI(MoonDogController);
 
+        let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
+        enemyHitbox.x = enemyHitbox.x - 6
+
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
     }

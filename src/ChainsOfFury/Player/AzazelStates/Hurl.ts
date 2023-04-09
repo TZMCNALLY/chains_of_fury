@@ -11,16 +11,18 @@ export default class Attack extends PlayerState {
                 // Checks if the E key has been pressed
                 this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_RIGHT)
                 this.owner.animation.queue(AzazelAnimations.ATTACK_RIGHT)
-                this.parent.emitter.fireEvent(COFEvents.PLAYER_FIRE_PROJECTILE);
 	}
 
 	public update(deltaT: number): void {
 
                 //CHARGE NOT PLAYING
                 if(!this.owner.animation.isPlaying(AzazelAnimations.CHARGE_RIGHT) && 
-                !this.owner.animation.isPlaying(AzazelAnimations.ATTACK_RIGHT))
-                        //TODO: FIRE EVENT FOR FIREBALL HERE
+                !this.owner.animation.isPlaying(AzazelAnimations.ATTACK_RIGHT)) {
+
+                        this.emitter.fireEvent(COFEvents.PLAYER_HURL, {faceDir: this.parent.faceDir, pos: this.owner.position})
                         this.finished(AzazelStates.IDLE)
+
+                }
 	}
 
 	public onExit(): Record<string, any> {

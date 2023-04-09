@@ -125,7 +125,7 @@ export default class AzazelController extends StateMachineAI {
         this.receiver.subscribe(COFEvents.PLAYER_FIRE_PROJECTILE);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
-        this.receiver.subscribe(COFEvents.REGENERATE_STAMINA)
+        this.receiver.subscribe(COFEvents.REGENERATE_STAMINA);
     }
 
     /** 

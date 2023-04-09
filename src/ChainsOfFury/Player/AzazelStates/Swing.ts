@@ -15,7 +15,7 @@ export default class Swing extends PlayerState {
 			this.owner.animation.playIfNotAlready(AzazelAnimations.ATTACK_RIGHT);
 		}
 
-		this.parent.fireEvent(COFEvents.PLAYER_SWING, {faceDir: this.parent.lastFace});
+		this.parent.emitter.fireEvent(COFEvents.PLAYER_SWING, {faceDir: this.parent.lastFace});
 	}
 
 	public update(deltaT: number): void {

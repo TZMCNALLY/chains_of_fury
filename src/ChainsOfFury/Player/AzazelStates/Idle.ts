@@ -2,6 +2,7 @@ import { AzazelStates, AzazelAnimations } from "../AzazelController";
 import PlayerState from "./PlayerState";
 import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
+import { COFEvents } from "../../COFEvents";
 
 export default class Idle extends PlayerState {
 
@@ -15,6 +16,8 @@ export default class Idle extends PlayerState {
 
 	public update(deltaT: number): void {
 
+        this.parent.emitter.fireEvent(COFEvents.REGENERATE_STAMINA);
+
         if (Input.isPressed(AzazelControls.MOVE_RIGHT) || Input.isPressed(AzazelControls.MOVE_LEFT) 
             || Input.isPressed(AzazelControls.MOVE_UP) || Input.isPressed(AzazelControls.MOVE_DOWN))
             this.finished(AzazelStates.RUN);
@@ -26,9 +29,9 @@ export default class Idle extends PlayerState {
             this.finished(AzazelStates.SWING)
         else {
             if (this.parent.lastFace == -1) {
-                this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
+                this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
             } else {
-                this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
+                this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
             }
         }	
 	}

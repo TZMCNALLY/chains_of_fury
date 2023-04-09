@@ -20,8 +20,8 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController from "../Player/AzazelController";
-import FireballShaderType from "../Shaders/FireballShaderType";
-import FireballAI from "../Fireball/FireballBehavior";
+// import FireballShaderType from "../Shaders/FireballShaderType";
+// import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
@@ -40,7 +40,7 @@ export const COFLayers = {
 } as const;
 
 // The layers as a type
-export type COFLAyer = typeof COFLayers[keyof typeof COFLayers]
+export type COFLayer = typeof COFLayers[keyof typeof COFLayers]
 
 export default class COFLevel extends Scene {
 
@@ -59,11 +59,11 @@ export default class COFLevel extends Scene {
     /** Collision sprite for weapon */
     protected playerWeapon: AnimatedSprite;
 
+    /** Object pool for fire projectiles */
+    // private fireballs: Array<Graphic>
+
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
-
-    /** Object pool for fireballs */
-    protected fireballs: Array<Graphic>
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -134,11 +134,11 @@ export default class COFLevel extends Scene {
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
 
-        this.load.shader(
-			FireballShaderType.KEY,
-			FireballShaderType.VSHADER,
-			FireballShaderType.FSHADER
-		);
+        // this.load.shader(
+		// 	FireballShaderType.KEY,
+		// 	FireballShaderType.VSHADER,
+		// 	FireballShaderType.FSHADER
+		// );
     }
 
     public startScene(): void {
@@ -149,6 +149,8 @@ export default class COFLevel extends Scene {
         this.initializeTilemap();
 
         this.initializeUI();
+
+        // this.initObjectPools();
 
         // Initialize the player 
         this.initializePlayer("azazel");
@@ -203,10 +205,10 @@ export default class COFLevel extends Scene {
                 this.handlePlayerStaminaChange(event.data.get("currStamina"), event.data.get("maxStamina"));
                 break;
             }
-            case COFEvents.PLAYER_HURLED: {
-                this.handleFireball;
-                break;
-            }
+            // case COFEvents.PLAYER_HURL: {
+            //     this.spawnFireball(event.data.get("faceDir"), event.data.get("pos"));
+            //     break;
+            // }
             // // When the level starts, reenable user input
             // case HW3Events.LEVEL_START: {
             //     Input.enableInput();
@@ -255,26 +257,26 @@ export default class COFLevel extends Scene {
         }
     }
 
-    protected initObjectPools(): void {
+    // protected initObjectPools(): void {
 		
-		// Init bubble object pool
-		this.fireballs = new Array(3);
-		for (let i = 0; i < this.fireballs.length; i++) {
-			this.fireballs[i] = this.add.graphic(GraphicType.RECT, COFLayers.PRIMARY, {position: new Vec2(0, 0), size: new Vec2(50, 50)});
+	// 	// Init bubble object pool
+	// 	this.fireballs = new Array(3);
+	// 	for (let i = 0; i < this.fireballs.length; i++) {
+	// 		this.fireballs[i] = this.add.graphic(GraphicType.RECT, COFLayers.PRIMARY, {position: new Vec2(200, 200), size: new Vec2(50, 50)});
             
-            // Give the bubbles a custom shader
-			this.fireballs[i].useCustomShader(FireballShaderType.KEY);
-			this.fireballs[i].visible = false;
-			this.fireballs[i].color = Color.RED;
+    //         // Give the bubbles a custom shader
+	// 		this.fireballs[i].useCustomShader(FireballShaderType.KEY);
+	// 		this.fireballs[i].visible = false;
+	// 		this.fireballs[i].color = Color.BLUE;
 
-            // Give the bubbles AI
-			this.fireballs[i].addAI(FireballAI);
+    //         // Give the bubbles AI
+	// 		this.fireballs[i].addAI(FireballAI);
 
-            // Give the bubbles a collider
-			let collider = new Circle(Vec2.ZERO, 25);
-			this.fireballs[i].setCollisionShape(collider);
-		}
-    }
+    //         // Give the bubbles a collider
+	// 		let collider = new Circle(Vec2.ZERO, 25);
+	// 		this.fireballs[i].setCollisionShape(collider);
+	// 	}
+    // }
 
     /**
      * Displays a mine on the tilemap.
@@ -289,6 +291,25 @@ export default class COFLevel extends Scene {
         // TODO detect whether a particle hit a tile
         return true;
     }
+   
+    /**
+    * Displays a fire projectile on the map
+    * 
+    * @param faceDir the direction the player is facing
+    */
+
+    // protected spawnFireball(faceDir: number, pos: Vec2) {
+
+    //     // Find first visible fireball
+    //     let fireball: Graphic = this.fireballs.find((fireball: Graphic) => { return !fireball.visible });
+
+    //     if(fireball)
+    //     {
+    //         fireball.visible = true;
+    //         fireball.position.copy(pos.clone())
+    //         fireball.setAIActive(true, {})
+    //     }
+    // }
 
     /**
      * 
@@ -388,6 +409,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA)
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
+        //this.receiver.subscribe(COFEvents.PLAYER_HURL)
     }
     /**
      * Adds in any necessary UI to the game

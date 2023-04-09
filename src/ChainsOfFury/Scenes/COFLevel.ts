@@ -18,11 +18,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController from "../Player/AzazelController";
-//import PlayerWeapon from "../Player/PlayerWeapon";
-
-//import { HW3Events } from "../HW3Events";
-//import { HW3PhysicsGroups } from "../HW3PhysicsGroups";
-//import HW3FactoryManager from "../Factory/HW3FactoryManager";
+import BubbleShaderType from "../Shaders/BubbleShaderType";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
@@ -131,6 +127,12 @@ export default class COFLevel extends Scene {
 
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
+
+        this.load.shader(
+			BubbleShaderType.KEY,
+			BubbleShaderType.VSHADER,
+			BubbleShaderType.FSHADER
+		);
     }
 
     public startScene(): void {
@@ -226,6 +228,25 @@ export default class COFLevel extends Scene {
 
     /**
      * Handles when player swings.
+     * 
+     * @param faceDir direction player is facing, -1 for left, 1 for right
+     */
+    protected handlePlayerSwing(faceDir: number) {
+        let playerSwingHitbox = this.player.boundary.getHalfSize().clone();
+        playerSwingHitbox.x = playerSwingHitbox.x-16;
+        
+        let swingPosition = this.player.position.clone();
+        swingPosition.x += faceDir*14;
+
+
+        // This should loop through all hitable object? and fire event.
+        if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            console.log("weapon hit");
+        }
+    }
+
+    /**
+     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
      * 
      * @param faceDir direction player is facing, -1 for left, 1 for right
      */

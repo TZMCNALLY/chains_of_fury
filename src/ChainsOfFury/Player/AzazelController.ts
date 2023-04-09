@@ -196,6 +196,7 @@ export default class AzazelController extends StateMachineAI {
     }
 
     public get health(): number { return this._health; }
+
     public set health(health: number) { 
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
         // If the health hit 0, change the state of the player

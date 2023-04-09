@@ -52,8 +52,10 @@ export const COFEvents = {
 
     /**
      * Event trigger when player entity throws a projectile
+     * 
+     * Has data: { faceDir: number, pos: Vec2 }
      */
-    PLAYER_FIRE_PROJECTILE: "PLAYER_FIRE_PROJECTILE",
+    PLAYER_HURL: "PLAYER_HURL",
 
     /**
      * Event trigger when player is idle, allowing them to regenerate lost stamina
@@ -65,7 +67,7 @@ export const COFEvents = {
     /**
      * Event trigger when player entity experiences a change in stamina
      * 
-     * Has data: { currStamina : number, maxStamina : number }
+     * Has data: { facedir: number, currStamina : number, maxStamina : number }
      */
     CHANGE_STAMINA: "CHANGE_STAMINA",
 

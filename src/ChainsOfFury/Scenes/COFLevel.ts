@@ -238,6 +238,25 @@ export default class COFLevel extends Scene {
         let swingPosition = this.player.position.clone();
         swingPosition.x += faceDir*14;
 
+
+        // This should loop through all hitable object? and fire event.
+        if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            console.log("weapon hit");
+        }
+    }
+
+    /**
+     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
+     * 
+     * @param faceDir direction player is facing, -1 for left, 1 for right
+     */
+    protected handlePlayerSwing(faceDir: number) {
+        let playerSwingHitbox = this.player.boundary.getHalfSize().clone();
+        playerSwingHitbox.x = playerSwingHitbox.x-16;
+        
+        let swingPosition = this.player.position.clone();
+        swingPosition.x += faceDir*14;
+
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
             this.emitter.fireEvent(COFEvents.ENEMY_HIT);

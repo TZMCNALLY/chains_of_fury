@@ -9,9 +9,11 @@ export default class Run extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
 		this.parent.speed = 150;
-        if(Input.isPressed(AzazelControls.MOVE_LEFT)) {
+        if(this.parent.lastFace == -1) {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
-        } else {
+        } 
+        
+        else {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
         }
 	}
@@ -37,9 +39,8 @@ export default class Run extends PlayerState {
         } else if(Input.isMouseJustPressed(0)) {
             // Left click
             this.finished(AzazelStates.SWING)
-
         // Play animation if no state switch.
-        } else if(this.parent.inputDir.x == -1) {
+        } else if(this.parent.lastFace == -1) {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
         } else {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)

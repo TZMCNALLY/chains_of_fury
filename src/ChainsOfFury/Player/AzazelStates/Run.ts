@@ -3,6 +3,7 @@ import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
 import PlayerState from "./PlayerState";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import { COFEvents } from "../../COFEvents";
 
 export default class Run extends PlayerState {
 
@@ -16,6 +17,9 @@ export default class Run extends PlayerState {
 	}
 
 	update(deltaT: number): void {
+
+        // Fires running event so HUD knows to decrease stamina.
+        this.parent.emitter.fireEvent(COFEvents.PLAYER_RUN);
 
         // Call getter to update last face.
         this.parent.lastFace;

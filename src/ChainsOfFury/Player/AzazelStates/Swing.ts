@@ -3,6 +3,7 @@ import PlayerState from "./PlayerState";
 import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import { COFEvents } from "../../COFEvents";
 
 export default class Swing extends PlayerState {
 
@@ -13,6 +14,8 @@ export default class Swing extends PlayerState {
 		} else {
 			this.owner.animation.playIfNotAlready(AzazelAnimations.ATTACK_RIGHT);
 		}
+
+		this.parent.emitter.fireEvent(COFEvents.PLAYER_SWING, {faceDir: this.parent.lastFace});
 	}
 
 	public update(deltaT: number): void {

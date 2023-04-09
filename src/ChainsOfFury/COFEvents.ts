@@ -12,9 +12,14 @@ export const COFEvents = {
     BOSS_DEFEATED: "BOSS_DEFEATED",
 
     /**
+     * Event trigger when player is hit.
+     */
+    PLAYER_HIT: "PLAYER_HIT",
+
+    /**
      * Event trigger when player takes damage.
      * 
-     * Has data: { damage: number }
+     * Has data: { currHealth : number, maxHealth: number }
      */
     PLAYER_TOOK_DAMAGE: "PLAYER_TOOK_DAMAGE",
 
@@ -22,9 +27,52 @@ export const COFEvents = {
     PLAYER_DEAD: "PLAYER_DEAD",
 
     /**
-     * Event trigger when enemy entity gets hit.
+     * Event trigger when enemy is hit.
+     */
+    ENEMY_HIT: "ENEMY_HIT",
+
+    /**
+     * Event trigger when enemy entity takes damage.
      * 
-     * Has data: { id: number, damage: number }
+     * Has data: { currHealth : number, maxHealth: number }
      */
     ENEMY_TOOK_DAMAGE: "ENEMY_TOOK_DAMAGE",
+
+    /**
+     * Event trigger when player swing.
+     * 
+     * Has data: { faceDir: numeber (-1 or 1) }
+     */
+    PLAYER_SWING: "PLAYER_SWING",
+
+    /**
+     * Event trigger when player is in the running state.
+     */
+    PLAYER_RUN: "PLAYER_RUN",
+
+    /**
+     * Event trigger when player entity throws a projectile
+     */
+    PLAYER_FIRE_PROJECTILE: "PLAYER_FIRE_PROJECTILE",
+
+    /**
+     * Event trigger when player is idle, allowing them to regenerate lost stamina
+     * 
+     * Has data: { currStamina : number, maxStamina : number }
+     */
+    REGENERATE_STAMINA: "REGENERATE_STAMINA",
+
+    /**
+     * Event trigger when player entity experiences a change in stamina
+     * 
+     * Has data: { currStamina : number, maxStamina : number }
+     */
+    CHANGE_STAMINA: "CHANGE_STAMINA",
+
+    /**
+     * Event trigger when player entity experiences a change in mana
+     * 
+     * Has data: { currMana : number, maxMana : number }
+     */
+    CHANGE_MANA: "CHANGE_MANA"
 }

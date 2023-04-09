@@ -1,10 +1,12 @@
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
@@ -18,7 +20,8 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController from "../Player/AzazelController";
-import BubbleShaderType from "../Shaders/BubbleShaderType";
+import FireballShaderType from "../Shaders/FireballShaderType";
+import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
@@ -58,6 +61,9 @@ export default class COFLevel extends Scene {
 
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
+
+    /** Object pool for fireballs */
+    protected fireballs: Array<Graphic>
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -129,9 +135,9 @@ export default class COFLevel extends Scene {
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
 
         this.load.shader(
-			BubbleShaderType.KEY,
-			BubbleShaderType.VSHADER,
-			BubbleShaderType.FSHADER
+			FireballShaderType.KEY,
+			FireballShaderType.VSHADER,
+			FireballShaderType.FSHADER
 		);
     }
 
@@ -186,7 +192,19 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.ENEMY_TOOK_DAMAGE: {
-                console.log("Hit enemy");
+                this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
+                break;
+            }
+            case COFEvents.CHANGE_MANA: {
+                this.handlePlayerManaChange(event.data.get("currMana"), event.data.get("maxMana"));
+                break;
+            }
+            case COFEvents.CHANGE_STAMINA: {
+                this.handlePlayerStaminaChange(event.data.get("currStamina"), event.data.get("maxStamina"));
+                break;
+            }
+            case COFEvents.PLAYER_HURLED: {
+                this.handleFireball;
                 break;
             }
             // // When the level starts, reenable user input
@@ -237,8 +255,29 @@ export default class COFLevel extends Scene {
         }
     }
 
+    protected initObjectPools(): void {
+		
+		// Init bubble object pool
+		this.fireballs = new Array(3);
+		for (let i = 0; i < this.fireballs.length; i++) {
+			this.fireballs[i] = this.add.graphic(GraphicType.RECT, COFLayers.PRIMARY, {position: new Vec2(0, 0), size: new Vec2(50, 50)});
+            
+            // Give the bubbles a custom shader
+			this.fireballs[i].useCustomShader(FireballShaderType.KEY);
+			this.fireballs[i].visible = false;
+			this.fireballs[i].color = Color.RED;
+
+            // Give the bubbles AI
+			this.fireballs[i].addAI(FireballAI);
+
+            // Give the bubbles a collider
+			let collider = new Circle(Vec2.ZERO, 25);
+			this.fireballs[i].setCollisionShape(collider);
+		}
+    }
+
     /**
-     * Checks if a particle hit the tile at the (col, row) coordinates in the tilemap.
+     * Displays a mine on the tilemap.
      * 
      * @param tilemap the tilemap
      * @param particle the particle
@@ -251,20 +290,62 @@ export default class COFLevel extends Scene {
         return true;
     }
 
-
     /**
      * 
      * 
      * @param currentHealth the current health of the player
      * @param maxHealth the maximum health of the player
      */
-    protected handleHealthChange(currentHealth: number, maxHealth: number): void {
+    protected handlePlayerHealthChange(currentHealth: number, maxHealth: number): void {
 		let unit = this.healthBarBg.size.x / maxHealth;
         
 		this.healthBar.size.set(this.healthBarBg.size.x - unit * (maxHealth - currentHealth), this.healthBarBg.size.y);
 		this.healthBar.position.set(this.healthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.healthBarBg.position.y);
 
 		this.healthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
+	}
+
+    /**
+     * 
+     * 
+     * @param currentStamina the current stamina of the player
+     * @param maxStamina the maximum stamina of the player
+     */
+    protected handlePlayerStaminaChange(currentStamina: number, maxStamina: number): void {
+		let unit = this.staminaBarBg.size.x / maxStamina;
+        
+		this.staminaBar.size.set(this.staminaBarBg.size.x - unit * (maxStamina - currentStamina), this.staminaBarBg.size.y);
+		this.staminaBar.position.set(this.staminaBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxStamina - currentStamina), this.staminaBarBg.position.y);
+	}
+
+    /**
+     * 
+     * 
+     * @param currentMana the current mana of the player
+     * @param maxMana the maximum mana of the player
+     */
+    protected handlePlayerManaChange(currentMana: number, maxMana: number): void {
+		let unit = this.manaBarBg.size.x / maxMana;
+        
+		this.manaBar.size.set(this.manaBarBg.size.x - unit * (maxMana - currentMana), this.manaBarBg.size.y);
+		this.manaBar.position.set(this.manaBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxMana - currentMana), this.manaBarBg.position.y);
+	}
+
+     /**
+     * 
+     * 
+     * @param currentHealth the current health of the boss
+     * @param maxHealth the maximum health of the boss
+     */
+     protected handleBossHealthChange(currentHealth: number, maxHealth: number): void {
+		let unit = this.enemyHealthBarBg.size.x / maxHealth;
+        
+		this.enemyHealthBar.size.set(this.enemyHealthBarBg.size.x - unit * (maxHealth - currentHealth), this.enemyHealthBarBg.size.y);
+		this.enemyHealthBar.position.set(this.enemyHealthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.enemyHealthBarBg.position.y);
+
+		this.enemyHealthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
+
+        // TODO: fire event boss_dead; play dying and dead scene before moving onto next lvl
 	}
 
 
@@ -305,36 +386,30 @@ export default class COFLevel extends Scene {
     protected subscribeToEvents(): void {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
+        this.receiver.subscribe(COFEvents.CHANGE_STAMINA)
+        this.receiver.subscribe(COFEvents.CHANGE_MANA);
     }
     /**
      * Adds in any necessary UI to the game
      */
     protected initializeUI(): void {
 
-        function createBar(bar: Label, barBg: Label, barLabel: Label, x: number, y: number, sx: number, sy: number, color: Color, font?: number) {
-            barBg = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(x, y), text: ""});
-            barBg.size = new Vec2(sx, sy);
-            barBg.backgroundColor = Color.BLACK;
+        this.healthBar = this.createBar(120, 20, 300, 20, Color.RED);
+        this.healthBarBg = this.createBarBg(120, 20, 300, 20, Color.TRANSPARENT);
+        this.healthLabel = this.createBarLabel(120, 20, 300, 20, Color.BLACK, "HP");
+        
+        this.staminaBar = this.createBar(120, 40, 300, 20, Color.GREEN);
+        this.staminaBarBg = this.createBarBg(120, 40, 300, 20, Color.TRANSPARENT);
+        this.staminaLabel = this.createBarLabel(120, 40, 300, 20, Color.BLACK, "Stamina");
 
-            bar = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(x, y), text: ""});
-            bar.size = new Vec2(sx, sy);
-            bar.backgroundColor = color;
-            console.log(bar.backgroundColor);
+        this.manaBar = this.createBar(120, 60, 300, 20, Color.BLUE);
+        this.manaBarBg = this.createBarBg(120, 60, 300, 20, Color.TRANSPARENT);
+        this.manaLabel = this.createBarLabel(120, 60, 300, 20, Color.BLACK, "Mana");
+        
+        this.enemyHealthBar = this.createBar(400, 500, 800, 40, Color.RED, 28);
+        this.enemyHealthBarBg = this.createBarBg(400, 500, 800, 40, Color.TRANSPARENT, 28);
+        this.enemyHealthLabel = this.createBarLabel(400, 500, 800, 40, Color.BLACK, "Moon Dog", 28);
 
-            barLabel = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(x, y), text: "placeholder"});
-            barLabel.size.set(sx, sy);
-            font ? barLabel.fontSize = font : barLabel.fontSize = 14;
-            barLabel.font = "PixelSimple"
-            barLabel.textColor = Color.WHITE;
-        }
-
-        createBar.apply(this, [this.healthBar, this.healthBarBg, this.healthLabel, 120, 20, 300, 20, Color.RED]);
-        createBar.apply(this, [this.staminaBar, this.staminaBarBg, this.staminaLabel, 120, 40, 300, 20, Color.GREEN]);
-        createBar.apply(this, [this.manaBar, this.manaBarBg, this.manaLabel, 120, 60, 300, 20, Color.BLUE]);
-
-        createBar.apply(this, [this.enemyHealthBar, this.enemyHealthBarBg, this.enemyHealthLabel, 400, 500, 800, 40, Color.RED, 28]);
-
-        // TODO: Call healthbar update to change text and mroe.
     }
     // /**
     //  * Initializes the particles system used by the player's weapon.
@@ -378,6 +453,7 @@ export default class COFLevel extends Scene {
         enemyHitbox.x = enemyHitbox.x - 6
 
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
     }
 
@@ -392,6 +468,34 @@ export default class COFLevel extends Scene {
         this.viewport.follow(this.player);
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
+    }
+
+    private createBar(posX: number, posY: number, sizeX: number, sizeY: number, color: Color, font?: number) : Label {
+        let bar = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(posX, posY), text: ""});
+        bar.size = new Vec2(sizeX, sizeY);
+        bar.backgroundColor = color;     
+
+        return bar;
+    }
+
+    private createBarBg(posX: number, posY: number, sizeX: number, sizeY: number, color: Color, font?: number) : Label{
+        let barBg = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(posX, posY), text: ""});
+        barBg.size = new Vec2(sizeX, sizeY);
+        barBg.backgroundColor = color;
+        barBg.borderColor = Color.BLACK;
+        barBg.borderWidth = 3;
+
+        return barBg;
+    }
+
+    private createBarLabel(posX: number, posY: number, sizeX: number, sizeY: number, color: Color, txt: String, font?: number) : Label {
+        let barLabel = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(posX, posY), text: txt});
+        barLabel.size = new Vec2(sizeX, sizeY);
+        font ? barLabel.fontSize = font : barLabel.fontSize = 14;
+        barLabel.font = "PixelSimple"
+        barLabel.textColor = color;
+        
+        return barLabel;
     }
 
 }

@@ -2,6 +2,7 @@ import { AzazelStates, AzazelAnimations } from "../AzazelController";
 import PlayerState from "./PlayerState";
 import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
+import { COFEvents } from "../../COFEvents";
 
 export default class Idle extends PlayerState {
 
@@ -14,6 +15,8 @@ export default class Idle extends PlayerState {
 	}
 
 	public update(deltaT: number): void {
+
+        this.parent.emitter.fireEvent(COFEvents.REGENERATE_STAMINA);
 
         if (Input.isPressed(AzazelControls.MOVE_RIGHT) || Input.isPressed(AzazelControls.MOVE_LEFT) 
             || Input.isPressed(AzazelControls.MOVE_UP) || Input.isPressed(AzazelControls.MOVE_DOWN))

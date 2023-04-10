@@ -104,6 +104,7 @@ export default class AzazelController extends StateMachineAI {
         this.stamina = this.maxStamina;
         this.maxMana = 100;
         this.mana = this.maxMana;
+        this.lastFace = 1
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
@@ -123,7 +124,8 @@ export default class AzazelController extends StateMachineAI {
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
-        this.receiver.subscribe(COFEvents.REGENERATE_STAMINA);
+        this.receiver.subscribe(COFEvents.PLAYER_GUARD);
+        this.receiver.subscribe(COFEvents.REGENERATE_STAMINA)
     }
 
     /** 
@@ -162,6 +164,10 @@ export default class AzazelController extends StateMachineAI {
 				this.handlePlayerSwing(event);
 				break;
 			}
+            case COFEvents.PLAYER_GUARD: {
+				this.handlePlayerGuard(event);
+				break;
+			}
             case COFEvents.REGENERATE_STAMINA: {
 				this.handlePlayerRegenerateStamina(event);
 				break;
@@ -187,6 +193,7 @@ export default class AzazelController extends StateMachineAI {
         }
         return this._lastFace;
     }
+    public set lastFace(x: number) { this._lastFace = x; }
 
     public get maxHealth(): number { return this._maxHealth; }
     public set maxHealth(maxHealth: number) { 
@@ -255,6 +262,11 @@ export default class AzazelController extends StateMachineAI {
     public handlePlayerSwing(event : GameEvent) : void {
         this.stamina -= 10;
         this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+    }
+
+    public handlePlayerGuard(event : GameEvent) : void {
+        this.mana -= .05;
+        this.emitter.fireEvent(COFEvents.CHANGE_MANA, {currMana : this.mana, maxMana : this.maxMana});
     }
 
     public handlePlayerRegenerateStamina(event : GameEvent) : void {

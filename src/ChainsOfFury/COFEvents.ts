@@ -58,6 +58,11 @@ export const COFEvents = {
     PLAYER_HURL: "PLAYER_HURL",
 
     /**
+     * Event trigger when player entity guardes
+     */
+    PLAYER_GUARD: "PLAYER_GUARD",
+
+    /**
      * Event trigger when player is idle, allowing them to regenerate lost stamina
      * 
      * Has data: { currStamina : number, maxStamina : number }

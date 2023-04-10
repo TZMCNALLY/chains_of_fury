@@ -104,6 +104,7 @@ export default class AzazelController extends StateMachineAI {
         this.stamina = this.maxStamina;
         this.maxMana = 100;
         this.mana = this.maxMana;
+        this.lastFace = 1
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
@@ -194,6 +195,7 @@ export default class AzazelController extends StateMachineAI {
         }
         return this._lastFace;
     }
+    public set lastFace(x: number) { this._lastFace = x; }
 
     public get maxHealth(): number { return this._maxHealth; }
     public set maxHealth(maxHealth: number) { 

@@ -7,11 +7,7 @@ import { COFEvents } from "../../COFEvents";
 export default class Guard extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-        if (this.parent.lastFace == -1) {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
-        } else {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-        }
+        this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT, true);
 	}
 
 	public update(deltaT: number): void {
@@ -21,16 +17,10 @@ export default class Guard extends PlayerState {
 		this.parent.emitter.fireEvent(COFEvents.PLAYER_GUARD)
 
 		if(!Input.isMousePressed(2)) {
-			console.log("transitioned")
-			this.finished(AzazelStates.IDLE);
+			this.finished(AzazelStates.IDLE)
 		}
 
-		if (this.parent.lastFace == -1) {
-			this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
-		} else {
-			console.log("idleing")
-			this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-		}
+		console.log(this.owner.animation.isPlaying(AzazelAnimations.IDLE_RIGHT) || this.owner.animation.isPlaying(AzazelAnimations.IDLE_LEFT))
 	}
 
 	public onExit(): Record<string, any> {

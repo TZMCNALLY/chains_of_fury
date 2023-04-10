@@ -14,13 +14,10 @@ export default class Guard extends PlayerState {
         // Adjust the direction the player is facing
 		super.update(deltaT);
 
-		this.parent.emitter.fireEvent(COFEvents.PLAYER_GUARD)
+		this.parent.emitter.fireEvent(COFEvents.PLAYER_GUARD);
 
-		if(!Input.isMousePressed(2)) {
-			this.finished(AzazelStates.IDLE)
-		}
-
-		console.log(this.owner.animation.isPlaying(AzazelAnimations.IDLE_RIGHT) || this.owner.animation.isPlaying(AzazelAnimations.IDLE_LEFT))
+		if(!Input.isMousePressed(2))
+			this.finished(AzazelStates.IDLE);
 	}
 
 	public onExit(): Record<string, any> {

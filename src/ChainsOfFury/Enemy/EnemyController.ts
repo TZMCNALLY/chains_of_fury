@@ -78,7 +78,7 @@ export default class EnemyController extends StateMachineAI {
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
         // If the health hit 0, change the state of the boss
         // if (this.health === 0) {
-        //     this.changeState(Boss.DEAD); 
+        //     this.changeState(Boss.DEAD);
         // }
     }
 

@@ -43,7 +43,7 @@ export default class Help extends Scene {
                 position: new Vec2(size.x, size.y-330),
                 text: "Help"
             }
-        )
+        );
         title.fontSize = 50;
         title.textColor = Color.RED;
 
@@ -52,12 +52,12 @@ export default class Help extends Scene {
 
         this.createBackground(size.x, size.y-175, 1150, 200);
 
-        this.createText(size.x, size.y-250, "Backstory: Hell is a place where only one reigns supreme: the Demon King. No demon can go against his power, primarily because he possesses the Crown of Obedience.")
-        this.createText(size.x, size.y-220, "All creatures of Hell must follow his rule, or be vanquished from existence by the Crown. This power is not everlasting, however. Every millennium, the crown decides upon a new owner.")
-        this.createText(size.x, size.y-190, "As the time is close at hand, the current demon king announces a tournament boasting Hell's cream of the crop to fight for the throne.")
-        this.createText(size.x, size.y-160, "Azazel, a vengeful demon residing in the depths of Hell, has been training with his meteor hammer for centuries, all for this moment.")
-        this.createText(size.x, size.y-130, "Ever since the Demon King sentenced his father to death, Azazel had been patiently waiting for his chance at revenge.")
-        this.createText(size.x, size.y-100, "And so he enters the tournament with only two goals in mind: to claim the Crown and kill the current Demon King.")
+        this.createText(size.x, size.y-250, "Backstory: Hell is a place where only one reigns supreme: the Demon King. No demon can go against his power, primarily because he possesses the Crown of Obedience.");
+        this.createText(size.x, size.y-220, "All creatures of Hell must follow his rule, or be vanquished from existence by the Crown. This power is not everlasting, however. Every millennium, the crown decides upon a new owner.");
+        this.createText(size.x, size.y-190, "As the time is close at hand, the current demon king announces a tournament boasting Hell's cream of the crop to fight for the throne.");
+        this.createText(size.x, size.y-160, "Azazel, a vengeful demon residing in the depths of Hell, has been training with his meteor hammer for centuries, all for this moment.");
+        this.createText(size.x, size.y-130, "Ever since the Demon King sentenced his father to death, Azazel had been patiently waiting for his chance at revenge.");
+        this.createText(size.x, size.y-100, "And so he enters the tournament with only two goals in mind: to claim the Crown and kill the current Demon King.");
 
         // Backstory Section
         // ================================================================================
@@ -66,7 +66,7 @@ export default class Help extends Scene {
         // Characters Section
 
         this.createBackground(size.x-200, size.y+100, 600, 350);
-        this.createText(size.x-300, size.y-50, "Characters here")
+        this.createText(size.x-300, size.y-50, "Characters here");
         
         // Characters Section
         // ================================================================================
@@ -75,7 +75,7 @@ export default class Help extends Scene {
         // Cheat Codes Section
 
         this.createBackground(size.x+200, size.y+100, 600, 350);
-        this.createText(size.x+200, size.y-50, "Cheat codes here")
+        this.createText(size.x+200, size.y-50, "Cheat codes here");
 
         // Cheat Codes Section
         // ================================================================================
@@ -85,7 +85,7 @@ export default class Help extends Scene {
         // Developers Section
 
         this.createBackground(size.x, size.y+330, 400, 50);
-        this.createText(size.x, size.y+330, "Developed by: Aaron Liang, Torin McNally, and Vincent Ke")
+        this.createText(size.x, size.y+330, "Developed by: Aaron Liang, Torin McNally, and Vincent Ke");
 
         // Developers Section
         // ================================================================================
@@ -99,7 +99,7 @@ export default class Help extends Scene {
                 position: new Vec2(size.x-480, size.y+320),
                 text: "Back"
             }
-        )
+        );
         back.backgroundColor = Color.BLACK;
         back.borderColor = Color.BLACK;
         back.borderRadius = 0;
@@ -128,7 +128,7 @@ export default class Help extends Scene {
     // Creates a text label and appends it onto main layer.
     // x and y are positions of the label, and string is the text that goes inside of the label.
     public createText(x : number, y : number, txt : String): void {
-        let label = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:txt})
+        let label = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:txt});
         label.fontSize = 15;
         label.font = "PixelSimple";
         label.textColor = Color.RED;
@@ -137,7 +137,7 @@ export default class Help extends Scene {
     // Creates a background label and appends it onto main layer.
     // x and y are positions of the label, l is the length of the background, and w is the width
     public createBackground(x : number, y : number, l : number, w : number): void {
-        let background = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:""})
+        let background = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:""});
         background.size.set(l, w);
         background.borderWidth = 5;
         background.borderColor = Color.RED;

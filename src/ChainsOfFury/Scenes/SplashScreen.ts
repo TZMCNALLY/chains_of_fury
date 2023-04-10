@@ -47,7 +47,7 @@ export default class SplashScreen extends Scene {
         // When the play button is clicked, go to the main menu
         playBtn.onClick = () => {
             this.sceneManager.changeToScene(MainMenu);
-        }
+        };
 
         // Scene has started, so start playing music
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});

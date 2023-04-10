@@ -8,6 +8,7 @@ import LevelSelect from "./LevelSelect";
 import COFLevel from "./COFLevel";
 import Help from "./Help";
 import Controls from "./Controls";
+import COFLevel1 from "./COFLevel1";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -59,7 +60,7 @@ export default class MainMenu extends Scene {
         // Scene transitions:
 
         startGame.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel);
+            this.sceneManager.changeToScene(COFLevel1);
         };
 
         levelSelect.onClick = () => {

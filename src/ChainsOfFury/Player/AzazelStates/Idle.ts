@@ -27,15 +27,6 @@ export default class Idle extends PlayerState {
                 this.finished(AzazelStates.HURL);
         }
 
-        /** 
-         * For a while, I tried to make the Idle animation carry over to the Guard state after a transition, but 
-         * the Idle animation in the Guard state freezes unless either an attack is done or 
-         * the player runs. For the sake of time, this implementation is working. However, later on in development, 
-         * the code inside of the mana check should be in Guard.ts instead to preserve states.
-         * 
-         * - Torin
-         */
-
         else if (Input.isMousePressed(2)) {
             if (this.parent.mana > 0)
                 this.finished(AzazelStates.GUARD);

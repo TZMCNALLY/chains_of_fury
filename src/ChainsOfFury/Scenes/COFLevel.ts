@@ -28,6 +28,8 @@ import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 
 import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import { COFEvents } from "../COFEvents";
+import EnemyController from "../Enemy/EnemyController";
+import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 
 /**
  * A const object for the layer names
@@ -59,11 +61,11 @@ export default class COFLevel extends Scene {
     /** Collision sprite for weapon */
     protected playerWeapon: AnimatedSprite;
 
-    /** Object pool for fire projectiles */
-    // private fireballs: Array<Graphic>
-
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
+
+    /** Object pool for fire projectiles */
+    // private fireballs: Array<Graphic>
 
     private healthLabel: Label;
 	private healthBar: Label;
@@ -131,9 +133,6 @@ export default class COFLevel extends Scene {
         // Load the tilemap
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
 
-        // Load dummy enemy
-        this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
-
         // this.load.shader(
 		// 	FireballShaderType.KEY,
 		// 	FireballShaderType.VSHADER,
@@ -148,7 +147,7 @@ export default class COFLevel extends Scene {
         // Initialize the tilemaps
         this.initializeTilemap();
 
-        this.initializeUI();
+        this.initializePlayerUI();
 
         // this.initObjectPools();
 
@@ -158,7 +157,7 @@ export default class COFLevel extends Scene {
         // Initially disable player movement
         Input.enableInput();
 
-        this.initializeEnemyBoss("moondog");
+        this.initializeEnemyBoss("moondog", MoonDogController);
 
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
@@ -275,20 +274,6 @@ export default class COFLevel extends Scene {
 	// 		this.fireballs[i].setCollisionShape(collider);
 	// 	}
     // }
-
-    /**
-     * Displays a mine on the tilemap.
-     * 
-     * @param tilemap the tilemap
-     * @param particle the particle
-     * @param col the column the 
-     * @param row the row 
-     * @returns true of the particle hit the tile; false otherwise
-     */
-    protected particleHitTile(tilemap: OrthogonalTilemap, particle: Particle, col: number, row: number): boolean {
-        // TODO detect whether a particle hit a tile
-        return true;
-    }
    
     /**
     * Displays a fire projectile on the map
@@ -407,10 +392,11 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         //this.receiver.subscribe(COFEvents.PLAYER_HURL);
     }
+
     /**
-     * Adds in any necessary UI to the game
+     * Adds in any necessary player UI to the game.
      */
-    protected initializeUI(): void {
+    protected initializePlayerUI(): void {
 
         this.healthBar = this.createBar(120, 20, 300, 20, Color.GREEN);
         this.healthBarBg = this.createBarBg(120, 20, 300, 20, Color.TRANSPARENT);
@@ -423,17 +409,17 @@ export default class COFLevel extends Scene {
         this.manaBar = this.createBar(120, 60, 300, 20, Color.BLUE);
         this.manaBarBg = this.createBarBg(120, 60, 300, 20, Color.TRANSPARENT);
         this.manaLabel = this.createBarLabel(120, 60, 300, 20, Color.BLACK, "Mana");
-        
+    }
+
+    /**
+     * Adds in any necessary boss UI to the game.
+     */
+    protected initializeBossUI(bossName : String): void {
         this.enemyHealthBar = this.createBar(400, 500, 800, 40, Color.RED, 28);
         this.enemyHealthBarBg = this.createBarBg(400, 500, 800, 40, Color.TRANSPARENT, 28);
-        this.enemyHealthLabel = this.createBarLabel(400, 500, 800, 40, Color.BLACK, "Moon Dog", 28);
-
+        this.enemyHealthLabel = this.createBarLabel(400, 500, 800, 40, Color.BLACK, bossName, 28);
     }
-    // /**
-    //  * Initializes the particles system used by the player's weapon.
-    //  */
-    // protected initializeWeaponSystem(): void {
-    // }
+
     /**
      * Initializes the player, setting the player's initial position to the given position.
      * @param position the player's spawn position
@@ -457,7 +443,7 @@ export default class COFLevel extends Scene {
     }
 
 
-    protected initializeEnemyBoss(key: string): void {
+    protected initializeEnemyBoss(key: string, controller : new (...a: any[]) => EnemyController): void {
         let enemySpawn = new Vec2(800,500);
 
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
@@ -465,7 +451,7 @@ export default class COFLevel extends Scene {
         this.enemyBoss.position.copy(enemySpawn);
 
         // Give enemy boss it's AI
-        this.enemyBoss.addAI(MoonDogController);
+        this.enemyBoss.addAI(controller);
 
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;

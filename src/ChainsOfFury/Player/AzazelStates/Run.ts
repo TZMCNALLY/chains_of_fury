@@ -19,7 +19,6 @@ export default class Run extends PlayerState {
 	}
 
 	update(deltaT: number): void {
-
         // Fires running event so HUD knows to decrease stamina.
         this.parent.emitter.fireEvent(COFEvents.PLAYER_RUN);
 
@@ -27,22 +26,34 @@ export default class Run extends PlayerState {
         this.parent.lastFace;
 
         // Switch state.
-        if(this.parent.inputDir.isZero()) {
+        if(this.parent.inputDir.isZero() || this.parent.stamina == 0) {
             // No movement
             this.finished(AzazelStates.IDLE)
-        } else if(Input.isJustPressed(AzazelControls.HURL)) {
+        } 
+
+        else if(Input.isPressed(AzazelControls.HURL)) {
             // Hurl key
-            this.finished(AzazelStates.HURL)
-        } else if (Input.isMouseJustPressed(2)) {
+            if (this.parent.mana >= 10)
+                this.finished(AzazelStates.HURL)
+        }
+
+        else if (Input.isMouseJustPressed(2)) {
             // Right click
-            this.finished(AzazelStates.GUARD);
-        } else if(Input.isMouseJustPressed(0)) {
+            if (this.parent.mana > 0)
+                this.finished(AzazelStates.GUARD);
+        }
+
+        else if(Input.isMouseJustPressed(0)) {
             // Left click
-            this.finished(AzazelStates.SWING)
-        // Play animation if no state switch.
-        } else if(this.parent.lastFace == -1) {
+            if (this.parent.stamina >= 10)
+                this.finished(AzazelStates.SWING)
+        }
+
+        else if(this.parent.lastFace == -1) {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
-        } else {
+        }
+        
+        else {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
         }
 

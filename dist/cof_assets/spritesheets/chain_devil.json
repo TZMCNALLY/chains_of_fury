@@ -478,7 +478,7 @@
         },
         {
             "name": "CHARGE_LEFT",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 143,

@@ -7,16 +7,13 @@ import { COFEvents } from "../../COFEvents";
 export default class Idle extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-        console.log("entered idle")
-        if (this.parent.lastFace == -1) {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
-        } else {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-        }
+        if (this.parent.lastFace == -1)
+            this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
+        else
+            this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
 	}
 
 	public update(deltaT: number): void {
-
         this.parent.emitter.fireEvent(COFEvents.REGENERATE_STAMINA);
 
         if (Input.isPressed(AzazelControls.MOVE_RIGHT) || Input.isPressed(AzazelControls.MOVE_LEFT) 
@@ -25,9 +22,9 @@ export default class Idle extends PlayerState {
                 this.finished(AzazelStates.RUN);
         }
 
-        else if(Input.isPressed(AzazelControls.HURL)) {
+        else if (Input.isPressed(AzazelControls.HURL)) {
             if (this.parent.mana >= 10)
-                this.finished(AzazelStates.HURL)
+                this.finished(AzazelStates.HURL);
         }
 
         /** 
@@ -39,36 +36,22 @@ export default class Idle extends PlayerState {
          * - Torin
          */
 
-        else if(Input.isMousePressed(2)) {
-            
-            if (this.parent.mana > 0) {
-
-                this.parent.emitter.fireEvent(COFEvents.PLAYER_GUARD)
-
-		        if (this.parent.lastFace == -1) {
-                    this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
-                } else {
-                    this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-                }
-            }
-            
-            //this.finished(AzazelStates.GUARD)
+        else if (Input.isMousePressed(2)) {
+            if (this.parent.mana > 0)
+                this.finished(AzazelStates.GUARD);
         }
 
         else if (Input.isMouseJustPressed(0)) {
             if (this.parent.stamina >= 10)
-                this.finished(AzazelStates.SWING)
+                this.finished(AzazelStates.SWING);
         }
 
         else {
-            if (this.parent.lastFace == -1) {
+            if (this.parent.lastFace == -1)
                 this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
-            } else {
+            else
                 this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-            }
         }	
-        console.log("updating idle")
-        console.log(this.owner.animation.isPlaying(AzazelAnimations.IDLE_RIGHT))
 	}
 
 	public onExit(): Record<string, any> {

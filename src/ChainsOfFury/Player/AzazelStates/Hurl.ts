@@ -7,22 +7,29 @@ import { COFEvents } from "../../COFEvents";
 
 export default class Attack extends PlayerState {
 
-        public onEnter(options: Record<string, any>): void {
-                // Checks if the E key has been pressed
-                this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_RIGHT)
-                this.owner.animation.queue(AzazelAnimations.ATTACK_RIGHT)
+    public onEnter(options: Record<string, any>): void {
+		if (this.parent.lastFace == -1) {
+			this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_LEFT);
+			this.owner.animation.queue(AzazelAnimations.ATTACK_LEFT);
+		}
+		else {
+			this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_RIGHT);
+			this.owner.animation.queue(AzazelAnimations.ATTACK_RIGHT);
+		}
 	}
 
 	public update(deltaT: number): void {
-
-                //CHARGE NOT PLAYING
-                if(!this.owner.animation.isPlaying(AzazelAnimations.CHARGE_RIGHT) && 
-                !this.owner.animation.isPlaying(AzazelAnimations.ATTACK_RIGHT)) {
-
-                        this.emitter.fireEvent(COFEvents.PLAYER_HURL, {faceDir: this.parent.faceDir, pos: this.owner.position})
-                        this.finished(AzazelStates.IDLE)
-
-                }
+		if (
+			(!this.owner.animation.isPlaying(AzazelAnimations.CHARGE_RIGHT) 
+			&& !this.owner.animation.isPlaying(AzazelAnimations.ATTACK_RIGHT))
+			&&
+			(!this.owner.animation.isPlaying(AzazelAnimations.CHARGE_LEFT) 
+			&& !this.owner.animation.isPlaying(AzazelAnimations.ATTACK_LEFT))
+		) 
+		{
+			this.emitter.fireEvent(COFEvents.PLAYER_HURL, {faceDir: this.parent.faceDir, pos: this.owner.position});
+			this.finished(AzazelStates.IDLE);
+		}
 	}
 
 	public onExit(): Record<string, any> {

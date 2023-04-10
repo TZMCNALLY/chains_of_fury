@@ -44,7 +44,7 @@ export default class MainMenu extends Scene {
                 position: new Vec2(size.x, size.y-120),
                 text: "CHAINS OF FURY"
             }
-        )
+        );
         title.fontSize = 35;
         title.textColor = Color.RED;
 
@@ -60,19 +60,19 @@ export default class MainMenu extends Scene {
 
         startGame.onClick = () => {
             this.sceneManager.changeToScene(COFLevel);
-        }
+        };
 
         levelSelect.onClick = () => {
             this.sceneManager.changeToScene(LevelSelect);
-        }
+        };
 
         controls.onClick = () => {
             this.sceneManager.changeToScene(Controls);
-        }
+        };
 
         help.onClick = () => {
             this.sceneManager.changeToScene(Help);
-        }
+        };
 
         // Scene has started, so start playing music
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
@@ -93,7 +93,7 @@ export default class MainMenu extends Scene {
                 position: new Vec2(x, y),
                 text: txt
             }
-        )
+        );
         button.backgroundColor = Color.BLACK;
         button.borderColor = Color.BLACK;
         button.borderRadius = 0;

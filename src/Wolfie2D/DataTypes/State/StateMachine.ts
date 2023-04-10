@@ -88,8 +88,6 @@ export default class StateMachine implements Updateable {
      * @param state The string name of the state to change to
      */
     changeState(state: string): void {
-        // Exit the current state
-        let options = this.currentState.onExit();
 
         // Make sure the correct state is at the top of the stack
         // This if-statement with the "previous" thing shouldn't be here IMO - PeteyLumpkins
@@ -104,6 +102,9 @@ export default class StateMachine implements Updateable {
 
         // Retreive the new state from the stack
         this.currentState = this.stack.peek();
+
+        // Exit the current state
+        let options = this.currentState.onExit();
 
         // Emit an event if turned on
         if(this.emitEventOnStateChange){

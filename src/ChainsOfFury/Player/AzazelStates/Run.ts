@@ -10,11 +10,11 @@ export default class Run extends PlayerState {
 	onEnter(options: Record<string, any>): void {
 		this.parent.speed = 150;
         if(this.parent.lastFace == -1) {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
+            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT);
         } 
         
         else {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
+            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT);
         }
 	}
 
@@ -28,13 +28,13 @@ export default class Run extends PlayerState {
         // Switch state.
         if(this.parent.inputDir.isZero() || this.parent.stamina == 0) {
             // No movement
-            this.finished(AzazelStates.IDLE)
+            this.finished(AzazelStates.IDLE);
         } 
 
         else if(Input.isPressed(AzazelControls.HURL)) {
             // Hurl key
             if (this.parent.mana >= 10)
-                this.finished(AzazelStates.HURL)
+                this.finished(AzazelStates.HURL);
         }
 
         else if (Input.isMouseJustPressed(2)) {
@@ -46,21 +46,21 @@ export default class Run extends PlayerState {
         else if(Input.isMouseJustPressed(0)) {
             // Left click
             if (this.parent.stamina >= 10)
-                this.finished(AzazelStates.SWING)
+                this.finished(AzazelStates.SWING);
         }
 
         else if(this.parent.lastFace == -1) {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT)
+            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT);
         }
         
         else {
-            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
+            this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT);
         }
 
         // Move player
         this.owner.move(
             this.parent.inputDir.scale(this.parent.speed).scale(deltaT)
-        )
+        );
 	}
 
 	onExit(): Record<string, any> {

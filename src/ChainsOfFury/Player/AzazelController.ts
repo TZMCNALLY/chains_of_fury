@@ -112,9 +112,7 @@ export default class AzazelController extends StateMachineAI {
         this.addState(AzazelStates.SWING, new Swing(this, this.owner));
         this.addState(AzazelStates.HURL, new Hurl(this, this.owner));
         this.addState(AzazelStates.GUARD, new Guard(this, this.owner));
-		// this.addState(AzazelStates.RUN, new Walk(this, this.owner));
         // this.addState(AzazelStates.DAMAGED, new Jump(this, this.owner));
-        // this.addState(AzazelStates.Attack, new Fall(this, this.owner));
         // this.addState(AzazelStates.DEAD, new Dead(this, this.owner));
         
         // Start the player in the Idle state

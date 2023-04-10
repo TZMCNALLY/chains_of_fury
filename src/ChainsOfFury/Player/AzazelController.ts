@@ -104,7 +104,7 @@ export default class AzazelController extends StateMachineAI {
         this.stamina = this.maxStamina;
         this.maxMana = 100;
         this.mana = this.maxMana;
-        this.lastFace = 1
+        this.lastFace = 1;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
@@ -112,9 +112,7 @@ export default class AzazelController extends StateMachineAI {
         this.addState(AzazelStates.SWING, new Swing(this, this.owner));
         this.addState(AzazelStates.HURL, new Hurl(this, this.owner));
         this.addState(AzazelStates.GUARD, new Guard(this, this.owner));
-		// this.addState(AzazelStates.RUN, new Walk(this, this.owner));
         // this.addState(AzazelStates.DAMAGED, new Jump(this, this.owner));
-        // this.addState(AzazelStates.Attack, new Fall(this, this.owner));
         // this.addState(AzazelStates.DEAD, new Dead(this, this.owner));
         
         // Start the player in the Idle state
@@ -127,7 +125,7 @@ export default class AzazelController extends StateMachineAI {
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.PLAYER_GUARD);
-        this.receiver.subscribe(COFEvents.REGENERATE_STAMINA)
+        this.receiver.subscribe(COFEvents.REGENERATE_STAMINA);
     }
 
     /** 
@@ -220,10 +218,6 @@ export default class AzazelController extends StateMachineAI {
     public get stamina(): number { return this._stamina; }
     public set stamina(stamina: number) { 
         this._stamina = MathUtils.clamp(stamina, 0, this.maxStamina);
-        // TODO: If the stamina hit 0, player input should be disabled until stamina regenerates
-        // if (this.health === 0) {
-        //     this.changeState(AzazelStates.DEAD); 
-        // }
     }
 
     public get maxMana(): number { return this._maxMana; }
@@ -234,10 +228,6 @@ export default class AzazelController extends StateMachineAI {
     public get mana(): number { return this._mana; }
     public set mana(mana: number) { 
         this._mana = MathUtils.clamp(mana, 0, this.maxMana);
-        // TODO: If the mana hit 0, player should not be able to throw fireballs until mana regenerates
-        // if (this.health === 0) {
-        //     this.changeState(AzazelStates.DEAD); 
-        // }
     }
 
     // Setters and getters
@@ -258,12 +248,12 @@ export default class AzazelController extends StateMachineAI {
 
     public handlePlayerRun(event : GameEvent) : void {
         this.stamina -= 0.05;
-        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
     }
 
     public handlePlayerSwing(event : GameEvent) : void {
         this.stamina -= 10;
-        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
     }
 
     public handlePlayerGuard(event : GameEvent) : void {
@@ -277,7 +267,7 @@ export default class AzazelController extends StateMachineAI {
         if (this.stamina > this.maxStamina)
             this.stamina = this.maxStamina;
 
-        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
     }
 
     // Event handlers

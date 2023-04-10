@@ -1,19 +1,21 @@
 import COFAnimatedSprite from "../../Nodes/COFAnimatedSprite";
 import EnemyController from "../EnemyController";
-import Idle from "./states/Idle";
 
-
+import Idle from "./MoonDogStates/Idle";
+import Run from "./MoonDogStates/Run";
+import Attack from "./MoonDogStates/Attack";
+import Charge from "./MoonDogStates/Charge";
+import Damaged from "./MoonDogStates/Damaged";
+import Dead from "./MoonDogStates/Dead";
 
 export const MoonDogState = {
     IDLE: "IDLE",
     RUN: "RUN",
 	DAMAGED: "DAMAGED",
-    SWING: "SWING",
-    HURL: "HURL",
-    DEAD: "DEAD",
-    GUARD: "GUARD"
+    ATTACK: "ATTACK",
+    CHARGE: "CHARGE",
+    DEAD: "DEAD"
 } as const
-
 
 export const MoonDogAnimation = {
     IDLE: "IDLE",
@@ -31,13 +33,17 @@ export const MoonDogAnimation = {
     CHARGE_LEFT: "CHARGE_LEFT",
 } as const
 
-
 export default class MoonDogController extends EnemyController {
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
 
         this.addState(MoonDogState.IDLE, new Idle(this, this.owner));
+        this.addState(MoonDogState.RUN, new Run(this, this.owner));
+        this.addState(MoonDogState.ATTACK, new Attack(this, this.owner));
+        this.addState(MoonDogState.CHARGE, new Charge(this, this.owner));
+        this.addState(MoonDogState.DAMAGED, new Damaged(this, this.owner));
+        this.addState(MoonDogState.DEAD, new Dead(this, this.owner));
 
         this.initialize(MoonDogState.IDLE);
 

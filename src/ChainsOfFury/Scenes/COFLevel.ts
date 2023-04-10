@@ -233,7 +233,7 @@ export default class COFLevel extends Scene {
             // }
             // Default: Throw an error! No unhandled events allowed.
             default: {
-                throw new Error(`Unhandled event caught in scene with type ${event.type}`)
+                throw new Error(`Unhandled event caught in scene with type ${event.type}`);
             }
         }
     }
@@ -362,8 +362,6 @@ export default class COFLevel extends Scene {
 		this.enemyHealthBar.size.set(this.enemyHealthBarBg.size.x - unit * (maxHealth - currentHealth), this.enemyHealthBarBg.size.y);
 		this.enemyHealthBar.position.set(this.enemyHealthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.enemyHealthBarBg.position.y);
 
-		this.enemyHealthBar.backgroundColor = currentHealth < maxHealth * 1/4 ? Color.RED: currentHealth < maxHealth * 3/4 ? Color.YELLOW : Color.GREEN;
-
         // TODO: fire event boss_dead; play dying and dead scene before moving onto next lvl
 	}
 
@@ -405,20 +403,20 @@ export default class COFLevel extends Scene {
     protected subscribeToEvents(): void {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
-        this.receiver.subscribe(COFEvents.CHANGE_STAMINA)
+        this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
-        //this.receiver.subscribe(COFEvents.PLAYER_HURL)
+        //this.receiver.subscribe(COFEvents.PLAYER_HURL);
     }
     /**
      * Adds in any necessary UI to the game
      */
     protected initializeUI(): void {
 
-        this.healthBar = this.createBar(120, 20, 300, 20, Color.RED);
+        this.healthBar = this.createBar(120, 20, 300, 20, Color.GREEN);
         this.healthBarBg = this.createBarBg(120, 20, 300, 20, Color.TRANSPARENT);
         this.healthLabel = this.createBarLabel(120, 20, 300, 20, Color.BLACK, "HP");
         
-        this.staminaBar = this.createBar(120, 40, 300, 20, Color.GREEN);
+        this.staminaBar = this.createBar(120, 40, 300, 20, Color.ORANGE);
         this.staminaBarBg = this.createBarBg(120, 40, 300, 20, Color.TRANSPARENT);
         this.staminaLabel = this.createBarLabel(120, 40, 300, 20, Color.BLACK, "Stamina");
 
@@ -441,7 +439,7 @@ export default class COFLevel extends Scene {
      * @param position the player's spawn position
      */
     protected initializePlayer(key: string): void {
-        this.playerSpawn = new Vec2(300, 250)
+        this.playerSpawn = new Vec2(300, 250);
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, COFLayers.PRIMARY);
@@ -470,7 +468,7 @@ export default class COFLevel extends Scene {
         this.enemyBoss.addAI(MoonDogController);
 
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
-        enemyHitbox.x = enemyHitbox.x - 6
+        enemyHitbox.x = enemyHitbox.x - 6;
 
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
@@ -512,7 +510,7 @@ export default class COFLevel extends Scene {
         let barLabel = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(posX, posY), text: txt});
         barLabel.size = new Vec2(sizeX, sizeY);
         font ? barLabel.fontSize = font : barLabel.fontSize = 14;
-        barLabel.font = "PixelSimple"
+        barLabel.font = "PixelSimple";
         barLabel.textColor = color;
         
         return barLabel;

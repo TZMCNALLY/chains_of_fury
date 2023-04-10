@@ -22,7 +22,7 @@ export default class Swing extends PlayerState {
         
         // Wait for the attack animation to end before entering another animation
         if(!this.owner.animation.isPlaying(AzazelAnimations.ATTACK_RIGHT) && !this.owner.animation.isPlaying(AzazelAnimations.ATTACK_LEFT)) {
-            this.finished(AzazelStates.IDLE)
+            this.finished(AzazelStates.IDLE);
         }
 	}
 

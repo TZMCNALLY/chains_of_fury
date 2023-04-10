@@ -9,13 +9,10 @@ export default class Run extends PlayerState {
 
 	onEnter(options: Record<string, any>): void {
 		this.parent.speed = 150;
-        if(this.parent.lastFace == -1) {
+        if(this.parent.lastFace == -1)
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT);
-        } 
-        
-        else {
+        else
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT);
-        }
 	}
 
 	update(deltaT: number): void {

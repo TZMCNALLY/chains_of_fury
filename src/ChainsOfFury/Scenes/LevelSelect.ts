@@ -42,7 +42,7 @@ export default class LevelSelect extends Scene {
                 position: new Vec2(size.x, size.y-350),
                 text: "Levels"
             }
-        )
+        );
         title.fontSize = 55;
         title.textColor = Color.WHITE;
 
@@ -54,7 +54,7 @@ export default class LevelSelect extends Scene {
                 position: new Vec2(size.x, size.y-250),
                 text: "Choose one of the following levels to start from."
             }
-        )
+        );
         subTitle.fontSize = 25;
         subTitle.textColor = Color.WHITE;
 
@@ -71,27 +71,27 @@ export default class LevelSelect extends Scene {
 
         level1.onClick = () => {
             this.sceneManager.changeToScene(SplashScreen);
-        }
+        };
 
         level2.onClick = () => {
             this.sceneManager.changeToScene(SplashScreen);
-        }
+        };
 
         level3.onClick = () => {
             this.sceneManager.changeToScene(SplashScreen);
-        }
+        };
 
         level4.onClick = () => {
             this.sceneManager.changeToScene(SplashScreen);
-        }
+        };
 
         level5.onClick = () => {
             this.sceneManager.changeToScene(SplashScreen);
-        }
+        };
         
         level6.onClick = () => {
             this.sceneManager.changeToScene(SplashScreen);
-        }
+        };
 
         // Scene has started, so start playing music
         // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
@@ -112,7 +112,7 @@ export default class LevelSelect extends Scene {
                 position: new Vec2(x, y),
                 text: txt
             }
-        )
+        );
         levelBox.backgroundColor = Color.BLACK;
         levelBox.borderColor = Color.BLACK;
         levelBox.borderRadius = 0;

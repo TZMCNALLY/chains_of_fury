@@ -48,7 +48,7 @@ export default class Controls extends Scene {
                 position: new Vec2(size.x, size.y-330),
                 text: "Controls"
             }
-        )
+        );
         title.fontSize = 50;
         title.textColor = Color.RED;
 
@@ -57,10 +57,10 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x-270, size.y-200, 500, 150);
 
-        this.createText(size.x-420, size.y-245, "W - Move Up")
-        this.createText(size.x-420, size.y-215, "A - Move Left")
-        this.createText(size.x-420, size.y-185, "S - Move Down")
-        this.createText(size.x-420, size.y-155, "D - Move Right")
+        this.createText(size.x-420, size.y-245, "W - Move Up");
+        this.createText(size.x-420, size.y-215, "A - Move Left");
+        this.createText(size.x-420, size.y-185, "S - Move Down");
+        this.createText(size.x-420, size.y-155, "D - Move Right");
 
         this.createSprite(size.x-120, size.y-200, 1, 1, "player", "RUN_RIGHT");
 
@@ -72,10 +72,10 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x+270, size.y-200, 500, 150);
 
-        this.createText(size.x+135, size.y-245, "E -")
-        this.createText(size.x+135, size.y-215, "Charges up and fires")
-        this.createText(size.x+135, size.y-185, "a fireball in the")
-        this.createText(size.x+135, size.y-155, "direction of the mouse")
+        this.createText(size.x+135, size.y-245, "E -");
+        this.createText(size.x+135, size.y-215, "Charges up and fires");
+        this.createText(size.x+135, size.y-185, "a fireball in the");
+        this.createText(size.x+135, size.y-155, "direction of the mouse");
 
         // TODO: Charge and shoot animation
         this.createSprite(size.x*2-160, size.y-200, 1, 1, "player", "CHARGE_RIGHT");
@@ -89,8 +89,8 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x-270, size.y, 500, 150);
 
-        this.createText(size.x-420, size.y-10, "Left-Click -")
-        this.createText(size.x-420, size.y+10, "Basic Swing")
+        this.createText(size.x-420, size.y-10, "Left-Click -");
+        this.createText(size.x-420, size.y+10, "Basic Swing");
 
         this.createSprite(size.x-120, size.y, 1, 1, "player", "ATTACK_RIGHT");
 
@@ -102,8 +102,8 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x+270, size.y, 500, 150);
 
-        this.createText(size.x+130, size.y-10, "Hold Right-Click -")
-        this.createText(size.x+130, size.y+10, "Guard")
+        this.createText(size.x+130, size.y-10, "Hold Right-Click -");
+        this.createText(size.x+130, size.y+10, "Guard");
 
         // TODO: Guard animation
         this.createSprite(size.x*2-160, size.y, 1, 1, "player", "IDLE_RIGHT");
@@ -129,8 +129,8 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x, size.y+200, 1050, 150);
 
-        this.createText(size.x, size.y+190, "Esc -")
-        this.createText(size.x, size.y+210, "Pauses the game")
+        this.createText(size.x, size.y+190, "Esc -");
+        this.createText(size.x, size.y+210, "Pauses the game");
 
         //this.createSprite(size.x*2-160, size.y+200, 1, 1, "player", "IDLE_RIGHT");
 
@@ -146,7 +146,7 @@ export default class Controls extends Scene {
                 position: new Vec2(size.x-480, size.y+340),
                 text: "Back"
             }
-        )
+        );
         back.backgroundColor = Color.BLACK;
         back.borderColor = Color.BLACK;
         back.borderRadius = 0;
@@ -177,7 +177,7 @@ export default class Controls extends Scene {
     // Creates a text label and appends it onto main layer.
     // x and y are positions of the label, and string is the text that goes inside of the label.
     public createText(x : number, y : number, txt : String): void {
-        let label = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:txt})
+        let label = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:txt});
         label.fontSize = 20;
         label.font = "PixelSimple";
         label.textColor = Color.RED;
@@ -186,7 +186,7 @@ export default class Controls extends Scene {
     // Creates a background label and appends it onto main layer.
     // x and y are positions of the label, l is the length of the background, and w is the width
     public createBackground(x : number, y : number, l : number, w : number): void {
-        let background = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:""})
+        let background = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:""});
         background.size.set(l, w);
         background.borderWidth = 5;
         background.borderColor = Color.RED;

@@ -246,17 +246,15 @@ export default class COFLevel extends Scene {
     protected handlePlayerSwing(faceDir: number) {
         let playerSwingHitbox = this.player.boundary.getHalfSize().clone();
         playerSwingHitbox.x = playerSwingHitbox.x-16;
-        
+
         let swingPosition = this.player.position.clone();
         swingPosition.x += faceDir*14;
 
-
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
-            console.log("weapon hit");
+            this.emitter.fireEvent(COFEvents.ENEMY_HIT);
         }
     }
-
     // protected initObjectPools(): void {
 		
 	// 	// Init bubble object pool

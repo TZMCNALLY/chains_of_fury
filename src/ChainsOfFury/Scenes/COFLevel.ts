@@ -342,11 +342,14 @@ export default class COFLevel extends Scene {
      * @param maxHealth the maximum health of the boss
      */
      protected handleBossHealthChange(currentHealth: number, maxHealth: number): void {
+        if (currentHealth == 0) {
+            this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
+        }
+
 		let unit = this.enemyHealthBarBg.size.x / maxHealth;
         
 		this.enemyHealthBar.size.set(this.enemyHealthBarBg.size.x - unit * (maxHealth - currentHealth), this.enemyHealthBarBg.size.y);
 		this.enemyHealthBar.position.set(this.enemyHealthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.enemyHealthBarBg.position.y);
-
         // TODO: fire event boss_dead; play dying and dead scene before moving onto next lvl
 	}
 

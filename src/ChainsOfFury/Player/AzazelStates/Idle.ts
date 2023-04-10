@@ -8,9 +8,9 @@ export default class Idle extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
         if (this.parent.lastFace == -1)
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
+            this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
         else
-            this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
+            this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
 	}
 
 	public update(deltaT: number): void {
@@ -37,17 +37,8 @@ export default class Idle extends PlayerState {
          */
 
         else if (Input.isMousePressed(2)) {
-            if (this.parent.mana > 0) {
-
-                this.parent.emitter.fireEvent(COFEvents.PLAYER_GUARD);
-
-		        if (this.parent.lastFace == -1)
-                    this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_LEFT);
-                else
-                    this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT);
-            }
-            
-            //this.finished(AzazelStates.GUARD)
+            if (this.parent.mana > 0)
+                this.finished(AzazelStates.GUARD);
         }
 
         else if (Input.isMouseJustPressed(0)) {

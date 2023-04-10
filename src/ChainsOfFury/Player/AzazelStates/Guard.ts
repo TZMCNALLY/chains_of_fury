@@ -7,7 +7,10 @@ import { COFEvents } from "../../COFEvents";
 export default class Guard extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT, true);
+		if (this.parent.lastFace == -1)
+			this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
+		else
+			this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
 	}
 
 	public update(deltaT: number): void {

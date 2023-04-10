@@ -41,6 +41,7 @@ export default class EnemyController extends StateMachineAI {
         this.receiver = new Receiver();
         this.emitter = new Emitter();
         this.receiver.subscribe(COFEvents.ENEMY_HIT);
+        this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
     }
 
     public update(deltaT: number): void {

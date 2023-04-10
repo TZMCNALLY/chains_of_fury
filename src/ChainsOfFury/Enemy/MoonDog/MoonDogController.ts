@@ -1,5 +1,7 @@
 import COFAnimatedSprite from "../../Nodes/COFAnimatedSprite";
 import EnemyController from "../EnemyController";
+import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { COFEvents } from "../../COFEvents";
 
 import Idle from "./MoonDogStates/Idle";
 import Run from "./MoonDogStates/Run";
@@ -50,5 +52,21 @@ export default class MoonDogController extends EnemyController {
         this.maxHealth = 500;
         this.health = this.maxHealth;
     }    
+
+    public update(deltaT: number): void {
+		super.update(deltaT);
+	}
+
+    public handleEvent(event: GameEvent): void {
+		switch(event.type) {
+			case COFEvents.ENEMY_HIT: {
+				this.handleEnemyHit(event);
+				break;
+			}
+			default: {
+				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
+			}
+		}
+	}
 
 }

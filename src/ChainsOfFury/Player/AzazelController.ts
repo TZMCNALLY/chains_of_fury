@@ -125,6 +125,7 @@ export default class AzazelController extends StateMachineAI {
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
+        this.receiver.subscribe(COFEvents.PLAYER_GUARD);
         this.receiver.subscribe(COFEvents.REGENERATE_STAMINA)
     }
 
@@ -162,6 +163,10 @@ export default class AzazelController extends StateMachineAI {
 			}
             case COFEvents.PLAYER_SWING: {
 				this.handlePlayerSwing(event);
+				break;
+			}
+            case COFEvents.PLAYER_GUARD: {
+				this.handlePlayerGuard(event);
 				break;
 			}
             case COFEvents.REGENERATE_STAMINA: {
@@ -257,6 +262,11 @@ export default class AzazelController extends StateMachineAI {
     public handlePlayerSwing(event : GameEvent) : void {
         this.stamina -= 10;
         this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina})
+    }
+
+    public handlePlayerGuard(event : GameEvent) : void {
+        this.mana -= .05;
+        this.emitter.fireEvent(COFEvents.CHANGE_MANA, {currMana : this.mana, maxMana : this.maxMana});
     }
 
     public handlePlayerRegenerateStamina(event : GameEvent) : void {

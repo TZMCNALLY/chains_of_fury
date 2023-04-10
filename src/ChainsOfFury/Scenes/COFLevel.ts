@@ -18,10 +18,11 @@ import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController from "../Player/AzazelController";
-// import FireballShaderType from "../Shaders/FireballShaderType";
-// import FireballAI from "../Fireball/FireballBehavior";
+import FireballShaderType from "../Shaders/FireballShaderType";
+import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
@@ -60,7 +61,7 @@ export default class COFLevel extends Scene {
     protected playerWeapon: AnimatedSprite;
 
     /** Object pool for fire projectiles */
-    // private fireballs: Array<Graphic>
+    private fireballs: Array<AnimatedSprite>;
 
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
@@ -134,6 +135,8 @@ export default class COFLevel extends Scene {
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
 
+        this.load.image("fireball", "cof_assets/images/fireball")
+
         // this.load.shader(
 		// 	FireballShaderType.KEY,
 		// 	FireballShaderType.VSHADER,
@@ -150,7 +153,7 @@ export default class COFLevel extends Scene {
 
         this.initializeUI();
 
-        // this.initObjectPools();
+        this.initObjectPools();
 
         // Initialize the player 
         this.initializePlayer("azazel");
@@ -205,10 +208,10 @@ export default class COFLevel extends Scene {
                 this.handlePlayerStaminaChange(event.data.get("currStamina"), event.data.get("maxStamina"));
                 break;
             }
-            // case COFEvents.PLAYER_HURL: {
-            //     this.spawnFireball(event.data.get("faceDir"), event.data.get("pos"));
-            //     break;
-            // }
+            case COFEvents.PLAYER_HURL: {
+                this.spawnFireball(event.data.get("faceDir"), event.data.get("pos"));
+                break;
+            }
             // // When the level starts, reenable user input
             // case HW3Events.LEVEL_START: {
             //     Input.enableInput();
@@ -255,26 +258,26 @@ export default class COFLevel extends Scene {
             this.emitter.fireEvent(COFEvents.ENEMY_HIT);
         }
     }
-    // protected initObjectPools(): void {
+    protected initObjectPools(): void {
 		
-	// 	// Init bubble object pool
-	// 	this.fireballs = new Array(3);
-	// 	for (let i = 0; i < this.fireballs.length; i++) {
-	// 		this.fireballs[i] = this.add.graphic(GraphicType.RECT, COFLayers.PRIMARY, {position: new Vec2(200, 200), size: new Vec2(50, 50)});
+		// Init bubble object pool
+		this.fireballs = new Array(3);
+		for (let i = 0; i < this.fireballs.length; i++) {
+			this.fireballs[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
             
-    //         // Give the bubbles a custom shader
-	// 		this.fireballs[i].useCustomShader(FireballShaderType.KEY);
-	// 		this.fireballs[i].visible = false;
-	// 		this.fireballs[i].color = Color.BLUE;
+            // Give the bubbles a custom shader
+			//this.fireballs[i].useCustomShader(FireballShaderType.KEY);
+			this.fireballs[i].visible = false;
+			//this.fireballs[i].color = Color.BLUE;
 
-    //         // Give the bubbles AI
-	// 		this.fireballs[i].addAI(FireballAI);
+            // Give the bubbles AI
+			this.fireballs[i].addAI(FireballAI);
 
-    //         // Give the bubbles a collider
-	// 		let collider = new Circle(Vec2.ZERO, 25);
-	// 		this.fireballs[i].setCollisionShape(collider);
-	// 	}
-    // }
+            // Give the bubbles a collider
+			let collider = new AABB(Vec2.ZERO, new Vec2(5,5));
+			this.fireballs[i].setCollisionShape(collider);
+		}
+    }
 
     /**
      * Displays a mine on the tilemap.
@@ -296,18 +299,31 @@ export default class COFLevel extends Scene {
     * @param faceDir the direction the player is facing
     */
 
-    // protected spawnFireball(faceDir: number, pos: Vec2) {
+    protected spawnFireball(faceDir: number, pos: Vec2) {
 
-    //     // Find first visible fireball
-    //     let fireball: Graphic = this.fireballs.find((fireball: Graphic) => { return !fireball.visible });
+        let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible })
+        
+        if (fireball){
+			// Bring this mine to life
+			fireball.visible = true;
 
-    //     if(fireball)
-    //     {
-    //         fireball.visible = true;
-    //         fireball.position.copy(pos.clone())
-    //         fireball.setAIActive(true, {})
-    //     }
-    // }
+			// Extract the size of the viewport
+			let paddedViewportSize = this.viewport.getHalfSize().scaled(2).add(this.worldPadding);
+			let viewportSize = this.viewport.getHalfSize().scaled(2);
+
+			// Loop on position until we're clear of the player
+			fireball.position.copy(RandUtils.randVec(viewportSize.x, paddedViewportSize.x, paddedViewportSize.y - viewportSize.y, viewportSize.y));
+			while(fireball.position.distanceTo(this.player.position) < 100){
+				fireball.position.copy(RandUtils.randVec(paddedViewportSize.x, paddedViewportSize.x, paddedViewportSize.y - viewportSize.y, viewportSize.y));
+			}
+
+			fireball.setAIActive(true, {});
+			// Start the mine spawn timer - spawn a mine every half a second I think
+			this.mineSpawnTimer.start(100);
+
+		}
+
+    }
 
     /**
      * 
@@ -405,7 +421,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
-        //this.receiver.subscribe(COFEvents.PLAYER_HURL);
+        this.receiver.subscribe(COFEvents.PLAYER_HURL);
     }
     /**
      * Adds in any necessary UI to the game

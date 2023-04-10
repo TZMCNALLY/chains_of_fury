@@ -72,7 +72,6 @@ export default class BubbleBehavior implements AI {
 
         // Only update the bubble if it's visible
         if (this.owner.visible) {
-            console.log("LOL")
             // Increment the speeds
             this.currentXSpeed += this.xSpeedIncrement * deltaT;
             this.currentYSpeed += this.ySpeedIncrement * deltaT;

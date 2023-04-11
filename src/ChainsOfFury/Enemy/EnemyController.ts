@@ -31,12 +31,17 @@ export default class EnemyController extends StateMachineAI {
     // protected cannon: Sprite;
     // protected weapon: PlayerWeapon;
 
+    /** The player this enemy should attack. */
+    protected _player: COFAnimatedSprite;
+
     // A receiver and emitter to hook into the event queue
 	protected receiver: Receiver;
 	protected emitter: Emitter;
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>){
         this.owner = owner;
+
+        this._player = options.player;
 
         this.receiver = new Receiver();
         this.emitter = new Emitter();
@@ -73,6 +78,8 @@ export default class EnemyController extends StateMachineAI {
     public set maxHealth(maxHealth: number) { 
         this._maxHealth = maxHealth; 
     }
+
+    public get player(): COFAnimatedSprite { return this._player; }
 
     public get health(): number { return this._health; }
     public set health(health: number) { 

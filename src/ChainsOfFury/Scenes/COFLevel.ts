@@ -287,6 +287,7 @@ export default class COFLevel extends Scene {
 			// Assign them fireball ai
 			this.fireballs[i].addAI(FireballBehavior, {user: this.player.ai});
 
+            this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
 			this.fireballs[i].scale.set(1.5, 1.5);
 
     //         // Give the bubbles a custom shader
@@ -311,24 +312,39 @@ export default class COFLevel extends Scene {
 
     protected spawnFireball(faceDir: number, pos: Vec2) {
 
-        let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible });
+        // let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible });
         
-        if (fireball){
-			// Bring this mine to life
-			fireball.visible = true;
+        // if (fireball){
+		// 	// Bring this mine to life
+		// 	fireball.visible = true;
 
-			// Loop on position until we're clear of the player
-			fireball.position.copy(this.player.position);
+		// 	// Loop on position until we're clear of the player
+		// 	fireball.position.copy(this.player.position);
 
-            let fireballHitbox = new AABB(this.player.position.clone(), fireball.boundary.getHalfSize().clone());
-            fireball.addPhysics(fireballHitbox);
-            fireball.setGroup(COFPhysicsGroups.FIREBALL);
-            console.log(fireball.triggerMask)
-            fireball.isTrigger = true
-            console.log(this.walls.isTrigger)
-            fireball.setTrigger(COFPhysicsGroups.WALL, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
-			fireball.setAIActive(true, {});
-		}
+        //     let fireballHitbox = new AABB(this.player.position.clone(), fireball.boundary.getHalfSize().clone());
+        //     fireball.addPhysics(fireballHitbox);
+        //     fireball.setGroup(COFPhysicsGroups.FIREBALL);
+        //     fireball.setTrigger(COFPhysicsGroups.ENEMY, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
+		// 	fireball.setAIActive(true, {});
+		// }
+
+        for(let i = 0; i < this.fireballs.length; i++) {
+
+            if(!this.fireballs[i].visible) {
+
+                this.fireballs[i].visible = true;
+
+                // Loop on position until we're clear of the player
+                this.fireballs[i].position.copy(this.player.position);
+
+                let fireballHitbox = new AABB(this.player.position.clone(), this.fireballs[i].boundary.getHalfSize().clone());
+                this.fireballs[i].addPhysics(fireballHitbox);
+                this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
+                this.fireballs[i].setTrigger(COFPhysicsGroups.ENEMY, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
+                this.fireballs[i].setAIActive(true, {});
+                break;
+            }
+        }
     }
 
     protected despawnFireballs(node: number) : void {
@@ -339,6 +355,7 @@ export default class COFLevel extends Scene {
 
                 this.fireballs[i].position.copy(Vec2.ZERO);
                 this.fireballs[i].visible = false;
+                break;
             }
         }
     }
@@ -433,6 +450,7 @@ export default class COFLevel extends Scene {
         // Add physics to the wall layer
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
+        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT, null)
     }
     /**
      * Handles all subscriptions to events

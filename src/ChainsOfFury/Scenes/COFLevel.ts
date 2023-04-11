@@ -18,7 +18,7 @@ import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Sprite from '../../Wolfie2D/Nodes/Sprites/Sprite';
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController from "../Player/AzazelController";
 import FireballShaderType from "../Shaders/FireballShaderType";
@@ -26,7 +26,7 @@ import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
-
+import FireballBehavior from "../Fireball/FireballBehavior";
 import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import { COFEvents } from "../COFEvents";
 import EnemyController from "../Enemy/EnemyController";
@@ -46,6 +46,11 @@ export const COFLayers = {
 export type COFLayer = typeof COFLayers[keyof typeof COFLayers]
 
 export default class COFLevel extends Scene {
+
+    //TODO: ADD KEY STRINGS TO DATA (player, boss, etc.)
+
+    public static FIREBALL_KEY = "FIREBALL";
+    public static FIREBALL_PATH = "cof_assets/spritesheets/fireball.json";
 
     /** Overrride the factory manager */
     //public add: HW3FactoryManager;
@@ -110,14 +115,16 @@ export default class COFLevel extends Scene {
             COFPhysicsGroups.PLAYER, 
             COFPhysicsGroups.ENEMY,
             COFPhysicsGroups.WALL,
-            COFPhysicsGroups.PLAYER_WEAPON
+            COFPhysicsGroups.PLAYER_WEAPON,
+            COFPhysicsGroups.FIREBALL
         ]
         
         let collisions : number[][] = [
-            [0,0,1,0],
-            [0,0,1,1],
-            [1,1,0,0],
-            [0,1,0,0]
+            [0,0,1,0,0],
+            [0,0,1,1,1],
+            [1,1,0,0,1],
+            [0,1,0,0,0],
+            [0,1,1,0,0]
         ];
 
 
@@ -140,7 +147,7 @@ export default class COFLevel extends Scene {
         // Load dummy enemy
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
 
-        this.load.image("fireball", "cof_assets/images/fireball")
+        this.load.spritesheet("fireball", "cof_assets/spritesheets/fireball.json")
 
         // this.load.shader(
 		// 	FireballShaderType.KEY,
@@ -158,12 +165,12 @@ export default class COFLevel extends Scene {
 
         this.initializePlayerUI();
 
-        this.initObjectPools();
-
         // Initialize the player 
         this.initializePlayer("azazel");
 
-        // Initially disable player movement
+        this.initObjectPools();
+
+        // Enable player movement
         Input.enableInput();
 
         this.initializeEnemyBoss("moondog", MoonDogController);
@@ -215,6 +222,10 @@ export default class COFLevel extends Scene {
             }
             case COFEvents.PLAYER_HURL: {
                 this.spawnFireball(event.data.get("faceDir"), event.data.get("pos"));
+                break;
+            }
+            case COFEvents.FIREBALL_HIT: {
+                this.despawnFireballs(event.data.get("node"));
                 break;
             }
             // // When the level starts, reenable user input
@@ -270,6 +281,14 @@ export default class COFLevel extends Scene {
 		for (let i = 0; i < this.fireballs.length; i++) {
 			this.fireballs[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
 
+            // Make our fireballs inactive by default
+			this.fireballs[i].visible = false;
+
+			// Assign them fireball ai
+			this.fireballs[i].addAI(FireballBehavior, {user: this.player.ai});
+
+			this.fireballs[i].scale.set(1.5, 1.5);
+
     //         // Give the bubbles a custom shader
 	// 		this.fireballs[i].useCustomShader(FireballShaderType.KEY);
 	// 		this.fireballs[i].visible = false;
@@ -281,8 +300,8 @@ export default class COFLevel extends Scene {
     //         // Give the bubbles a collider
 	// 		let collider = new Circle(Vec2.ZERO, 25);
 	// 		this.fireballs[i].setCollisionShape(collider);
-	// 	}
-    // }
+	    }
+    }
    
     /**
     * Displays a fire projectile on the map
@@ -292,28 +311,36 @@ export default class COFLevel extends Scene {
 
     protected spawnFireball(faceDir: number, pos: Vec2) {
 
-        let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible })
+        let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible });
         
         if (fireball){
 			// Bring this mine to life
 			fireball.visible = true;
 
-			// Extract the size of the viewport
-			let paddedViewportSize = this.viewport.getHalfSize().scaled(2).add(this.worldPadding);
-			let viewportSize = this.viewport.getHalfSize().scaled(2);
-
 			// Loop on position until we're clear of the player
-			fireball.position.copy(RandUtils.randVec(viewportSize.x, paddedViewportSize.x, paddedViewportSize.y - viewportSize.y, viewportSize.y));
-			while(fireball.position.distanceTo(this.player.position) < 100){
-				fireball.position.copy(RandUtils.randVec(paddedViewportSize.x, paddedViewportSize.x, paddedViewportSize.y - viewportSize.y, viewportSize.y));
-			}
+			fireball.position.copy(this.player.position);
 
+            let fireballHitbox = new AABB(this.player.position.clone(), fireball.boundary.getHalfSize().clone());
+            fireball.addPhysics(fireballHitbox);
+            fireball.setGroup(COFPhysicsGroups.FIREBALL);
+            console.log(fireball.triggerMask)
+            fireball.isTrigger = true
+            console.log(this.walls.isTrigger)
+            fireball.setTrigger(COFPhysicsGroups.WALL, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
 			fireball.setAIActive(true, {});
-			// Start the mine spawn timer - spawn a mine every half a second I think
-			this.mineSpawnTimer.start(100);
-
 		}
+    }
 
+    protected despawnFireballs(node: number) : void {
+
+        for(let i = 0; i < this.fireballs.length; i++) {
+
+            if(this.fireballs[i].id == node) {
+
+                this.fireballs[i].position.copy(Vec2.ZERO);
+                this.fireballs[i].visible = false;
+            }
+        }
     }
 
     /**
@@ -404,8 +431,8 @@ export default class COFLevel extends Scene {
         this.walls = this.getTilemap("Barrier") as OrthogonalTilemap;
 
         // Add physics to the wall layer
-        this.walls.setGroup(COFPhysicsGroups.WALL);
         this.walls.addPhysics();
+        this.walls.setGroup(COFPhysicsGroups.WALL);
     }
     /**
      * Handles all subscriptions to events
@@ -416,6 +443,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
+        this.receiver.subscribe(COFEvents.FIREBALL_HIT);
     }
 
     /**

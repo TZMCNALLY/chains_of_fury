@@ -313,7 +313,7 @@ export default class COFLevel extends Scene {
 
         let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible });
         
-        if (fireball){
+        if (fireball) {
 			// Bring this mine to life
 			fireball.visible = true;
 

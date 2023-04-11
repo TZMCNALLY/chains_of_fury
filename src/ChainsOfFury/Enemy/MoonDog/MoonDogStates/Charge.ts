@@ -8,9 +8,13 @@ export default class Charge extends MoonDogState {
 	protected _target_location: Vec2;
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(MoonDogAnimation.CHARGE_LEFT);
 
 		this._target_location = this.parent.player.position.clone();
+		if (this._target_location.x < this.owner.position.x)
+			this.owner.animation.play(MoonDogAnimation.CHARGE_LEFT);
+		else
+			this.owner.animation.play(MoonDogAnimation.CHARGE_RIGHT);
+		
 		this.parent.speed = 10;
 	}
 

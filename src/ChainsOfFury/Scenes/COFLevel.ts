@@ -92,6 +92,9 @@ export default class COFLevel extends Scene {
     private enemyHealthBar: Label;
     private enemyHealthBarBg: Label;
 
+    protected levelEndTimer: Timer;
+    protected levelEndLabel: Label;
+
     /** The keys to the tilemap and different tilemap layers */
     protected tilemapKey: string;
     protected destructibleLayerKey: string;
@@ -178,6 +181,8 @@ export default class COFLevel extends Scene {
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
         this.subscribeToEvents();
+
+        this.initializeLevelEndUI();
         
         // Initialize the ends of the levels - must be initialized after the primary layer has been added
         //this.initializeLevelEnds();
@@ -225,8 +230,16 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.FIREBALL_HIT: {
-                console.log("here");
                 this.despawnFireballs(event.data.get("node"));
+                break;
+            }
+            case COFEvents.BOSS_DEFEATED: {
+                this.handleLevelEnd();
+                break;
+            }
+            // When the boss is defeated, change the scene to fight the next boss
+            case COFEvents.LEVEL_END: {
+                this.sceneManager.changeToScene(MainMenu);
                 break;
             }
             // // When the level starts, reenable user input
@@ -341,6 +354,11 @@ export default class COFLevel extends Scene {
         }
     }
 
+    protected handleLevelEnd(): void {
+
+        this.levelEndLabel.tweens.play("slideIn")
+    }
+
     /**
      * 
      * 
@@ -389,9 +407,6 @@ export default class COFLevel extends Scene {
      * @param maxHealth the maximum health of the boss
      */
      protected handleBossHealthChange(currentHealth: number, maxHealth: number): void {
-        if (currentHealth == 0) {
-            this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
-        }
 
 		let unit = this.enemyHealthBarBg.size.x / maxHealth;
         
@@ -443,6 +458,8 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT);
+        this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
+        this.receiver.subscribe(COFEvents.LEVEL_END);
     }
 
     /**
@@ -470,6 +487,33 @@ export default class COFLevel extends Scene {
         this.enemyHealthBar = this.createBar(400, 500, 800, 40, Color.RED, 28);
         this.enemyHealthBarBg = this.createBarBg(400, 500, 800, 40, Color.TRANSPARENT, 28);
         this.enemyHealthLabel = this.createBarLabel(400, 500, 800, 40, Color.BLACK, bossName, 28);
+    }
+
+    protected initializeLevelEndUI(): void {
+
+        // End of level label (start off screen)
+        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
+        this.levelEndLabel.size.set(800, 60);
+        this.levelEndLabel.borderRadius = 0;
+        this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
+        this.levelEndLabel.textColor = Color.WHITE;
+        this.levelEndLabel.fontSize = 48;
+        this.levelEndLabel.font = "PixelSimple";
+
+        // Add a tween to move the label on screen
+        this.levelEndLabel.tweens.add("slideIn", {
+            startDelay: 0,
+            duration: 1000,
+            effects: [
+                {
+                    property: TweenableProperties.posX,
+                    start: -300,
+                    end: 300,
+                    ease: EaseFunctionType.OUT_SINE
+                }
+            ],
+            onEnd: COFEvents.LEVEL_END
+        });
     }
 
     /**
@@ -526,6 +570,8 @@ export default class COFLevel extends Scene {
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
     }
+
+    
 
     private createBar(posX: number, posY: number, sizeX: number, sizeY: number, color: Color, font?: number) : Label {
         let bar = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(posX, posY), text: ""});

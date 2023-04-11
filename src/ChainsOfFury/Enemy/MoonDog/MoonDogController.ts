@@ -31,7 +31,7 @@ export const MoonDogAnimation = {
     DYING_LEFT: "DYING_LEFT",
     DEAD_RIGHT: "DEAD_RIGHT",
     DEAD_LEFT: "DEAD_LEFT",
-    CHARGE_RIGHT: "CHARGE_RIGHT",
+    CHARGE_RIGHT: "WALKING_RIGHT",
     CHARGE_LEFT: "WALKING_LEFT",
 } as const
 

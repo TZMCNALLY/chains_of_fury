@@ -4,7 +4,7 @@ import MoonDogState from "./MoonDogState";
 export default class Run extends MoonDogState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.parent.speed = 100;
+        this.parent.speed = 10;
         this.owner.animation.play(MoonDogAnimation.RUN_LEFT);
 	}
 

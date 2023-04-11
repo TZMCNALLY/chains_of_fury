@@ -46,7 +46,6 @@ export default class EnemyController extends StateMachineAI {
         this.receiver = new Receiver();
         this.emitter = new Emitter();
         this.receiver.subscribe(COFEvents.ENEMY_HIT);
-        this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
     }
 
     public update(deltaT: number): void {
@@ -100,6 +99,10 @@ export default class EnemyController extends StateMachineAI {
     public handleEnemyHit(event: GameEvent): void {
         this.health -= 10;
         this.emitter.fireEvent(COFEvents.ENEMY_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+
+        if (this.health == 0) {
+            this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
+        }
     }
 
     // Event handlers

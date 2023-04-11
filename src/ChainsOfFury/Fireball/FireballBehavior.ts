@@ -5,47 +5,20 @@ import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import { COFEvents } from "../COFEvents";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import AzazelController from "../Player/AzazelController";
 
-/**
- * A class that represents the behavior of the bubbles in the HW2Scene
- * @author PeteyLumpkins
- */
-export default class BubbleBehavior implements AI {
+export default class FireballBehavior implements AI {
     // The GameNode that owns this behavior
-    private owner: Graphic;
-
-    // The current horizontal and vertical speed of the bubble
-    private currentXSpeed: number;
-    private currentYSpeed: number;
-
-    // How much to increase the speed of the bubble by each frame
-    private xSpeedIncrement: number;
-    private ySpeedIncrement: number;
-
-    // Upper and lower bounds on the horizontal speed of the bubble
-    private minXSpeed: number;
-    private maxXSpeed: number;
-
-    // Upper and lower bounds on the vertical speed of the bubble
-    private minYSpeed: number;
-    private maxYSpeed: number;
-
+    private _owner: AnimatedSprite;
+    private _velocity: Vec2
     private receiver: Receiver;
 
-    public initializeAI(owner: Graphic, options: Record<string, any>): void {
+    public initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
+        this.velocity = new Vec2(400, 0);
         this.receiver = new Receiver();
-
-        this.currentXSpeed = 50;
-        this.xSpeedIncrement = 0;
-        this.minXSpeed = 50;
-        this.maxXSpeed = 50;
-
-        this.currentYSpeed = 50;
-        this.ySpeedIncrement = 0;
-        this.minYSpeed = 50;
-        this.maxYSpeed = 50;
-
         this.activate(options);
     }
 
@@ -70,18 +43,15 @@ export default class BubbleBehavior implements AI {
             this.handleEvent(this.receiver.getNextEvent());
         }
 
-        // Only update the bubble if it's visible
         if (this.owner.visible) {
-            // Increment the speeds
-            this.currentXSpeed += this.xSpeedIncrement * deltaT;
-            this.currentYSpeed += this.ySpeedIncrement * deltaT;
-            // Clamp the speeds if need be
-            this.currentXSpeed= MathUtils.clamp(this.currentXSpeed, this.minXSpeed, this.maxXSpeed)
-            this.currentYSpeed = MathUtils.clamp(this.currentYSpeed, this.minYSpeed, this.maxYSpeed);
-
-            // Update position of the bubble - I'm scaling the Vec2.UP and Vec2.LEFT vectors to move the bubble up and to the left
-            this.owner.position.add(Vec2.UP.scale(this.currentYSpeed * deltaT)).add(Vec2.LEFT.scale(this.currentXSpeed* deltaT));
+            // Update position of the fireball
+            this.owner.move(this.velocity.scaled(deltaT));
         }
     }
+
+    public get owner() { return this._owner }
+    public set owner(owner : AnimatedSprite) { this._owner = owner as AnimatedSprite; }
+    public get velocity() { return this._velocity }
+    public set velocity(velocity : Vec2) { this._velocity = velocity as Vec2; }
 }
 

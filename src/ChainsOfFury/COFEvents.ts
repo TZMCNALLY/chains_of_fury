@@ -81,5 +81,7 @@ export const COFEvents = {
      * 
      * Has data: { currMana : number, maxMana : number }
      */
-    CHANGE_MANA: "CHANGE_MANA"
+    CHANGE_MANA: "CHANGE_MANA",
+
+    FIREBALL_HIT: "FIREBALL_HIT"
 }

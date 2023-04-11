@@ -225,6 +225,7 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.FIREBALL_HIT: {
+                console.log("here");
                 this.despawnFireballs(event.data.get("node"));
                 break;
             }
@@ -311,37 +312,17 @@ export default class COFLevel extends Scene {
     */
 
     protected spawnFireball(faceDir: number, pos: Vec2) {
-
-        // let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible });
-        
-        // if (fireball){
-		// 	// Bring this mine to life
-		// 	fireball.visible = true;
-
-		// 	// Loop on position until we're clear of the player
-		// 	fireball.position.copy(this.player.position);
-
-        //     let fireballHitbox = new AABB(this.player.position.clone(), fireball.boundary.getHalfSize().clone());
-        //     fireball.addPhysics(fireballHitbox);
-        //     fireball.setGroup(COFPhysicsGroups.FIREBALL);
-        //     fireball.setTrigger(COFPhysicsGroups.ENEMY, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
-		// 	fireball.setAIActive(true, {});
-		// }
-
         for(let i = 0; i < this.fireballs.length; i++) {
 
             if(!this.fireballs[i].visible) {
 
                 this.fireballs[i].visible = true;
 
-                // Loop on position until we're clear of the player
                 this.fireballs[i].position.copy(this.player.position);
 
                 let fireballHitbox = new AABB(this.player.position.clone(), this.fireballs[i].boundary.getHalfSize().clone());
                 this.fireballs[i].addPhysics(fireballHitbox);
                 this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
-                this.fireballs[i].setTrigger(COFPhysicsGroups.ENEMY, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
-                this.fireballs[i].setAIActive(true, {});
                 break;
             }
         }
@@ -530,6 +511,7 @@ export default class COFLevel extends Scene {
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
+        this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT, null);
     }
 
 

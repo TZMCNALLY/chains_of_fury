@@ -173,7 +173,7 @@ export default class COFLevel extends Scene {
         // Enable player movement
         Input.enableInput();
 
-        this.initializeEnemyBoss("moondog", MoonDogController);
+        // this.initializeEnemyBoss("moondog", MoonDogController);
 
         // Initialize the viewport - this must come after the player has been initialized
         this.initializeViewport();
@@ -503,7 +503,7 @@ export default class COFLevel extends Scene {
         this.enemyBoss.position.copy(enemySpawn);
 
         // Give enemy boss it's AI
-        this.enemyBoss.addAI(controller);
+        this.enemyBoss.addAI(controller, {player: this.player});
 
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;

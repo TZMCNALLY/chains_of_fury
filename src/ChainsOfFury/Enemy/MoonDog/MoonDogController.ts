@@ -10,7 +10,7 @@ import Charge from "./MoonDogStates/Charge";
 import Damaged from "./MoonDogStates/Damaged";
 import Dead from "./MoonDogStates/Dead";
 
-export const MoonDogState = {
+export const MoonDogStates = {
     IDLE: "IDLE",
     RUN: "RUN",
 	DAMAGED: "DAMAGED",
@@ -32,7 +32,7 @@ export const MoonDogAnimation = {
     DEAD_RIGHT: "DEAD_RIGHT",
     DEAD_LEFT: "DEAD_LEFT",
     CHARGE_RIGHT: "CHARGE_RIGHT",
-    CHARGE_LEFT: "CHARGE_LEFT",
+    CHARGE_LEFT: "WALKING_LEFT",
 } as const
 
 export default class MoonDogController extends EnemyController {
@@ -40,14 +40,14 @@ export default class MoonDogController extends EnemyController {
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
 
-        this.addState(MoonDogState.IDLE, new Idle(this, this.owner));
-        this.addState(MoonDogState.RUN, new Run(this, this.owner));
-        this.addState(MoonDogState.ATTACK, new Attack(this, this.owner));
-        this.addState(MoonDogState.CHARGE, new Charge(this, this.owner));
-        this.addState(MoonDogState.DAMAGED, new Damaged(this, this.owner));
-        this.addState(MoonDogState.DEAD, new Dead(this, this.owner));
+        this.addState(MoonDogStates.IDLE, new Idle(this, this.owner));
+        this.addState(MoonDogStates.RUN, new Run(this, this.owner));
+        this.addState(MoonDogStates.ATTACK, new Attack(this, this.owner));
+        this.addState(MoonDogStates.CHARGE, new Charge(this, this.owner));
+        this.addState(MoonDogStates.DAMAGED, new Damaged(this, this.owner));
+        this.addState(MoonDogStates.DEAD, new Dead(this, this.owner));
 
-        this.initialize(MoonDogState.IDLE);
+        this.initialize(MoonDogStates.IDLE);
 
         this.maxHealth = 500;
         this.health = this.maxHealth;

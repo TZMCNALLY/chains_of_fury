@@ -34,6 +34,9 @@ export default class AnimationManager {
     /** The name of the event (if any) to send when the current animation stops playing. */
     protected onEndEvent: string;
 
+    /** The information to send with the event when the current animation stops playing. */
+    protected onEndEventData : Record<string, any>;
+
     /** The event emitter for this animation manager */
     protected emitter: Emitter;
 
@@ -59,6 +62,7 @@ export default class AnimationManager {
         this.loop = false;
         this.animations = new Map();
         this.onEndEvent = null;
+        this.onEndEventData = null;
         this.emitter = new Emitter();
     }
 
@@ -141,7 +145,10 @@ export default class AnimationManager {
         this.animationState = AnimationState.STOPPED;
 
         if(this.onEndEvent !== null){
-            this.emitter.fireEvent(this.onEndEvent, {owner: this.owner.id, animation: this.currentAnimation});
+            if(this.onEndEventData == null)
+                this.emitter.fireEvent(this.onEndEvent, {owner: this.owner.id, animation: this.currentAnimation});
+            else
+                this.emitter.fireEvent(this.onEndEvent, this.onEndEventData);
         }
 
         // If there is a pending animation, play it
@@ -156,9 +163,9 @@ export default class AnimationManager {
      * @param loop Whether or not to loop the animation. False by default
      * @param onEnd The name of an event to send when this animation naturally stops playing. This only matters if loop is false.
      */
-    playIfNotAlready(animation: string, loop?: boolean, onEnd?: string): void {
+    playIfNotAlready(animation: string, loop?: boolean, onEnd?: string, onEndEventData?: Record<string, any>): void {
         if(this.currentAnimation !== animation){
-            this.play(animation, loop, onEnd);
+            this.play(animation, loop, onEnd, onEndEventData);
         }
     }
 
@@ -168,7 +175,7 @@ export default class AnimationManager {
      * @param loop Whether or not to loop the animation. False by default
      * @param onEnd The name of an event to send when this animation naturally stops playing. This only matters if loop is false.
      */
-    play(animation: string, loop?: boolean, onEnd?: string): void {
+    play(animation: string, loop?: boolean, onEnd?: string, onEndEventData?: Record<string, any>): void {
         this.currentAnimation = animation;
         this.currentFrame = 0;
         this.frameProgress = 0;
@@ -186,6 +193,10 @@ export default class AnimationManager {
             this.onEndEvent = onEnd;
         } else {
             this.onEndEvent = null;
+        }
+
+        if(onEndEventData !== undefined){
+            this.onEndEventData = onEndEventData;
         }
 
         // Reset pending animation

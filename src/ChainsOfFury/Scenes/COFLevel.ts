@@ -20,7 +20,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import Sprite from '../../Wolfie2D/Nodes/Sprites/Sprite';
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
-import AzazelController from "../Player/AzazelController";
+import AzazelController, { AzazelAnimations } from '../Player/AzazelController';
 import FireballShaderType from "../Shaders/FireballShaderType";
 import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
@@ -31,6 +31,8 @@ import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import { COFEvents } from "../COFEvents";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import PlayerController from '../../demos/PlatformerPlayerController';
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 /**
  * A const object for the layer names
@@ -226,7 +228,7 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.PLAYER_HURL: {
-                this.spawnFireball(event.data.get("faceDir"), event.data.get("pos"));
+                this.spawnFireball( event.data.get("lastFace"), event.data.get("faceDir"));
                 break;
             }
             case COFEvents.FIREBALL_HIT: {
@@ -324,38 +326,40 @@ export default class COFLevel extends Scene {
     * @param faceDir the direction the player is facing
     */
 
-    protected spawnFireball(faceDir: number, pos: Vec2) {
-
-        // let fireball: Sprite = this.fireballs.find((fireball: Sprite) => { return !fireball.visible });
-        
-        // if (fireball){
-		// 	// Bring this mine to life
-		// 	fireball.visible = true;
-
-		// 	// Loop on position until we're clear of the player
-		// 	fireball.position.copy(this.player.position);
-
-        //     let fireballHitbox = new AABB(this.player.position.clone(), fireball.boundary.getHalfSize().clone());
-        //     fireball.addPhysics(fireballHitbox);
-        //     fireball.setGroup(COFPhysicsGroups.FIREBALL);
-        //     fireball.setTrigger(COFPhysicsGroups.ENEMY, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
-		// 	fireball.setAIActive(true, {});
-		// }
-
+    protected spawnFireball(lastFace: number, faceDir: Vec2) {
         for(let i = 0; i < this.fireballs.length; i++) {
 
             if(!this.fireballs[i].visible) {
 
+                // Bring this fireball to life
                 this.fireballs[i].visible = true;
 
-                // Loop on position until we're clear of the player
+                // Set the velocity to be in the direction of the mouse
+                if((faceDir.x < 0 && lastFace == 1) || (faceDir.x > 0 && lastFace == -1)) {
+                    faceDir.x = 0;
+
+                    if(faceDir.y < 0)
+                        faceDir.y = -400
+
+                    else
+                        faceDir.y = 400
+                }
+                
+                else {
+                    faceDir.x *= 400;
+                    faceDir.y *= 400;
+                }
+
+                (this.fireballs[i]._ai as FireballBehavior).velocity = faceDir
+
+                // Set the starting position of the fireball
                 this.fireballs[i].position.copy(this.player.position);
 
+                // Give physics to this fireball
                 let fireballHitbox = new AABB(this.player.position.clone(), this.fireballs[i].boundary.getHalfSize().clone());
                 this.fireballs[i].addPhysics(fireballHitbox);
                 this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
-                this.fireballs[i].setTrigger(COFPhysicsGroups.ENEMY, COFEvents.FIREBALL_HIT, COFEvents.FIREBALL_HIT);
-                this.fireballs[i].setAIActive(true, {});
+
                 break;
             }
         }

@@ -16,18 +16,18 @@ export default class Idle extends MoonDogState {
         // Adjust the direction the player is facing
 		super.update(deltaT);
 
-		if (this.lastActionTime == -1) {
-			this.lastActionTime = new Date().getTime() / 1000;
-		}
+		// if (this.lastActionTime == -1) {
+		// 	this.lastActionTime = new Date().getTime() / 1000;
+		// }
 
-		if (new Date().getTime() / 1000 - this.lastActionTime > 1) {
-			this.lastActionTime = new Date().getTime() / 1000;
+		// if (new Date().getTime() / 1000 - this.lastActionTime > 1) {
+		// 	this.lastActionTime = new Date().getTime() / 1000;
 
-			if (RandUtils.randInt(1, 101) < 51) {
-				// 50% chance to start charging.
-				this.finished(MoonDogStates.CHARGE);
-			}
-		}
+		// 	if (RandUtils.randInt(1, 101) < 51) {
+		// 		// 50% chance to start charging.
+		// 		this.finished(MoonDogStates.CHARGE);
+		// 	}
+		// }
 	}
 
 	public onExit(): Record<string, any> {

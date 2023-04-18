@@ -228,7 +228,7 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.PLAYER_HURL: {
-                this.spawnFireball( event.data.get("lastFace"), event.data.get("faceDir"));
+                this.spawnFireball( event.data.get("faceDir"));
                 break;
             }
             case COFEvents.FIREBALL_HIT: {
@@ -326,7 +326,7 @@ export default class COFLevel extends Scene {
     * @param faceDir the direction the player is facing
     */
 
-    protected spawnFireball(lastFace: number, faceDir: Vec2) {
+    protected spawnFireball(faceDir: Vec2) {
         for(let i = 0; i < this.fireballs.length; i++) {
 
             if(!this.fireballs[i].visible) {
@@ -335,20 +335,8 @@ export default class COFLevel extends Scene {
                 this.fireballs[i].visible = true;
 
                 // Set the velocity to be in the direction of the mouse
-                if((faceDir.x < 0 && lastFace == 1) || (faceDir.x > 0 && lastFace == -1)) {
-                    faceDir.x = 0;
-
-                    if(faceDir.y < 0)
-                        faceDir.y = -400
-
-                    else
-                        faceDir.y = 400
-                }
-                
-                else {
-                    faceDir.x *= 400;
-                    faceDir.y *= 400;
-                }
+                faceDir.x *= 400;
+                faceDir.y *= 400;
 
                 (this.fireballs[i]._ai as FireballBehavior).velocity = faceDir
 

@@ -8,12 +8,15 @@ import { COFEvents } from "../../COFEvents";
 export default class Attack extends PlayerState {
 
     public onEnter(options: Record<string, any>): void {
-		if (this.parent.lastFace == -1) {
-			this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_LEFT, false, COFEvents.PLAYER_HURL, {lastFace : this.parent.lastFace, faceDir : this.parent.faceDir});
+		let mousePos = Input.getGlobalMousePosition()
+		if (mousePos.x < this.owner.position.x) {
+			this.parent.lastFace = -1;
+			this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_LEFT, false, COFEvents.PLAYER_HURL, {faceDir : this.parent.faceDir});
 			this.owner.animation.queue(AzazelAnimations.ATTACK_LEFT);
 		}
 		else {
-			this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_RIGHT, false, COFEvents.PLAYER_HURL, {lastFace : this.parent.lastFace, faceDir : this.parent.faceDir});
+			this.parent.lastFace = 1;
+			this.owner.animation.playIfNotAlready(AzazelAnimations.CHARGE_RIGHT, false, COFEvents.PLAYER_HURL, {faceDir : this.parent.faceDir});
 			this.owner.animation.queue(AzazelAnimations.ATTACK_RIGHT);
 		}
 	}

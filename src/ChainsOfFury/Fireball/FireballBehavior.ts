@@ -8,6 +8,7 @@ import { COFEvents } from "../COFEvents";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import AzazelController from "../Player/AzazelController";
+import Input from "../../Wolfie2D/Input/Input"
 
 export default class FireballBehavior implements AI {
     // The GameNode that owns this behavior
@@ -17,14 +18,12 @@ export default class FireballBehavior implements AI {
 
     public initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
-        this.velocity = new Vec2(400, 0);
+        this.velocity = new Vec2(0,0);
         this.receiver = new Receiver();
         this.activate(options);
     }
 
-    public destroy(): void {
-        
-    }
+    public destroy(): void {}
 
     public activate(options: Record<string, any>): void {}
 
@@ -32,7 +31,7 @@ export default class FireballBehavior implements AI {
         switch(event.type) {
 
             default: {
-                throw new Error("Unhandled event caught in BubbleBehavior! Event type: " + event.type);
+                throw new Error("Unhandled event caught in FireballBehavior! Event type: " + event.type);
             }
         }
     }

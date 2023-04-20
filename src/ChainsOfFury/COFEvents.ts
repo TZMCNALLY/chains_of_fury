@@ -68,6 +68,11 @@ export const COFEvents = {
     PLAYER_TELEPORT: "PLAYER_TELEPORT",
 
     /**
+     * Event trigger when boss entity teleports
+     */
+    BOSS_TELEPORT: "BOSS_TELEPORT",
+
+    /**
      * Event trigger when player is idle, allowing them to regenerate lost stamina
      * 
      * Has data: { currStamina : number, maxStamina : number }

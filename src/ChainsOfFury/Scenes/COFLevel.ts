@@ -237,6 +237,10 @@ export default class COFLevel extends Scene {
                 this.handlePlayerTeleportation();
                 break;
             }
+            case COFEvents.BOSS_TELEPORT: {
+                this.handleBossTeleportation();
+                break;
+            }
             case COFEvents.FIREBALL_HIT_WALL: {
                 this.despawnFireballs(event.data.get("node"));
                 break;
@@ -449,6 +453,13 @@ export default class COFLevel extends Scene {
         this.player.tweens.play(AzazelTweens.TELEPORTED);
     }
 
+    protected handleBossTeleportation(): void {
+
+        // this.enemyBoss.position = new Vec2(200, 1000)
+        // this.enemyBoss.ai.initializeAI.
+        // this.enemyBoss.position.x = Math.
+    }
+
      /**
      * 
      * 
@@ -510,6 +521,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_TELEPORT);
+        this.receiver.subscribe(COFEvents.BOSS_TELEPORT);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);

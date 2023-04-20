@@ -4,31 +4,29 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { COFEvents } from "../../COFEvents";
 
 import Idle from "./MindFlayerStates/Idle";
-import Run from "./MindFlayerStates/Run";
+import Walk from "./MindFlayerStates/Walk";
 import Attack from "./MindFlayerStates/Attack";
+import Teleport from "./MindFlayerStates/Teleport";
 import Damaged from "./MindFlayerStates/Damaged";
 import Dead from "./MindFlayerStates/Dead";
 
 export const MindFlayerStates = {
     IDLE: "IDLE",
-    RUN: "RUN",
+    WALK: "WALK",
 	DAMAGED: "DAMAGED",
     ATTACK: "ATTACK",
+    TELEPORT: "TELEPORT",
     DEAD: "DEAD"
 } as const
 
 export const MindFlayerAnimation = {
     IDLE: "IDLE",
-    ATTACK_RIGHT: "ATTACK_RIGHT",
-    ATTACK_LEFT: "ATTACK_LEFT",
-    TAKINGDAMAGE_RIGHT: "TAKINGDAMAGE_RIGHT",
-    TAKINGDAMAGE_LEFT: "TAKINGDAMAGE_LEFT",
-    RUN_RIGHT: "RUN_RIGHT",
-    RUN_LEFT: "RUN_LEFT",
-    DYING_RIGHT: "DYING_RIGHT",
-    DYING_LEFT: "DYING_LEFT",
-    DEAD_RIGHT: "DEAD_RIGHT",
-    DEAD_LEFT: "DEAD_LEFT"
+    ATTACK: "CASTING_LEFT",
+    TAKING_DAMAGE: "TAKING_DAMAGE",
+    WALK_RIGHT: "WALKING_RIGHT",
+    WALK_LEFT: "WALKING_LEFT",
+    DYING: "DYING",
+    DEAD: "DEAD"
 } as const
 
 export default class MindFlayerController extends EnemyController {
@@ -37,8 +35,9 @@ export default class MindFlayerController extends EnemyController {
         super.initializeAI(owner, options);
 
         this.addState(MindFlayerStates.IDLE, new Idle(this, this.owner));
-        this.addState(MindFlayerStates.RUN, new Run(this, this.owner));
+        this.addState(MindFlayerStates.WALK, new Walk(this, this.owner));
         this.addState(MindFlayerStates.ATTACK, new Attack(this, this.owner));
+        this.addState(MindFlayerStates.TELEPORT, new Teleport(this, this.owner));
         this.addState(MindFlayerStates.DAMAGED, new Damaged(this, this.owner));
         this.addState(MindFlayerStates.DEAD, new Dead(this, this.owner));
 

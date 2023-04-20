@@ -2,9 +2,13 @@ import COFLevel from "./COFLevel";
 import COFLevel6 from "./COFLevel6";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Input from "../../Wolfie2D/Input/Input";
-import MoonDogController from "../Enemy/MoonDog/MoonDogController";
+import SwordController from "../Enemy/Sword/SwordController";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import { SwordTweens } from "../Enemy/Sword/SwordController";
+import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
+import { AzazelTweens } from "../Player/AzazelController";
 
 export default class COFLevel5 extends COFLevel {
 
@@ -14,13 +18,25 @@ export default class COFLevel5 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
+        this.load.spritesheet("flying_sword", "cof_assets/spritesheets/flying_sword.json");
     }
 
     public startScene(): void {
         super.startScene();
-        super.initializeBossUI("Moon Dog");
-        this.initializeEnemyBoss("moondog", MoonDogController, 1);
+        super.initializeBossUI("Satan's Blade");
+        this.initializeEnemyBoss("flying_sword", SwordController, 1);
+        this.enemyBoss.tweens.add(SwordTweens.SPIN, {
+            startDelay: 0,
+            duration: 100,
+            effects: [
+                {
+                    property: "rotation",
+                    start: 0,
+                    end: Math.PI * 2,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ]
+        });
     }
 
     protected handleLevelEnd(): void {

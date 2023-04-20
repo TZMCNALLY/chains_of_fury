@@ -155,12 +155,6 @@ export default class COFLevel extends Scene {
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
 
         this.load.spritesheet("fireball", "cof_assets/spritesheets/fireball.json")
-
-        // this.load.shader(
-		// 	FireballShaderType.KEY,
-		// 	FireballShaderType.VSHADER,
-		// 	FireballShaderType.FSHADER
-		// );
     }
 
     public startScene(): void {
@@ -315,18 +309,6 @@ export default class COFLevel extends Scene {
 
             this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
 			this.fireballs[i].scale.set(1.5, 1.5);
-
-    //         // Give the bubbles a custom shader
-	// 		this.fireballs[i].useCustomShader(FireballShaderType.KEY);
-	// 		this.fireballs[i].visible = false;
-	// 		this.fireballs[i].color = Color.BLUE;
-
-    //         // Give the bubbles AI
-	// 		this.fireballs[i].addAI(FireballAI);
-
-    //         // Give the bubbles a collider
-	// 		let collider = new Circle(Vec2.ZERO, 25);
-	// 		this.fireballs[i].setCollisionShape(collider);
 	    }
     }
    
@@ -619,7 +601,7 @@ export default class COFLevel extends Scene {
 
 
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number): void {
-        let enemySpawn = new Vec2(800,500);
+        let enemySpawn = new Vec2(500,300);
 
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
         this.enemyBoss.scale.set(scaleSize, scaleSize);

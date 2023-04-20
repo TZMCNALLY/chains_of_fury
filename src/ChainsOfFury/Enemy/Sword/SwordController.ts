@@ -3,15 +3,10 @@ import EnemyController from "../EnemyController";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { COFEvents } from "../../COFEvents";
 
-import Idle from "./MoonDogStates/Idle";
-import Run from "./MoonDogStates/Run";
-import Attack from "./MoonDogStates/Attack";
-import Charge from "./MoonDogStates/Charge";
-import Damaged from "./MoonDogStates/Damaged";
-import Dead from "./MoonDogStates/Dead";
-import Stunned from "./MoonDogStates/Stunned";
+import Idle from "./SwordStates/Idle";
+import Attack from "./SwordStates/Attack";
 
-export const MoonDogStates = {
+export const SwordStates = {
     IDLE: "IDLE",
     RUN: "RUN",
 	DAMAGED: "DAMAGED",
@@ -21,7 +16,7 @@ export const MoonDogStates = {
     STUNNED: "STUNNED"
 } as const
 
-export const MoonDogAnimation = {
+export const SwordAnimation = {
     IDLE: "IDLE",
     ATTACK_RIGHT: "ATTACK_RIGHT",
     ATTACK_LEFT: "ATTACK_LEFT",
@@ -37,24 +32,24 @@ export const MoonDogAnimation = {
     CHARGE_LEFT: "WALKING_LEFT",
 } as const
 
-export default class MoonDogController extends EnemyController {
+export const SwordTweens = {
+    SPIN: "SPIN"
+}
+
+export default class SwordController extends EnemyController {
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
 
-        this.addState(MoonDogStates.IDLE, new Idle(this, this.owner));
-        this.addState(MoonDogStates.RUN, new Run(this, this.owner));
-        this.addState(MoonDogStates.ATTACK, new Attack(this, this.owner));
-        this.addState(MoonDogStates.CHARGE, new Charge(this, this.owner));
-        this.addState(MoonDogStates.DAMAGED, new Damaged(this, this.owner));
-        this.addState(MoonDogStates.DEAD, new Dead(this, this.owner));
-        this.addState(MoonDogStates.STUNNED, new Stunned(this, this.owner));
+        this.addState(SwordStates.IDLE, new Idle(this, this.owner));
+        this.addState(SwordStates.ATTACK, new Attack(this, this.owner));
+        //MAKE MORE STATES LATER
 
-        this.initialize(MoonDogStates.IDLE);
+        this.initialize(SwordStates.IDLE);
 
         this.maxHealth = 500;
         this.health = this.maxHealth;
-    }    
+    }
 
     public update(deltaT: number): void {
 		super.update(deltaT);

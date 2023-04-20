@@ -75,7 +75,6 @@ export default class LevelSelect extends Scene {
         let level6 = this.makeLevelBox(size.x+350, size.y+200, "level6");
 
         // Scene transitions:
-
         level1.onClick = () => {
             this.sceneManager.changeToScene(COFLevel1);
         };

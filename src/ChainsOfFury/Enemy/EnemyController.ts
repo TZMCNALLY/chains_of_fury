@@ -31,6 +31,8 @@ export default class EnemyController extends StateMachineAI {
     // protected cannon: Sprite;
     // protected weapon: PlayerWeapon;
 
+    protected _stunned: boolean;
+
     /** The player this enemy should attack. */
     protected _player: COFAnimatedSprite;
 
@@ -45,8 +47,15 @@ export default class EnemyController extends StateMachineAI {
 
         this.receiver = new Receiver();
         this.emitter = new Emitter();
+
+        // Subscribe to Events.
         this.receiver.subscribe(COFEvents.SWING_HIT);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
+
+        this.receiver.subscribe(COFEvents.ENEMY_HIT);
+        this.receiver.subscribe(COFEvents.ENEMY_STUNNED);
+
+        this._stunned = false;
     }
 
     public update(deltaT: number): void {
@@ -55,6 +64,14 @@ export default class EnemyController extends StateMachineAI {
 
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
+			case COFEvents.ENEMY_HIT: {
+				this.handleEnemyHit(event);
+				break;
+			}
+            case COFEvents.ENEMY_STUNNED: {
+                this.handleEnemyStunned(event);
+                break;
+            }
 			default: {
 				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
 			}
@@ -69,6 +86,9 @@ export default class EnemyController extends StateMachineAI {
 
     public get speed(): number { return this._speed; }
     public set speed(speed: number) { this._speed = speed; }
+
+    public get stunned(): boolean { return this._stunned; }
+    public set stunned(stunned: boolean) { this._stunned = stunned; }
 
     public get maxHealth(): number { return this._maxHealth; }
     public set maxHealth(maxHealth: number) { 
@@ -109,6 +129,12 @@ export default class EnemyController extends StateMachineAI {
         if (this.health == 0) {
             this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
         }
+    }
+
+
+    public handleEnemyStunned(event: GameEvent): void {
+        // this.owner.move(this.velocity.scaleTo(-1));
+        this.stunned = true;
     }
 
     // Event handlers

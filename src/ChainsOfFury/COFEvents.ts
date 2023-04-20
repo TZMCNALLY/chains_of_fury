@@ -32,6 +32,11 @@ export const COFEvents = {
     SWING_HIT: "SWING_HIT",
 
     /**
+     * Event trigger when enemy gets stunned.
+     */
+    ENEMY_STUNNED: "ENEMY_STUNNED",
+
+    /**
      * Event trigger when enemy entity takes damage.
      * 
      * Has data: { currHealth : number, maxHealth: number }

@@ -119,17 +119,19 @@ export default class COFLevel extends Scene {
         let groupNames : string[] = [
             COFPhysicsGroups.PLAYER, 
             COFPhysicsGroups.ENEMY,
+            COFPhysicsGroups.ENEMY_CONTACT_DMG,
             COFPhysicsGroups.WALL,
             COFPhysicsGroups.PLAYER_WEAPON,
             COFPhysicsGroups.FIREBALL
         ]
         
         let collisions : number[][] = [
-            [0,0,1,0,0],
-            [0,0,1,1,1],
-            [1,1,0,0,1],
-            [0,1,0,0,0],
-            [0,1,1,0,0]
+            [0,0,0,1,0,0],
+            [0,0,0,1,1,1],
+            [0,0,0,1,1,1],
+            [1,1,1,0,0,1],
+            [0,1,1,0,0,0],
+            [0,1,1,1,0,0]
         ];
 
 
@@ -494,6 +496,10 @@ export default class COFLevel extends Scene {
         // Add physics to the wall layer
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
+        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT, null);
+        
+        // Allows a trigger to happen when boss charges into the wall.
+        this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, null);
     }
     /**
      * Handles all subscriptions to events

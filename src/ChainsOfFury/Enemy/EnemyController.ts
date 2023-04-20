@@ -64,10 +64,14 @@ export default class EnemyController extends StateMachineAI {
 
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
-			// case COFEvents.ENEMY_HIT: {
-			// 	this.handleEnemyHit(event);
-			// 	break;
-			// }
+			case COFEvents.SWING_HIT: {
+				this.handleEnemySwingHit(event);
+				break;
+			}
+            case COFEvents.FIREBALL_HIT_ENEMY: {
+				this.handleEnemyFireballHit(event);
+				break;
+            }
             case COFEvents.ENEMY_STUNNED: {
                 this.handleEnemyStunned(event);
                 break;
@@ -130,7 +134,6 @@ export default class EnemyController extends StateMachineAI {
             this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
         }
     }
-
 
     public handleEnemyStunned(event: GameEvent): void {
         // this.owner.move(this.velocity.scaleTo(-1));

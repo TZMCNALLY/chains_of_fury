@@ -6,6 +6,13 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import SplashScreen from "./SplashScreen";
 
+import COFLevel1 from "./COFLevel1";
+import COFLevel2 from "./COFLevel2";
+import COFLevel3 from "./COFLevel3";
+import COFLevel4 from "./COFLevel4";
+import COFLevel5 from "./COFLevel5";
+import COFLevel6 from "./COFLevel6";
+
 // Layers for the main menu scene
 export const MenuLayers = {
     MAIN: "MAIN"
@@ -68,29 +75,28 @@ export default class LevelSelect extends Scene {
         let level6 = this.makeLevelBox(size.x+350, size.y+200, "level6");
 
         // Scene transitions:
-
         level1.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(COFLevel1);
         };
 
         level2.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(COFLevel2);
         };
 
         level3.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(COFLevel3);
         };
 
         level4.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(COFLevel4);
         };
 
         level5.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(COFLevel5);
         };
         
         level6.onClick = () => {
-            this.sceneManager.changeToScene(SplashScreen);
+            this.sceneManager.changeToScene(COFLevel6);
         };
 
         // Scene has started, so start playing music

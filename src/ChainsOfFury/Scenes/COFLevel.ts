@@ -119,17 +119,19 @@ export default class COFLevel extends Scene {
         let groupNames : string[] = [
             COFPhysicsGroups.PLAYER, 
             COFPhysicsGroups.ENEMY,
+            COFPhysicsGroups.ENEMY_CONTACT_DMG,
             COFPhysicsGroups.WALL,
             COFPhysicsGroups.PLAYER_WEAPON,
             COFPhysicsGroups.FIREBALL
         ]
         
         let collisions : number[][] = [
-            [0,0,1,0,0],
-            [0,0,1,1,1],
-            [1,1,0,0,1],
-            [0,1,0,0,0],
-            [0,1,1,0,0]
+            [0,0,0,1,0,0],
+            [0,0,0,1,1,1],
+            [0,0,0,1,1,1],
+            [1,1,1,0,0,1],
+            [0,1,1,0,0,0],
+            [0,1,1,1,0,0]
         ];
 
 
@@ -376,7 +378,6 @@ export default class COFLevel extends Scene {
     }
 
     protected handleLevelEnd(): void {
-
         this.levelEndLabel.tweens.play("slideIn")
     }
 
@@ -494,6 +495,10 @@ export default class COFLevel extends Scene {
         // Add physics to the wall layer
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
+        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
+        
+        // Allows a trigger to happen when boss charges into the wall.
+        this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, null);
     }
     /**
      * Handles all subscriptions to events
@@ -613,11 +618,11 @@ export default class COFLevel extends Scene {
     }
 
 
-    protected initializeEnemyBoss(key: string, controller : new (...a: any[]) => EnemyController): void {
+    protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number): void {
         let enemySpawn = new Vec2(800,500);
 
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
-        this.enemyBoss.scale.set(1,1);
+        this.enemyBoss.scale.set(scaleSize, scaleSize);
         this.enemyBoss.position.copy(enemySpawn);
 
         // Give enemy boss it's AI

@@ -9,6 +9,8 @@ import COFLevel from "./COFLevel";
 import Help from "./Help";
 import Controls from "./Controls";
 import COFLevel1 from "./COFLevel1";
+import COFLevel3 from "./COFLevel3";
+
 
 // Layers for the main menu scene
 export const MenuLayers = {

@@ -496,7 +496,7 @@ export default class COFLevel extends Scene {
         // Add physics to the wall layer
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
-        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT, null);
+        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
         
         // Allows a trigger to happen when boss charges into the wall.
         this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, null);

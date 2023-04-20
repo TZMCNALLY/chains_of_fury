@@ -59,8 +59,12 @@ export default class MoonDogController extends EnemyController {
 
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
-			case COFEvents.ENEMY_HIT: {
-				this.handleEnemyHit(event);
+			case COFEvents.SWING_HIT: {
+				this.handleEnemySwingHit(event);
+				break;
+			}
+            case COFEvents.FIREBALL_HIT_ENEMY: {
+				this.handleEnemyFireballHit(event);
 				break;
 			}
 			default: {

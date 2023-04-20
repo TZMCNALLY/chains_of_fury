@@ -37,7 +37,7 @@ export default class Run extends PlayerState {
         else if (Input.isMouseJustPressed(2)) {
             // Right click
             if (this.parent.mana > 0)
-                this.finished(AzazelStates.GUARD);
+                this.finished(AzazelStates.TELEPORT);
         }
 
         else if(Input.isMouseJustPressed(0)) {

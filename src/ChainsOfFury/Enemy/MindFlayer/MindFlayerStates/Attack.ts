@@ -5,11 +5,10 @@ import MindFlayerController from "../MindFlayerController";
 export default class Attack extends MindFlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(MindFlayerAnimation.ATTACK_LEFT);
+        this.owner.animation.play(MindFlayerAnimation.ATTACK);
 	}
 
 	public update(deltaT: number): void {
-        // Adjust the direction the player is facing
 		super.update(deltaT);
 	}
 

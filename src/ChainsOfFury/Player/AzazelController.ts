@@ -8,16 +8,14 @@ import Idle from "./AzazelStates/Idle";
 import Run from "./AzazelStates/Run";
 import Swing from "./AzazelStates/Swing";
 import Hurl from "./AzazelStates/Hurl";
+import Teleport from "./AzazelStates/Teleport";
 
-//import PlayerWeapon from "./PlayerWeapon";
 import Input from "../../Wolfie2D/Input/Input";
 
 import { AzazelControls } from "./AzazelControls";
 import COFAnimatedSprite from "../Nodes/COFAnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { COFEvents } from "../COFEvents";
-import Guard from "./AzazelStates/Guard";
-//import Dead from "./PlayerStates/Dead";
 
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import Emitter from "../../Wolfie2D/Events/Emitter";
@@ -42,6 +40,10 @@ export const AzazelAnimations = {
     CHARGE_LEFT: "CHARGE_LEFT",
 } as const
 
+export const AzazelTweens = {
+    TELEPORTED: "TELEPORTED"
+}
+
 /**
  * Keys for the states Azazel can be in.
  */
@@ -52,7 +54,7 @@ export const AzazelStates = {
     SWING: "SWING",
     HURL: "HURL",
     DEAD: "DEAD",
-    GUARD: "GUARD"
+    TELEPORT: "TELEPORT"
 } as const
 
 /**
@@ -111,7 +113,7 @@ export default class AzazelController extends StateMachineAI {
         this.addState(AzazelStates.RUN, new Run(this, this.owner));
         this.addState(AzazelStates.SWING, new Swing(this, this.owner));
         this.addState(AzazelStates.HURL, new Hurl(this, this.owner));
-        this.addState(AzazelStates.GUARD, new Guard(this, this.owner));
+        this.addState(AzazelStates.TELEPORT, new Teleport(this, this.owner));
         // this.addState(AzazelStates.DAMAGED, new Jump(this, this.owner));
         // this.addState(AzazelStates.DEAD, new Dead(this, this.owner));
         
@@ -124,7 +126,7 @@ export default class AzazelController extends StateMachineAI {
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
-        this.receiver.subscribe(COFEvents.PLAYER_GUARD);
+        this.receiver.subscribe(COFEvents.PLAYER_TELEPORT);
         this.receiver.subscribe(COFEvents.REGENERATE_STAMINA);
     }
 
@@ -164,7 +166,7 @@ export default class AzazelController extends StateMachineAI {
 				this.handlePlayerSwing(event);
 				break;
 			}
-            case COFEvents.PLAYER_GUARD: {
+            case COFEvents.PLAYER_TELEPORT: {
 				this.handlePlayerGuard(event);
 				break;
 			}

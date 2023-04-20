@@ -45,7 +45,8 @@ export default class EnemyController extends StateMachineAI {
 
         this.receiver = new Receiver();
         this.emitter = new Emitter();
-        this.receiver.subscribe(COFEvents.ENEMY_HIT);
+        this.receiver.subscribe(COFEvents.SWING_HIT);
+        this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
     }
 
     public update(deltaT: number): void {
@@ -54,10 +55,6 @@ export default class EnemyController extends StateMachineAI {
 
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
-			case COFEvents.ENEMY_HIT: {
-				this.handleEnemyHit(event);
-				break;
-			}
 			default: {
 				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
 			}
@@ -96,7 +93,16 @@ export default class EnemyController extends StateMachineAI {
     // ======================================================================
     // Event handlers
 
-    public handleEnemyHit(event: GameEvent): void {
+    public handleEnemySwingHit(event: GameEvent): void {
+        this.health -= 10;
+        this.emitter.fireEvent(COFEvents.ENEMY_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+
+        if (this.health == 0) {
+            this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
+        }
+    }
+
+    public handleEnemyFireballHit(event: GameEvent): void {
         this.health -= 10;
         this.emitter.fireEvent(COFEvents.ENEMY_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
 

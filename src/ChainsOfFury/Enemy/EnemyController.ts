@@ -21,7 +21,7 @@ export default class EnemyController extends StateMachineAI {
     protected _health: number;
     protected _maxHealth: number;
 
-    /** The players game node */
+    /** The boss game node */
     protected owner: COFAnimatedSprite;
 
     protected _velocity: Vec2;
@@ -141,5 +141,33 @@ export default class EnemyController extends StateMachineAI {
     }
 
     // Event handlers
+    // ======================================================================
+
+    // ======================================================================
+    // Helper functions
+
+    // gets the x distance between boss and player
+    // directional: negative - boss to left of player
+    //              positive - boss to right of player
+    public getXDistanceFromPlayer() {
+        return this.owner.position.x - this.player.position.x;
+    }
+
+    // gets the y distance between boss and player
+    // directional: negative - boss below player
+    //              positive - boss above player
+    public getYDistanceFromPlayer() {
+        return this.owner.position.y - this.player.position.y;
+    }
+
+    // gets the distance between player and boss (non-directional)
+    public getDistanceFromPlayer() {
+        let diffInX = this.getXDistanceFromPlayer();
+        let diffInY = this.getYDistanceFromPlayer();
+
+        return Math.sqrt(diffInX*diffInX + diffInY*diffInY)
+    }
+
+    // Helper functions
     // ======================================================================
 }

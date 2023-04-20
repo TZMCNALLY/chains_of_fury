@@ -20,7 +20,7 @@ export default class COFLevel3 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Mind Flayer");
-        this.initializeEnemyBoss("mind_flayer", MindFlayerController);
+        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35);
     }
 
     protected handleLevelEnd(): void {

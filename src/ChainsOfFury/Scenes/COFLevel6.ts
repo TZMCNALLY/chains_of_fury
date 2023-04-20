@@ -20,7 +20,7 @@ export default class COFLevel6 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Moon Dog");
-        this.initializeEnemyBoss("moondog", MoonDogController);
+        this.initializeEnemyBoss("moondog", MoonDogController, 1);
     }
 
     protected handleLevelEnd(): void {

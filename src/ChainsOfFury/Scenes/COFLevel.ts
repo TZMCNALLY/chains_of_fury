@@ -618,11 +618,11 @@ export default class COFLevel extends Scene {
     }
 
 
-    protected initializeEnemyBoss(key: string, controller : new (...a: any[]) => EnemyController): void {
+    protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number): void {
         let enemySpawn = new Vec2(800,500);
 
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
-        this.enemyBoss.scale.set(1,1);
+        this.enemyBoss.scale.set(scaleSize, scaleSize);
         this.enemyBoss.position.copy(enemySpawn);
 
         // Give enemy boss it's AI

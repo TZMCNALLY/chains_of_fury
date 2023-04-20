@@ -378,7 +378,6 @@ export default class COFLevel extends Scene {
     }
 
     protected handleLevelEnd(): void {
-
         this.levelEndLabel.tweens.play("slideIn")
     }
 

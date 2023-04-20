@@ -118,7 +118,7 @@ export default class EnemyController extends StateMachineAI {
     // Event handlers
 
     public handleEnemySwingHit(event: GameEvent): void {
-        this.health -= 10;
+        this.health -= 100;
         this.emitter.fireEvent(COFEvents.ENEMY_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
 
         if (this.health == 0) {

@@ -1,11 +1,12 @@
 import COFLevel from "./COFLevel";
+import COFLevel4 from "./COFLevel4"
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Input from "../../Wolfie2D/Input/Input";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import MindFlayerController from "../Enemy/MindFlayer/MindFlayerController";
 
-export default class COFLevel1 extends COFLevel {
+export default class COFLevel3 extends COFLevel {
 
     /**
      * @see Scene.update()
@@ -20,5 +21,10 @@ export default class COFLevel1 extends COFLevel {
         super.startScene();
         super.initializeBossUI("Mind Flayer");
         this.initializeEnemyBoss("mind_flayer", MindFlayerController);
+    }
+
+    protected handleLevelEnd(): void {
+        super.handleLevelEnd();
+        this.sceneManager.changeToScene(COFLevel4)
     }
 }

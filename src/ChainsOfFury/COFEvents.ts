@@ -27,9 +27,14 @@ export const COFEvents = {
     PLAYER_DEAD: "PLAYER_DEAD",
 
     /**
-     * Event trigger when enemy is hit.
+     * Event trigger when enemy is hit by a swing.
      */
-    ENEMY_HIT: "ENEMY_HIT",
+    SWING_HIT: "SWING_HIT",
+
+    /**
+     * Event trigger when enemy gets stunned.
+     */
+    ENEMY_STUNNED: "ENEMY_STUNNED",
 
     /**
      * Event trigger when enemy entity takes damage.
@@ -58,9 +63,9 @@ export const COFEvents = {
     PLAYER_HURL: "PLAYER_HURL",
 
     /**
-     * Event trigger when player entity guardes
+     * Event trigger when player entity teleports
      */
-    PLAYER_GUARD: "PLAYER_GUARD",
+    PLAYER_TELEPORT: "PLAYER_TELEPORT",
 
     /**
      * Event trigger when player is idle, allowing them to regenerate lost stamina
@@ -83,5 +88,13 @@ export const COFEvents = {
      */
     CHANGE_MANA: "CHANGE_MANA",
 
-    FIREBALL_HIT: "FIREBALL_HIT"
+    /**
+     * Event trigger when enemy is hit by a fireball.
+     */
+    FIREBALL_HIT_ENEMY: "FIREBALL_HIT_ENEMY",
+
+    /**
+     * Event trigger when a fireball hit a wall.
+     */
+    FIREBALL_HIT_WALL: "FIREBALL_HIT_WALL",
 }

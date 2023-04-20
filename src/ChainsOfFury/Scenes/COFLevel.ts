@@ -20,7 +20,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import Sprite from '../../Wolfie2D/Nodes/Sprites/Sprite';
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
-import AzazelController from "../Player/AzazelController";
+import AzazelController, { AzazelTweens } from '../Player/AzazelController';
 import FireballShaderType from "../Shaders/FireballShaderType";
 import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
@@ -31,6 +31,8 @@ import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import { COFEvents } from "../COFEvents";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import PlayerController from '../../demos/PlatformerPlayerController';
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 /**
  * A const object for the layer names
@@ -117,17 +119,19 @@ export default class COFLevel extends Scene {
         let groupNames : string[] = [
             COFPhysicsGroups.PLAYER, 
             COFPhysicsGroups.ENEMY,
+            COFPhysicsGroups.ENEMY_CONTACT_DMG,
             COFPhysicsGroups.WALL,
             COFPhysicsGroups.PLAYER_WEAPON,
             COFPhysicsGroups.FIREBALL
         ]
         
         let collisions : number[][] = [
-            [0,0,1,0,0],
-            [0,0,1,1,1],
-            [1,1,0,0,1],
-            [0,1,0,0,0],
-            [0,1,1,0,0]
+            [0,0,0,1,0,0],
+            [0,0,0,1,1,1],
+            [0,0,0,1,1,1],
+            [1,1,1,0,0,1],
+            [0,1,1,0,0,0],
+            [0,1,1,1,0,0]
         ];
 
 
@@ -226,10 +230,18 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.PLAYER_HURL: {
-                this.spawnFireball(event.data.get("faceDir"), event.data.get("pos"));
+                this.spawnFireball(event.data.get("faceDir"));
                 break;
             }
-            case COFEvents.FIREBALL_HIT: {
+            case COFEvents.PLAYER_TELEPORT: {
+                this.handlePlayerTeleportation();
+                break;
+            }
+            case COFEvents.FIREBALL_HIT_WALL: {
+                this.despawnFireballs(event.data.get("node"));
+                break;
+            }
+            case COFEvents.FIREBALL_HIT_ENEMY: {
                 this.despawnFireballs(event.data.get("node"));
                 break;
             }
@@ -285,7 +297,7 @@ export default class COFLevel extends Scene {
 
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
-            this.emitter.fireEvent(COFEvents.ENEMY_HIT);
+            this.emitter.fireEvent(COFEvents.SWING_HIT);
         }
     }
     protected initObjectPools(): void {
@@ -324,18 +336,29 @@ export default class COFLevel extends Scene {
     * @param faceDir the direction the player is facing
     */
 
-    protected spawnFireball(faceDir: number, pos: Vec2) {
+    protected spawnFireball(faceDir: Vec2) {
         for(let i = 0; i < this.fireballs.length; i++) {
 
             if(!this.fireballs[i].visible) {
 
+                // Bring this fireball to life
                 this.fireballs[i].visible = true;
 
+                // Set the velocity to be in the direction of the mouse
+                faceDir.x *= 400;
+                faceDir.y *= 400;
+
+                (this.fireballs[i]._ai as FireballBehavior).velocity = faceDir
+
+                // Set the starting position of the fireball
                 this.fireballs[i].position.copy(this.player.position);
 
+                // Give physics to this fireball
                 let fireballHitbox = new AABB(this.player.position.clone(), this.fireballs[i].boundary.getHalfSize().clone());
                 this.fireballs[i].addPhysics(fireballHitbox);
                 this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
+                this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
+
                 break;
             }
         }
@@ -400,6 +423,33 @@ export default class COFLevel extends Scene {
 		this.manaBar.position.set(this.manaBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxMana - currentMana), this.manaBarBg.position.y);
 	}
 
+    protected handlePlayerTeleportation(): void {
+
+        var fireball; // the fireball to teleport to
+
+        // Find the most recently thrown visible fireball
+        for(let i = 2; i >= 0; i--) {
+
+            if(this.fireballs[i].visible) {
+                fireball = this.fireballs[i];
+                break;
+            }
+        }
+
+        // If no fireball was thrown, then teleportation can't happen
+        if(fireball == undefined)
+            return;
+
+        this.player.position.copy(fireball.position);
+
+        // Keeps player from clipping out of bounds
+        this.player.position.x = MathUtils.clamp(this.player.position.x, 232, 1030);
+        this.player.position.y = MathUtils.clamp(this.player.position.y, 186, 776);
+
+        this.despawnFireballs(fireball.id)
+        this.player.tweens.play(AzazelTweens.TELEPORTED);
+    }
+
      /**
      * 
      * 
@@ -446,7 +496,10 @@ export default class COFLevel extends Scene {
         // Add physics to the wall layer
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
-        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT, null)
+        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
+        
+        // Allows a trigger to happen when boss charges into the wall.
+        this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, null);
     }
     /**
      * Handles all subscriptions to events
@@ -457,7 +510,9 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
-        this.receiver.subscribe(COFEvents.FIREBALL_HIT);
+        this.receiver.subscribe(COFEvents.PLAYER_TELEPORT);
+        this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
+        this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.LEVEL_END);
     }
@@ -534,6 +589,31 @@ export default class COFLevel extends Scene {
         let playerHitbox = this.player.boundary.getHalfSize().clone();
         playerHitbox.x = playerHitbox.x-12;
 
+        this.player.tweens.add(AzazelTweens.TELEPORTED, {
+            startDelay: 0,
+            duration: 500,
+            effects: [
+                {
+                    property: "rotation",
+                    start: 0,
+                    end: Math.PI * 2,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                },
+                {
+                    property: TweenableProperties.scaleX,
+                    start: .05,
+                    end: .4,
+                    ease: EaseFunctionType.IN_OUT_QUAD,
+                },
+                {
+                    property: TweenableProperties.scaleY,
+                    start: .05,
+                    end: .4,
+                    ease: EaseFunctionType.IN_OUT_QUAD,
+                }
+            ],
+        });
+
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
     }
@@ -555,7 +635,7 @@ export default class COFLevel extends Scene {
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
-        this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT, null);
+        this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
     }
 
 

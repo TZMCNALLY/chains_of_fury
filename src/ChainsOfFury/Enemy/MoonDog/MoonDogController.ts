@@ -9,6 +9,7 @@ import Attack from "./MoonDogStates/Attack";
 import Charge from "./MoonDogStates/Charge";
 import Damaged from "./MoonDogStates/Damaged";
 import Dead from "./MoonDogStates/Dead";
+import Stunned from "./MoonDogStates/Stunned";
 
 export const MoonDogStates = {
     IDLE: "IDLE",
@@ -16,15 +17,16 @@ export const MoonDogStates = {
 	DAMAGED: "DAMAGED",
     ATTACK: "ATTACK",
     CHARGE: "CHARGE",
-    DEAD: "DEAD"
+    DEAD: "DEAD",
+    STUNNED: "STUNNED"
 } as const
 
 export const MoonDogAnimation = {
     IDLE: "IDLE",
     ATTACK_RIGHT: "ATTACK_RIGHT",
     ATTACK_LEFT: "ATTACK_LEFT",
-    TAKINGDAMAGE_RIGHT: "TAKINGDAMAGE_RIGHT",
-    TAKINGDAMAGE_LEFT: "TAKINGDAMAGE_LEFT",
+    TAKINGDAMAGE_RIGHT: "DAMAGE_RIGHT",
+    TAKINGDAMAGE_LEFT: "DAMAGE_LEFT",
     RUN_RIGHT: "RUN_RIGHT",
     RUN_LEFT: "RUN_LEFT",
     DYING_RIGHT: "DYING_RIGHT",
@@ -46,6 +48,7 @@ export default class MoonDogController extends EnemyController {
         this.addState(MoonDogStates.CHARGE, new Charge(this, this.owner));
         this.addState(MoonDogStates.DAMAGED, new Damaged(this, this.owner));
         this.addState(MoonDogStates.DEAD, new Dead(this, this.owner));
+        this.addState(MoonDogStates.STUNNED, new Stunned(this, this.owner));
 
         this.initialize(MoonDogStates.IDLE);
 
@@ -57,16 +60,21 @@ export default class MoonDogController extends EnemyController {
 		super.update(deltaT);
 	}
 
-    public handleEvent(event: GameEvent): void {
-		switch(event.type) {
-			case COFEvents.ENEMY_HIT: {
-				this.handleEnemyHit(event);
-				break;
-			}
-			default: {
-				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
-			}
-		}
-	}
+    // Seems unnecessary override
+
+    // public handleEvent(event: GameEvent): void {
+	// 	switch(event.type) {
+	// 		case COFEvents.ENEMY_HIT: {
+	// 			this.handleEnemyHit(event);
+	// 			break;
+	// 		}
+    //         case COFEvents.ENEMY_STUNNED: {
+    //             this.handleEnemyStunned(event);
+    //         }
+	// 		default: {
+	// 			throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
+	// 		}
+	// 	}
+	// }
 
 }

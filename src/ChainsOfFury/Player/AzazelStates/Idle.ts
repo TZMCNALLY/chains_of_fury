@@ -11,6 +11,7 @@ export default class Idle extends PlayerState {
             this.owner.animation.play(AzazelAnimations.IDLE_LEFT);
         else
             this.owner.animation.play(AzazelAnimations.IDLE_RIGHT);
+        console.log(this.owner.position)
 	}
 
 	public update(deltaT: number): void {
@@ -29,7 +30,7 @@ export default class Idle extends PlayerState {
 
         else if (Input.isMousePressed(2)) {
             if (this.parent.mana > 0)
-                this.finished(AzazelStates.GUARD);
+                this.finished(AzazelStates.TELEPORT);
         }
 
         else if (Input.isMouseJustPressed(0)) {

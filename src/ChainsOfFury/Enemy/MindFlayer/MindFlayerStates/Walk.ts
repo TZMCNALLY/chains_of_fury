@@ -6,11 +6,6 @@ import Idle from "./Idle";
 
 export default class Walk extends MindFlayerState {
 
-	// direction the boss should be facing
-	// -1 or left and down, 1 for up and right
-	protected faceXDir = -1
-	protected faceYDir = -1
-
 	public onEnter(options: Record<string, any>): void {
         this.parent.speed = 10;
 		if (this.parent.getXDistanceFromPlayer() > 0)

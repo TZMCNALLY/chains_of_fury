@@ -151,7 +151,7 @@ export default class AzazelController extends StateMachineAI {
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
 			case COFEvents.PLAYER_HIT: {
-				//this.handlePlayerHit(event);
+				this.handlePlayerHit(event);
 				break;
 			}
             case COFEvents.PLAYER_HURL: {
@@ -240,7 +240,8 @@ export default class AzazelController extends StateMachineAI {
     // Event handlers
 
     public handlePlayerHit(event: GameEvent): void {
-    //     this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : maxHealth : });
+        this.health -= 10;
+        this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
     }
 
     public handlePlayerHurl(event: GameEvent): void {

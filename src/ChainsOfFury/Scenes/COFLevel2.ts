@@ -1,5 +1,5 @@
 import COFLevel from "./COFLevel";
-import COFLevel3 from "./COFLevel3"
+import COFLevel5 from "./COFLevel5"
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Input from "../../Wolfie2D/Input/Input";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
@@ -25,6 +25,6 @@ export default class COFLevel2 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
-        this.sceneManager.changeToScene(COFLevel3)
+        this.sceneManager.changeToScene(COFLevel5)
     }
 }

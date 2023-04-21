@@ -59,22 +59,4 @@ export default class MoonDogController extends EnemyController {
     public update(deltaT: number): void {
 		super.update(deltaT);
 	}
-
-    // Seems unnecessary override
-
-    // public handleEvent(event: GameEvent): void {
-	// 	switch(event.type) {
-	// 		case COFEvents.ENEMY_HIT: {
-	// 			this.handleEnemyHit(event);
-	// 			break;
-	// 		}
-    //         case COFEvents.ENEMY_STUNNED: {
-    //             this.handleEnemyStunned(event);
-    //         }
-	// 		default: {
-	// 			throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
-	// 		}
-	// 	}
-	// }
-
 }

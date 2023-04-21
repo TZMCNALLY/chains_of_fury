@@ -172,7 +172,7 @@ export default class EnemyController extends StateMachineAI {
 
         return Math.sqrt(diffInX*diffInX + diffInY*diffInY)
     }
-
+    
     // Helper functions
     // ======================================================================
 }

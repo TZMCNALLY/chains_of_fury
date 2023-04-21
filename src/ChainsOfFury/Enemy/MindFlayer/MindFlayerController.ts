@@ -5,23 +5,23 @@ import { COFEvents } from "../../COFEvents";
 
 import Idle from "./MindFlayerStates/Idle";
 import Walk from "./MindFlayerStates/Walk";
-import Attack from "./MindFlayerStates/Attack";
 import Teleport from "./MindFlayerStates/Teleport";
 import Damaged from "./MindFlayerStates/Damaged";
 import Dead from "./MindFlayerStates/Dead";
+import CastFireballs from "./MindFlayerStates/CastFireballs";
 
 export const MindFlayerStates = {
     IDLE: "IDLE",
     WALK: "WALK",
 	DAMAGED: "DAMAGED",
-    ATTACK: "ATTACK",
+    CAST_FIREBALLS: "ATTACK",
     TELEPORT: "TELEPORT",
     DEAD: "DEAD"
 } as const
 
 export const MindFlayerAnimation = {
     IDLE: "IDLE",
-    ATTACK: "CASTING_LEFT",
+    CAST_FIREBALLS: "CASTING_LEFT",
     TAKING_DAMAGE: "TAKING_DAMAGE",
     WALK_RIGHT: "WALKING_RIGHT",
     WALK_LEFT: "WALKING_LEFT",
@@ -36,7 +36,7 @@ export default class MindFlayerController extends EnemyController {
 
         this.addState(MindFlayerStates.IDLE, new Idle(this, this.owner));
         this.addState(MindFlayerStates.WALK, new Walk(this, this.owner));
-        this.addState(MindFlayerStates.ATTACK, new Attack(this, this.owner));
+        this.addState(MindFlayerStates.CAST_FIREBALLS, new CastFireballs(this, this.owner));
         this.addState(MindFlayerStates.TELEPORT, new Teleport(this, this.owner));
         this.addState(MindFlayerStates.DAMAGED, new Damaged(this, this.owner));
         this.addState(MindFlayerStates.DEAD, new Dead(this, this.owner));

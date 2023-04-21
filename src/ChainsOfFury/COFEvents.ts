@@ -68,11 +68,6 @@ export const COFEvents = {
     PLAYER_TELEPORT: "PLAYER_TELEPORT",
 
     /**
-     * Event trigger when boss entity teleports
-     */
-    BOSS_TELEPORT: "BOSS_TELEPORT",
-
-    /**
      * Event trigger when player is idle, allowing them to regenerate lost stamina
      * 
      * Has data: { currStamina : number, maxStamina : number }
@@ -101,5 +96,5 @@ export const COFEvents = {
     /**
      * Event trigger when a fireball hit a wall.
      */
-    FIREBALL_HIT_WALL: "FIREBALL_HIT_WALL",
+    FIREBALL_HIT_WALL: "FIREBALL_HIT_WALL"
 }

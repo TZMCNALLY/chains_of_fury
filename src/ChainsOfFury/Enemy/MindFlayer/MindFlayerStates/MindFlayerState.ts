@@ -12,6 +12,11 @@ export default abstract class MindFlayerState extends State {
     protected parent: MindFlayerController;
 	protected owner: COFAnimatedSprite;
 
+    // direction the boss should be facing
+	// -1 or left and down, 1 for up and right
+	protected faceXDir = -1
+	protected faceYDir = -1
+
 	public constructor(parent: MindFlayerController, owner: COFAnimatedSprite){
 		super(parent);
 		this.owner = owner;

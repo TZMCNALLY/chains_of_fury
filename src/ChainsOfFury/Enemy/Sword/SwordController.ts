@@ -4,37 +4,33 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { COFEvents } from "../../COFEvents";
 
 import Idle from "./SwordStates/Idle";
-import Attack from "./SwordStates/Attack";
+import BasicAttack from "./SwordStates/BasicAttack";
+import Walk from "./SwordStates/Walk"
+import SpinAttack from "./SwordStates/SpinAttack";
 
 export const SwordStates = {
     IDLE: "IDLE",
-    RUN: "RUN",
-	DAMAGED: "DAMAGED",
-    ATTACK: "ATTACK",
-    CHARGE: "CHARGE",
-    DEAD: "DEAD",
-    STUNNED: "STUNNED"
+    WALK: "WALK",
+    BASIC_ATTACK: "BASIC_ATTACK",
+    SPIN_ATTACK: "SPIN_ATTACK"
 } as const
 
 export const SwordAnimation = {
     IDLE: "IDLE",
+    SPAWN: "SPAWN",
+    MOVE_RIGHT: "MOVE_RIGHT",
+    MOVE_LEFT: "MOVE_LEFT",
     ATTACK_RIGHT: "ATTACK_RIGHT",
     ATTACK_LEFT: "ATTACK_LEFT",
-    TAKINGDAMAGE_RIGHT: "DAMAGE_RIGHT",
-    TAKINGDAMAGE_LEFT: "DAMAGE_LEFT",
-    RUN_RIGHT: "RUN_RIGHT",
-    RUN_LEFT: "RUN_LEFT",
-    DYING_RIGHT: "DYING_RIGHT",
-    DYING_LEFT: "DYING_LEFT",
-    DEAD_RIGHT: "DEAD_RIGHT",
-    DEAD_LEFT: "DEAD_LEFT",
-    CHARGE_RIGHT: "WALKING_RIGHT",
-    CHARGE_LEFT: "WALKING_LEFT",
+    ATTACKED_RIGHT: "ATTACKED_RIGHT",
+    ATTACKED_LEFT: "ATTACKED_LEFT",
+    DYING: "DYING",
+    DEAD: "DEAD"
 } as const
 
 export const SwordTweens = {
     SPIN: "SPIN"
-}
+} as const
 
 export default class SwordController extends EnemyController {
 
@@ -42,11 +38,13 @@ export default class SwordController extends EnemyController {
         super.initializeAI(owner, options);
 
         this.addState(SwordStates.IDLE, new Idle(this, this.owner));
-        this.addState(SwordStates.ATTACK, new Attack(this, this.owner));
+        this.addState(SwordStates.BASIC_ATTACK, new BasicAttack(this, this.owner));
+        this.addState(SwordStates.WALK, new Walk(this, this.owner));
+        this.addState(SwordStates.SPIN_ATTACK, new SpinAttack(this, this.owner));
         //MAKE MORE STATES LATER
 
-        this.initialize(SwordStates.IDLE);
-
+        this.initialize(SwordStates.WALK);
+        
         this.maxHealth = 500;
         this.health = this.maxHealth;
     }

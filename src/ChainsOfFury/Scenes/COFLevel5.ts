@@ -27,16 +27,17 @@ export default class COFLevel5 extends COFLevel {
         this.initializeEnemyBoss("flying_sword", SwordController, 1);
         this.enemyBoss.tweens.add(SwordTweens.SPIN, {
             startDelay: 0,
-            duration: 100,
+            duration: 750,
             effects: [
                 {
                     property: "rotation",
                     start: 0,
                     end: Math.PI * 2,
-                    ease: EaseFunctionType.IN_OUT_QUAD
+                    ease: EaseFunctionType.IN_SINE
                 }
             ]
         });
+        console.log(this.enemyBoss)
     }
 
     protected handleLevelEnd(): void {

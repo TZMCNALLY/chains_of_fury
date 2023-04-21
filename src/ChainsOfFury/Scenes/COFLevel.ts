@@ -309,7 +309,7 @@ export default class COFLevel extends Scene {
 			this.fireballs[i].visible = false;
 
 			// Assign them fireball ai
-			this.fireballs[i].addAI(FireballBehavior, {user: this.player.ai});
+			this.fireballs[i].addAI(FireballBehavior);
 
             this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
 			this.fireballs[i].scale.set(1.5, 1.5);
@@ -343,7 +343,8 @@ export default class COFLevel extends Scene {
                 let fireballHitbox = new AABB(this.player.position.clone(), this.fireballs[i].boundary.getHalfSize().clone());
                 this.fireballs[i].addPhysics(fireballHitbox);
                 this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
-                this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
+                //this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
+                this.fireballs[i].setTrigger(COFPhysicsGroups.WALL, COFEvents.FIREBALL_HIT_WALL, null);
 
                 break;
             }
@@ -619,13 +620,13 @@ export default class COFLevel extends Scene {
         this.enemyBoss.scale.set(scaleSize, scaleSize);
         this.enemyBoss.position.copy(enemySpawn);
 
-        // Give enemy boss it's AI
+        // Give enemy boss its AI
         this.enemyBoss.addAI(controller, {player: this.player});
 
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
 
-        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
+        //this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
         this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);

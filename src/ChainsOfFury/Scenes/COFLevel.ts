@@ -33,6 +33,7 @@ import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import PlayerController from '../../demos/PlatformerPlayerController';
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import { MindFlayerAnimation } from "../Enemy/MindFlayer/MindFlayerController";
 
 /**
  * A const object for the layer names
@@ -122,16 +123,18 @@ export default class COFLevel extends Scene {
             COFPhysicsGroups.ENEMY_CONTACT_DMG,
             COFPhysicsGroups.WALL,
             COFPhysicsGroups.PLAYER_WEAPON,
-            COFPhysicsGroups.FIREBALL
+            COFPhysicsGroups.FIREBALL,
+            COFPhysicsGroups.ENEMY_PROJECTILE
         ]
         
         let collisions : number[][] = [
-            [0,0,0,1,0,0],
-            [0,0,0,1,1,1],
-            [0,0,0,1,1,1],
-            [1,1,1,0,0,1],
-            [0,1,1,0,0,0],
-            [0,1,1,1,0,0]
+            [0,0,0,1,0,1,1],
+            [0,0,0,1,1,1,0],
+            [0,0,0,1,1,1,0],
+            [1,1,1,0,0,1,1],
+            [0,1,1,0,0,0,0],
+            [1,1,1,1,0,0,0],
+            [1,0,0,1,0,0,0]
         ];
 
 
@@ -237,16 +240,16 @@ export default class COFLevel extends Scene {
                 this.handlePlayerTeleportation();
                 break;
             }
-            case COFEvents.BOSS_TELEPORT: {
-                this.handleBossTeleportation();
-                break;
-            }
             case COFEvents.FIREBALL_HIT_WALL: {
                 this.despawnFireballs(event.data.get("node"));
                 break;
             }
             case COFEvents.FIREBALL_HIT_ENEMY: {
                 this.despawnFireballs(event.data.get("node"));
+                break;
+            }
+            case COFEvents.PLAYER_TOOK_DAMAGE: {
+                this.handlePlayerHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
             case COFEvents.BOSS_DEFEATED: {
@@ -280,10 +283,6 @@ export default class COFLevel extends Scene {
             //     this.handleParticleHit(event.data.get("node"));
             //     break;
             // }
-            // Default: Throw an error! No unhandled events allowed.
-            default: {
-                throw new Error(`Unhandled event caught in scene with type ${event.type}`);
-            }
         }
     }
 
@@ -361,7 +360,6 @@ export default class COFLevel extends Scene {
                 let fireballHitbox = new AABB(this.player.position.clone(), this.fireballs[i].boundary.getHalfSize().clone());
                 this.fireballs[i].addPhysics(fireballHitbox);
                 this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
-                this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
 
                 break;
             }
@@ -369,7 +367,6 @@ export default class COFLevel extends Scene {
     }
 
     protected despawnFireballs(node: number) : void {
-
         for(let i = 0; i < this.fireballs.length; i++) {
 
             if(this.fireballs[i].id == node) {
@@ -449,15 +446,8 @@ export default class COFLevel extends Scene {
         this.player.position.x = MathUtils.clamp(this.player.position.x, 232, 1030);
         this.player.position.y = MathUtils.clamp(this.player.position.y, 186, 776);
 
-        this.despawnFireballs(fireball.id)
+        this.despawnFireballs(fireball.id);
         this.player.tweens.play(AzazelTweens.TELEPORTED);
-    }
-
-    protected handleBossTeleportation(): void {
-
-        // this.enemyBoss.position = new Vec2(200, 1000)
-        // this.enemyBoss.ai.initializeAI.
-        // this.enemyBoss.position.x = Math.
     }
 
      /**
@@ -521,9 +511,9 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_TELEPORT);
-        this.receiver.subscribe(COFEvents.BOSS_TELEPORT);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
+        this.receiver.subscribe(COFEvents.PLAYER_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.LEVEL_END);
     }
@@ -627,6 +617,7 @@ export default class COFLevel extends Scene {
 
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PLAYER_HIT, null);
     }
 
 

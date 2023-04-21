@@ -20,17 +20,20 @@ export default class Idle extends MindFlayerState {
 
 		// Walk closer to target, if too far
 		if (this.parent.getDistanceFromPlayer() > 500) {
-			this.finished(MindFlayerStates.WALK)
+			this.lastActionTime = new Date();
+			this.finished(MindFlayerStates.WALK);
 		}
 
-		// // If target is too close, teleport away to a safe distance
-		// if (this.parent.getDistanceFromPlayer() < 100 && timeSinceLastAction > 5000) {
-		// 	this.finished(MindFlayerStates.TELEPORT)
-		// }
+		// If target is too close, teleport away to a safe distance
+		if ((this.parent.getDistanceFromPlayer() < 200 && timeSinceLastAction > 3000)) {
+			this.lastActionTime = new Date();
+			this.finished(MindFlayerStates.TELEPORT);
+		}
 
-		// if (timeSinceLastAction > 5000) {
-		// 	this.lastActionTime = new Date()
-		// }
+		if (timeSinceLastAction > 5000) {
+			this.lastActionTime = new Date();
+			this.finished(MindFlayerStates.CAST_FIREBALLS);
+		}
 	}
 
 	public onExit(): Record<string, any> {

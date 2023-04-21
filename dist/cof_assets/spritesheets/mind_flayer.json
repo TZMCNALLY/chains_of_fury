@@ -12,7 +12,7 @@
     "animations": [
         {
             "name": "CASTING_LEFT",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 0,

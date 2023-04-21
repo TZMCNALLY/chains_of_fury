@@ -158,12 +158,6 @@ export default class COFLevel extends Scene {
         this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
 
         this.load.spritesheet("fireball", "cof_assets/spritesheets/fireball.json")
-
-        // this.load.shader(
-		// 	FireballShaderType.KEY,
-		// 	FireballShaderType.VSHADER,
-		// 	FireballShaderType.FSHADER
-		// );
     }
 
     public startScene(): void {
@@ -314,22 +308,10 @@ export default class COFLevel extends Scene {
 			this.fireballs[i].visible = false;
 
 			// Assign them fireball ai
-			this.fireballs[i].addAI(FireballBehavior, {user: this.player.ai});
+			this.fireballs[i].addAI(FireballBehavior);
 
             this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
 			this.fireballs[i].scale.set(1.5, 1.5);
-
-    //         // Give the bubbles a custom shader
-	// 		this.fireballs[i].useCustomShader(FireballShaderType.KEY);
-	// 		this.fireballs[i].visible = false;
-	// 		this.fireballs[i].color = Color.BLUE;
-
-    //         // Give the bubbles AI
-	// 		this.fireballs[i].addAI(FireballAI);
-
-    //         // Give the bubbles a collider
-	// 		let collider = new Circle(Vec2.ZERO, 25);
-	// 		this.fireballs[i].setCollisionShape(collider);
 	    }
     }
    
@@ -360,7 +342,6 @@ export default class COFLevel extends Scene {
                 let fireballHitbox = new AABB(this.player.position.clone(), this.fireballs[i].boundary.getHalfSize().clone());
                 this.fireballs[i].addPhysics(fireballHitbox);
                 this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
-
                 break;
             }
         }
@@ -622,19 +603,19 @@ export default class COFLevel extends Scene {
 
 
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number): void {
-        let enemySpawn = new Vec2(800,500);
+        let enemySpawn = new Vec2(500,300);
 
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
         this.enemyBoss.scale.set(scaleSize, scaleSize);
         this.enemyBoss.position.copy(enemySpawn);
 
-        // Give enemy boss it's AI
+        // Give enemy boss its AI
         this.enemyBoss.addAI(controller, {player: this.player});
 
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
 
-        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
+        //this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
         this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);

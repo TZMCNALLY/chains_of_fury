@@ -10,12 +10,12 @@ import Receiver from "../../Wolfie2D/Events/Receiver";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
+import Input from "../../Wolfie2D/Input/Input";
+
 /**
  * The controller that controls the player.
  */
 export default class EnemyController extends StateMachineAI {
-    //public readonly MAX_SPEED: number = 200;
-    //public readonly MIN_SPEED: number = 100;
 
     /** Health and max health for the player */
     protected _health: number;
@@ -35,6 +35,8 @@ export default class EnemyController extends StateMachineAI {
 
     /** The player this enemy should attack. */
     protected _player: COFAnimatedSprite;
+
+    protected _lastFace: number; // Could be -1 for left, or 1 for right.
 
     // A receiver and emitter to hook into the event queue
 	protected receiver: Receiver;
@@ -84,6 +86,9 @@ export default class EnemyController extends StateMachineAI {
 
     // ======================================================================
     // Getters and setters
+
+    public get lastFace(): number { return this._lastFace; }
+    public set lastFace(x: number) { this._lastFace = x; }
 
     public get velocity(): Vec2 { return this._velocity; }
     public set velocity(velocity: Vec2) { this._velocity = velocity; }

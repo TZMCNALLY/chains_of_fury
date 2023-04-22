@@ -14,6 +14,7 @@ import { SwordEvents } from "../Enemy/Sword/SwordEvents";
 import { COFEvents } from "../COFEvents";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Vec2 from '../../Wolfie2D/DataTypes/Vec2';
+import { COFPhysicsGroups } from '../COFPhysicsGroups';
 
 export default class COFLevel5 extends COFLevel {
 
@@ -61,15 +62,25 @@ export default class COFLevel5 extends COFLevel {
         }
     }
 
+    protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number, enemySpawn: number[]): void {
+        super.initializeEnemyBoss(key, controller, scaleSize, enemySpawn);
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-32, this.enemyBoss.boundary.getHalfSize().clone().y-16)));
+        this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
+        this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
+    }
+
     protected handleBasicAttack(lastFace: number) {
 
         let basicAttackHitbox = this.enemyBoss.boundary.getHalfSize().clone();
-        if(lastFace == -1)
-            basicAttackHitbox.x = basicAttackHitbox.x - 8;
-        else
-            basicAttackHitbox.x = basicAttackHitbox.x + 8;
+        basicAttackHitbox.x -= 40;
+        basicAttackHitbox.y -= 16;
 
         let basicAttackPosition = this.enemyBoss.position.clone();
+
+        if(lastFace == -1)
+            basicAttackPosition.x -= 32;
+        else
+            basicAttackPosition.x += 32;
 
         if (this.player.collisionShape.overlaps(new AABB(basicAttackPosition, basicAttackHitbox))) {
             this.emitter.fireEvent(COFEvents.PLAYER_HIT);

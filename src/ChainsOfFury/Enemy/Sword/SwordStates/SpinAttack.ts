@@ -96,6 +96,7 @@ export default class SpinAttack extends SwordState {
     }
 
     public onExit(): Record<string, any> {
+        this.parent.walkTimer.start();
 		return {};
 	}
 }

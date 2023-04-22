@@ -5,6 +5,7 @@ import Vec2 from '../../../../Wolfie2D/DataTypes/Vec2';
 import AzazelController, { AzazelAnimations } from "../../../Player/AzazelController";
 import Input from '../../../../Wolfie2D/Input/Input';
 import { AzazelControls } from '../../../Player/AzazelControls';
+import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
 
 export default class SpinAttack extends SwordState {
 

@@ -3,6 +3,8 @@ import SwordState from "./SwordState";
 import SwordController from "../SwordController";
 import { AzazelTweens } from "../../../Player/AzazelController";
 import { SwordStates }from "../SwordController";
+import { COFEvents } from "../../../COFEvents";
+import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
 
 export default class BasicAttack extends SwordState {
 
@@ -13,9 +15,16 @@ export default class BasicAttack extends SwordState {
 	public update(deltaT: number): void {
 		super.update(deltaT);
 
-		if(this.numSlashes == 5)
-			this.finished(SwordStates.WALK)
+		// If animation is not playing, go back to normal group.
+		if (!this.owner.animation.isPlaying(SwordAnimation.ATTACK_RIGHT) && !this.owner.animation.isPlaying(SwordAnimation.ATTACKED_LEFT)) {
+			this.owner.setGroup(COFPhysicsGroups.ENEMY);
+		}
 
+		if(this.numSlashes == 5) {
+			this.owner.setGroup(COFPhysicsGroups.ENEMY);
+			this.finished(SwordStates.WALK)
+		}
+		
 		// Check if the sword can slash again
 		else if(!this.owner.animation.isPlaying(SwordAnimation.ATTACK_LEFT) 
 			&& !this.owner.animation.isPlaying(SwordAnimation.ATTACK_RIGHT)) {
@@ -27,9 +36,11 @@ export default class BasicAttack extends SwordState {
 
 			if(this.parent.getXDistanceFromPlayer() < 0)
 				this.owner.animation.play(SwordAnimation.ATTACK_RIGHT)
-			
 			else
 				this.owner.animation.play(SwordAnimation.ATTACK_LEFT)
+
+			// Set contact damage group.
+			this.owner.setGroup(COFPhysicsGroups.ENEMY_CONTACT_DMG);
 			
 			this.numSlashes++;
 		}
@@ -39,6 +50,10 @@ export default class BasicAttack extends SwordState {
 
 	public onExit(): Record<string, any> {
 		this.owner.animation.stop();
+
+		// Set back to normal enemy group.
+		this.owner.setGroup(COFPhysicsGroups.ENEMY);
+
 		return {};
 	}
 }

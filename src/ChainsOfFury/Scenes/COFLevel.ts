@@ -605,6 +605,7 @@ export default class COFLevel extends Scene {
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
         this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PLAYER_HIT, null);
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PLAYER_HIT, null);
     }
 
 

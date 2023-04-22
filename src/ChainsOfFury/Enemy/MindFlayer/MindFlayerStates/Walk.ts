@@ -7,7 +7,7 @@ import Idle from "./Idle";
 export default class Walk extends MindFlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.parent.speed = 10;
+        this.parent.speed = 20;
 		if (this.parent.getXDistanceFromPlayer() > 0)
         	this.owner.animation.play(MindFlayerAnimation.WALK_LEFT);
 		else

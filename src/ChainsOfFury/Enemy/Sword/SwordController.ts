@@ -41,7 +41,6 @@ export default class SwordController extends EnemyController {
         this.addState(SwordStates.BASIC_ATTACK, new BasicAttack(this, this.owner));
         this.addState(SwordStates.WALK, new Walk(this, this.owner));
         this.addState(SwordStates.SPIN_ATTACK, new SpinAttack(this, this.owner));
-        //MAKE MORE STATES LATER
 
         this.initialize(SwordStates.WALK);
         

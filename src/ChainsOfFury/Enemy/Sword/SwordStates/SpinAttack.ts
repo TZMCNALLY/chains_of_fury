@@ -1,10 +1,11 @@
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import SwordState from "./SwordState";
-import { SwordStates, SwordTweens } from '../SwordController';
+import { SwordAnimation, SwordStates, SwordTweens } from '../SwordController';
 import Vec2 from '../../../../Wolfie2D/DataTypes/Vec2';
-import AzazelController, { AzazelAnimations } from "../../../Player/AzazelController";
+import AzazelController, { AzazelAnimations, AzazelStates } from "../../../Player/AzazelController";
 import Input from '../../../../Wolfie2D/Input/Input';
 import { AzazelControls } from '../../../Player/AzazelControls';
+import { SwordEvents } from '../SwordEvents';
 
 export default class SpinAttack extends SwordState {
 
@@ -13,7 +14,10 @@ export default class SpinAttack extends SwordState {
 
     public onEnter(options: Record<string, any>): void {
         this.isCentered = false;
-        this.owner.tweens.play(SwordTweens.SPIN, true)
+        this.timer = new Timer(10000);
+        this.timer.start();
+        this.owner.animation.playIfNotAlready(SwordAnimation.ATTACK_RIGHT, true, null)
+        this.owner.tweens.play(SwordTweens.SPIN, true);
     }
 
     public update(deltaT: number): void{
@@ -33,6 +37,11 @@ export default class SpinAttack extends SwordState {
         }
         
         else {
+
+            if(this.timer.isStopped()) {
+                this.owner.tweens.stop(SwordTweens.SPIN);
+                this.finished(SwordStates.WALK)
+            }
 
             let xDistance = this.parent.getXDistanceFromPlayer();
             let yDistance = this.parent.getYDistanceFromPlayer();
@@ -70,22 +79,8 @@ export default class SpinAttack extends SwordState {
                         (this.parent.player.ai as AzazelController).speed = 50
                 }
             }
-            
 
-            // if(this.parent.getYDistanceFromPlayer() < 0) {
-
-            //     if(inputDir.y == 1) {
-            //         console.log(inputDir);
-            //         (this.parent.player.ai as AzazelController).speed = 50
-            //     }
-            // }
-
-            // else {
-
-            //     if(inputDir.x == -1 || (inputDir.x == 0 && inputDir.y != 0))
-            //         (this.parent.player.ai as AzazelController).speed = 50
-            // }
-
+            // If the player isn't moving, pull him towards the sword
             if(!Input.isPressed(AzazelControls.MOVE_RIGHT)
                 && !Input.isPressed(AzazelControls.MOVE_LEFT)
                 && !Input.isPressed(AzazelControls.MOVE_UP)
@@ -95,11 +90,12 @@ export default class SpinAttack extends SwordState {
                     this.parent.player.position.dirTo(this.owner.position).scale(200).scale(deltaT)
                 );
             }
+
+            this.emitter.fireEvent(SwordEvents.SPIN_ATTACK);
         }
     }
 
     public onExit(): Record<string, any> {
-		this.owner.animation.stop();
 		return {};
 	}
 }

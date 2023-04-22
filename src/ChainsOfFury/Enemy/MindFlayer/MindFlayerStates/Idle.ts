@@ -33,7 +33,9 @@ export default class Idle extends MindFlayerState {
 
 		if (timeSinceLastAction > 3000) {
 			this.lastActionTime = new Date();
-			if (this.parent.shadowDemonCount < 5) {
+			console.log(this.parent.shadowDemonCount)
+			console.log(this.parent.maxShadowDemonCount)
+			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount) {
 				this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
 			}
 			else {

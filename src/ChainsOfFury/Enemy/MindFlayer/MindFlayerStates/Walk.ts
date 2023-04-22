@@ -17,6 +17,7 @@ export default class Walk extends MindFlayerState {
 	public update(deltaT: number): void {
 		super.update(deltaT);
 
+		console.log(this.parent.player.position);
 		// Set appropriate player direction
 		if (this.parent.getXDistanceFromPlayer() < 0) {
 			this.faceXDir = 1

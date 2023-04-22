@@ -34,7 +34,8 @@ export const MindFlayerAnimation = {
 
 export default class MindFlayerController extends EnemyController {
 
-    protected _shadowDemonCount : number;
+    protected _shadowDemonCount : number = 0;
+    protected _maxShadowDemonCount : number = 5;
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
@@ -62,11 +63,13 @@ export default class MindFlayerController extends EnemyController {
     }
 
     public set shadowDemonCount(count : number) {
-        this.shadowDemonCount = count;
+        this._shadowDemonCount = count;
     }
     
+    public get maxShadowDemonCount() : number {
+        return this._maxShadowDemonCount;
+    }
     
-
     // public handleEvent(event: GameEvent): void {
 	// 	switch(event.type) {
 	// 		case COFEvents.ENEMY_HIT: {

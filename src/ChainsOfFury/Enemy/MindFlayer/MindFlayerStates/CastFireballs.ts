@@ -15,7 +15,10 @@ export default class CastFireballs extends MindFlayerState {
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
-		if (!this.owner.animation.isPlaying(MindFlayerAnimation.CAST_FIREBALLS) && this.fireballsToFire > 0) {
+		if (this.parent.getDistanceFromPlayer() > 500) {
+			this.finished(MindFlayerStates.IDLE);
+		}
+		else if (!this.owner.animation.isPlaying(MindFlayerAnimation.CAST_FIREBALLS) && this.fireballsToFire > 0) {
 			let direction = this.owner.position.dirTo(this.parent.player.position)
 			this.owner.animation.play(MindFlayerAnimation.CAST_FIREBALLS, false, MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL, {faceDir: direction})
 			this.fireballsToFire--;

@@ -2,6 +2,9 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 import SwordState from "./SwordState";
 import { SwordStates, SwordTweens } from '../SwordController';
 import Vec2 from '../../../../Wolfie2D/DataTypes/Vec2';
+import AzazelController from "../../../Player/AzazelController";
+import Input from '../../../../Wolfie2D/Input/Input';
+import { AzazelControls } from '../../../Player/AzazelControls';
 
 export default class SpinAttack extends SwordState {
 
@@ -16,21 +19,52 @@ export default class SpinAttack extends SwordState {
     public update(deltaT: number): void{
 
         if(this.isCentered == false) {
+            
+            if(this.owner.position.x > 390 && this.owner.position.x < 410
+                && this.owner.position.y > 390 && this.owner.position.y < 410)
+                this.isCentered = true;
 
-                console.log(this.owner.position)
-                //Spin toward the position of the player
-                this.parent.velocity = this.owner.position.dirTo(new Vec2(600, 400))
+            else {
+                this.parent.velocity = this.owner.position.dirTo(new Vec2(400, 400))
                 this.parent.velocity.x *= 800;
                 this.parent.velocity.y *= 800;
                 this.owner.move(this.parent.velocity.scaled(deltaT));
+            }
         }
+        
+        else {
 
-        else{
-            this.isCentered = true;
-            console.log("lol")
-            this.parent.player._velocity = this.parent.player.position.dirTo(this.owner.position)
-            this.parent.player._velocity.scale(.5)
-            this.parent.player.move(this.parent.player._velocity.scaled(deltaT))
+            if(this.parent.getXDistanceFromPlayer() < 0) {
+
+                if(Input.isPressed(AzazelControls.MOVE_RIGHT))
+                    (this.parent.player.ai as AzazelController).speed = 50
+            }
+
+            else {
+
+                if(Input.isPressed(AzazelControls.MOVE_LEFT))
+                    (this.parent.player.ai as AzazelController).speed = 50
+            }
+
+            // Boss above
+            if(this.parent.getYDistanceFromPlayer() < 0) {
+
+                if(Input.isPressed(AzazelControls.MOVE_DOWN))
+                    (this.parent.player.ai as AzazelController).speed = 50
+            }
+
+            // Boss below
+            else {
+
+                if(Input.isPressed(AzazelControls.MOVE_UP))
+                    (this.parent.player.ai as AzazelController).speed = 50
+            }
+
+ 
+            this.parent.player.move(
+                (new Vec2 (10, 10)).scale(deltaT)
+            );
+
         }
     }
 

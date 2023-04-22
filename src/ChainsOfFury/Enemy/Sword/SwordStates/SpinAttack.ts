@@ -2,7 +2,7 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 import SwordState from "./SwordState";
 import { SwordStates, SwordTweens } from '../SwordController';
 import Vec2 from '../../../../Wolfie2D/DataTypes/Vec2';
-import AzazelController from "../../../Player/AzazelController";
+import AzazelController, { AzazelAnimations } from "../../../Player/AzazelController";
 import Input from '../../../../Wolfie2D/Input/Input';
 import { AzazelControls } from '../../../Player/AzazelControls';
 
@@ -34,37 +34,67 @@ export default class SpinAttack extends SwordState {
         
         else {
 
-            if(this.parent.getXDistanceFromPlayer() < 0) {
+            let xDistance = this.parent.getXDistanceFromPlayer();
+            let yDistance = this.parent.getYDistanceFromPlayer();
 
-                if(Input.isPressed(AzazelControls.MOVE_RIGHT))
-                    (this.parent.player.ai as AzazelController).speed = 50
+            // Player in front
+            if(xDistance < 0) {
+
+                // Player below
+                if(yDistance < 0) {
+
+                    if(!Input.isPressed(AzazelControls.MOVE_UP) && !Input.isPressed(AzazelControls.MOVE_LEFT))
+                        (this.parent.player.ai as AzazelController).speed = 50
+                }
+
+                // Player above
+                else {
+                    if(!Input.isPressed(AzazelControls.MOVE_DOWN) && !Input.isPressed(AzazelControls.MOVE_LEFT))
+                        (this.parent.player.ai as AzazelController).speed = 50
+                }
             }
 
+            // Player behind
             else {
 
-                if(Input.isPressed(AzazelControls.MOVE_LEFT))
-                    (this.parent.player.ai as AzazelController).speed = 50
+                // Player below
+                if(yDistance < 0) {
+
+                    if(!Input.isPressed(AzazelControls.MOVE_UP) && !Input.isPressed(AzazelControls.MOVE_RIGHT))
+                        (this.parent.player.ai as AzazelController).speed = 50
+                }
+
+                // Player above
+                else {
+                    if(!Input.isPressed(AzazelControls.MOVE_DOWN) && !Input.isPressed(AzazelControls.MOVE_RIGHT))
+                        (this.parent.player.ai as AzazelController).speed = 50
+                }
             }
+            
 
-            // Boss above
-            if(this.parent.getYDistanceFromPlayer() < 0) {
+            // if(this.parent.getYDistanceFromPlayer() < 0) {
 
-                if(Input.isPressed(AzazelControls.MOVE_DOWN))
-                    (this.parent.player.ai as AzazelController).speed = 50
+            //     if(inputDir.y == 1) {
+            //         console.log(inputDir);
+            //         (this.parent.player.ai as AzazelController).speed = 50
+            //     }
+            // }
+
+            // else {
+
+            //     if(inputDir.x == -1 || (inputDir.x == 0 && inputDir.y != 0))
+            //         (this.parent.player.ai as AzazelController).speed = 50
+            // }
+
+            if(!Input.isPressed(AzazelControls.MOVE_RIGHT)
+                && !Input.isPressed(AzazelControls.MOVE_LEFT)
+                && !Input.isPressed(AzazelControls.MOVE_UP)
+                && !Input.isPressed(AzazelControls.MOVE_DOWN)) {
+                
+                this.parent.player.move(
+                    this.parent.player.position.dirTo(this.owner.position).scale(200).scale(deltaT)
+                );
             }
-
-            // Boss below
-            else {
-
-                if(Input.isPressed(AzazelControls.MOVE_UP))
-                    (this.parent.player.ai as AzazelController).speed = 50
-            }
-
- 
-            this.parent.player.move(
-                (new Vec2 (10, 10)).scale(deltaT)
-            );
-
         }
     }
 

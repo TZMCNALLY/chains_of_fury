@@ -3,12 +3,13 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Map from "../../Wolfie2D/DataTypes/Map";
 
-// import Fall from "./PlayerStates/Fall";
 import Idle from "./AzazelStates/Idle";
 import Run from "./AzazelStates/Run";
 import Swing from "./AzazelStates/Swing";
 import Hurl from "./AzazelStates/Hurl";
 import Teleport from "./AzazelStates/Teleport";
+import Damaged from "./AzazelStates/Damaged";
+import Dead from "./AzazelStates/Dead";
 
 import Input from "../../Wolfie2D/Input/Input";
 
@@ -28,8 +29,8 @@ export const AzazelAnimations = {
     IDLE_RIGHT: "IDLE_RIGHT",
     ATTACK_RIGHT: "ATTACK_RIGHT",
     ATTACK_LEFT: "ATTACK_LEFT",
-    TAKINGDAMAGE_RIGHT: "TAKINGDAMAGE_RIGHT",
-    TAKINGDAMAGE_LEFT: "TAKINGDAMAGE_LEFT",
+    TAKEDAMAGE_RIGHT: "TAKEDAMAGE_RIGHT",
+    TAKEDAMAGE_LEFT: "TAKEDAMAGE_LEFT",
     RUN_RIGHT: "RUN_RIGHT",
     RUN_LEFT: "RUN_LEFT",
     DYING_RIGHT: "DYING_RIGHT",
@@ -85,8 +86,8 @@ export default class AzazelController extends StateMachineAI {
     protected _lastFace: number; // Could be -1 for left, or 1 for right.
 
     protected tilemap: OrthogonalTilemap;
-    // protected cannon: Sprite;
-    // protected weapon: PlayerWeapon;
+
+    protected isDead = false;
 
     // A receiver and emitter to hook into the event queue
 	public receiver: Receiver;
@@ -114,8 +115,8 @@ export default class AzazelController extends StateMachineAI {
         this.addState(AzazelStates.SWING, new Swing(this, this.owner));
         this.addState(AzazelStates.HURL, new Hurl(this, this.owner));
         this.addState(AzazelStates.TELEPORT, new Teleport(this, this.owner));
-        // this.addState(AzazelStates.DAMAGED, new Jump(this, this.owner));
-        // this.addState(AzazelStates.DEAD, new Dead(this, this.owner));
+        this.addState(AzazelStates.DAMAGED, new Damaged(this, this.owner));
+        this.addState(AzazelStates.DEAD, new Dead(this, this.owner));
         
         // Start the player in the Idle state
         this.initialize(AzazelStates.IDLE);
@@ -151,7 +152,7 @@ export default class AzazelController extends StateMachineAI {
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
 			case COFEvents.PLAYER_HIT: {
-				//this.handlePlayerHit(event);
+				this.handlePlayerHit(event);
 				break;
 			}
             case COFEvents.PLAYER_HURL: {
@@ -207,8 +208,9 @@ export default class AzazelController extends StateMachineAI {
     public set health(health: number) { 
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
         // If the health hit 0, change the state of the player
-        if (this.health === 0) {
+        if (this.health === 0 && !this.isDead) {
             this.changeState(AzazelStates.DEAD); 
+            this.isDead = true;
         }
     }
 
@@ -240,7 +242,11 @@ export default class AzazelController extends StateMachineAI {
     // Event handlers
 
     public handlePlayerHit(event: GameEvent): void {
-    //     this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : maxHealth : });
+        this.health -= 10;
+        this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
+        
+        if (this.health > 0)
+            this.changeState(AzazelStates.DAMAGED);
     }
 
     public handlePlayerHurl(event: GameEvent): void {

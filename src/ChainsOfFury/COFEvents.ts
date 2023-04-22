@@ -96,5 +96,5 @@ export const COFEvents = {
     /**
      * Event trigger when a fireball hit a wall.
      */
-    FIREBALL_HIT_WALL: "FIREBALL_HIT_WALL",
+    FIREBALL_HIT_WALL: "FIREBALL_HIT_WALL"
 }

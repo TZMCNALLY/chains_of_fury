@@ -173,62 +173,60 @@
         {
             "name": "TAKEDAMAGE_RIGHT",
             "repeat": false,
-            "next": "IDLE_RIGHT",
             "frames": [
                 {
                     "index": 44,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 45,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 46,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 47,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 48,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 49,
-                    "duration": 5
+                    "duration": 2
                 }
             ]
         },
         {
             "name": "TAKEDAMAGE_LEFT",
             "repeat": false,
-            "next": "IDLE_LEFT",
             "frames": [
                 {
                     "index": 55,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 56,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 57,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 58,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 59,
-                    "duration": 4
+                    "duration": 2
                 },
                 {
                     "index": 60,
-                    "duration": 5
+                    "duration": 2
                 }
             ]
         },
@@ -295,7 +293,6 @@
         {
             "name": "DYING_RIGHT",
             "repeat": false,
-            "next": "DEAD_RIGHT",
             "frames": [
                 {
                     "index": 88,
@@ -330,7 +327,6 @@
         {
             "name": "DYING_LEFT",
             "repeat": false,
-            "next": "DEAD_LEFT",
             "frames": [
                 {
                     "index": 99,

@@ -66,35 +66,35 @@
         },
         {
             "name": "DANCING",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 12,
-                    "duration": 2
+                    "duration": 4
                 },
                 {
                     "index": 13,
-                    "duration": 2
+                    "duration": 4
                 },
                 {
                     "index": 14,
-                    "duration": 2
+                    "duration": 4
                 },
                 {
                     "index": 15,
-                    "duration": 2
+                    "duration": 4
                 },
                 {
                     "index": 16,
-                    "duration": 2
+                    "duration": 4
                 },
                 {
                     "index": 17,
-                    "duration": 2
+                    "duration": 4
                 },
                 {
                     "index": 18,
-                    "duration": 2
+                    "duration": 4
                 }
             ]
         },

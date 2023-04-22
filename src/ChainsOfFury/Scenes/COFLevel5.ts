@@ -29,7 +29,7 @@ export default class COFLevel5 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Satan's Blade");
-        this.initializeEnemyBoss("flying_sword", SwordController, 1);
+        this.initializeEnemyBoss("flying_sword", SwordController, 1, [700, 700]);
         this.enemyBoss.tweens.add(SwordTweens.SPIN, {
             startDelay: 0,
             duration: 100,

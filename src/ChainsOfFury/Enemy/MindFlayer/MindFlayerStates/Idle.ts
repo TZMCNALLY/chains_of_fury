@@ -7,10 +7,11 @@ import { MoonDogStates } from "../../MoonDog/MoonDogController";
 
 export default class Idle extends MindFlayerState {
 
-	protected lastActionTime: Date = new Date();
+	protected lastActionTime : Date;
 
 	public onEnter(options: Record<string, any>): void {
         this.owner.animation.play(MindFlayerAnimation.IDLE);
+		this.lastActionTime = new Date();
 	}
 
 	public update(deltaT: number): void {
@@ -32,7 +33,14 @@ export default class Idle extends MindFlayerState {
 
 		if (timeSinceLastAction > 3000) {
 			this.lastActionTime = new Date();
-			this.finished(MindFlayerStates.CAST_FIREBALLS);
+			console.log(this.parent.shadowDemonCount)
+			console.log(this.parent.maxShadowDemonCount)
+			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount) {
+				this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
+			}
+			else {
+				this.finished(MindFlayerStates.CAST_FIREBALLS);
+			}
 		}
 	}
 

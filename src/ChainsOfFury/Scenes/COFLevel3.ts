@@ -10,6 +10,8 @@ import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { COFEvents } from "../COFEvents";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import EnemyController from "../Enemy/EnemyController";
+
 
 export default class COFLevel3 extends COFLevel {
 
@@ -23,12 +25,13 @@ export default class COFLevel3 extends COFLevel {
         // Load enemy
         super.loadScene();
         this.load.spritesheet("mind_flayer", "cof_assets/spritesheets/mind_flayer.json");
+        this.load.spritesheet("shadow_demon", "cof_assets/spritesheets/shadow_demon.json")
     }
 
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Mind Flayer");
-        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35);
+        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [700, 700]);
     }
 
     protected handleLevelEnd(): void {
@@ -53,6 +56,10 @@ export default class COFLevel3 extends COFLevel {
             }
             case MindFlayerEvents.MIND_FLAYER_FIREBALL_HIT_WALL: {
                 this.despawnEnemyFireballs(event.data.get("node"));
+                break;
+            }
+            case MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON: {
+                this.summonShadowDemon(event.data.get("location"));
                 break;
             }
             case COFEvents.PLAYER_HIT: {
@@ -135,10 +142,31 @@ export default class COFLevel3 extends COFLevel {
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_TELEPORT);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIREBALL_HIT_WALL);
-        this.receiver.subscribe(COFEvents.PLAYER_HIT);
+        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON);
     }
 
     protected handleBossTeleportation(location: Vec2): void { 
         this.enemyBoss.position.copy(location);
+    }
+
+    // protected initializeShadowDemon(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number): void {
+    //     let enemySpawn = new Vec2(500,500);
+
+    //     this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
+    //     this.enemyBoss.scale.set(scaleSize, scaleSize);
+    //     this.enemyBoss.position.copy(enemySpawn);
+    //     this.enemyBoss.addAI(controller, {player: this.player});
+
+    //     let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
+    //     enemyHitbox.x = enemyHitbox.x - 6;
+
+    //     //this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
+    //     this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
+    //     this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
+    //     this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
+    // }
+
+    protected summonShadowDemon(location: Vec2): void {
+
     }
 }

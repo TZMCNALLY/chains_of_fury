@@ -499,6 +499,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.PLAYER_TOOK_DAMAGE);
+        this.receiver.subscribe(COFEvents.PLAYER_HIT);
         this.receiver.subscribe(COFEvents.PLAYER_DEAD);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.LEVEL_END);
@@ -607,12 +608,11 @@ export default class COFLevel extends Scene {
     }
 
 
-    protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number): void {
-        let enemySpawn = new Vec2(500,300);
-
+    protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController,
+     scaleSize: number, enemySpawn: number[]): void {
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
         this.enemyBoss.scale.set(scaleSize, scaleSize);
-        this.enemyBoss.position.copy(enemySpawn);
+        this.enemyBoss.position.copy(new Vec2(enemySpawn[0], enemySpawn[1]));
 
         // Give enemy boss its AI
         this.enemyBoss.addAI(controller, {player: this.player});

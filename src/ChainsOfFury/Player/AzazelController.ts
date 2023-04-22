@@ -86,8 +86,8 @@ export default class AzazelController extends StateMachineAI {
     protected _lastFace: number; // Could be -1 for left, or 1 for right.
 
     protected tilemap: OrthogonalTilemap;
-    // protected cannon: Sprite;
-    // protected weapon: PlayerWeapon;
+
+    protected isDead = false;
 
     // A receiver and emitter to hook into the event queue
 	public receiver: Receiver;
@@ -208,8 +208,9 @@ export default class AzazelController extends StateMachineAI {
     public set health(health: number) { 
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
         // If the health hit 0, change the state of the player
-        if (this.health === 0) {
+        if (this.health === 0 && !this.isDead) {
             this.changeState(AzazelStates.DEAD); 
+            this.isDead = true;
         }
     }
 

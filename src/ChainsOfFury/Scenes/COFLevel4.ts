@@ -5,6 +5,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 
 export default class COFLevel4 extends COFLevel {
 
@@ -20,7 +21,7 @@ export default class COFLevel4 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Moon Dog");
-        this.initializeEnemyBoss("moondog", MoonDogController, 1);
+        this.initializeEnemyBoss("moondog", MoonDogController, 1, [700, 700]);
     }
 
     protected handleLevelEnd(): void {

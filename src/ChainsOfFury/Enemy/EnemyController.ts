@@ -159,8 +159,8 @@ export default class EnemyController extends StateMachineAI {
     }
 
     // gets the y distance between boss and player
-    // directional: negative - boss below player
-    //              positive - boss above player
+    // directional: negative - boss above player
+    //              positive - boss below player
     public getYDistanceFromPlayer() {
         return this.owner.position.y - this.player.position.y;
     }

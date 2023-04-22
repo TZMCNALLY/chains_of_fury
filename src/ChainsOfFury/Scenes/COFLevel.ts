@@ -624,6 +624,7 @@ export default class COFLevel extends Scene {
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
         this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
+        
     }
 
 

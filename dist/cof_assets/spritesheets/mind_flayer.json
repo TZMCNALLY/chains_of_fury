@@ -66,7 +66,7 @@
         },
         {
             "name": "DANCING",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 12,

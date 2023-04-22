@@ -246,6 +246,10 @@ export default class COFLevel extends Scene {
                 this.handlePlayerHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
+            case COFEvents.PLAYER_DEAD: {
+                this.sceneManager.changeToScene(MainMenu);
+                break;
+            }
             case COFEvents.BOSS_DEFEATED: {
                 this.handleLevelEnd();
                 break;
@@ -495,6 +499,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.PLAYER_TOOK_DAMAGE);
+        this.receiver.subscribe(COFEvents.PLAYER_DEAD);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.LEVEL_END);
     }
@@ -569,7 +574,7 @@ export default class COFLevel extends Scene {
         this.player.addAI(AzazelController);
 
         let playerHitbox = this.player.boundary.getHalfSize().clone();
-        playerHitbox.x = playerHitbox.x-12;
+        playerHitbox.x = playerHitbox.x-15;
 
         this.player.tweens.add(AzazelTweens.TELEPORTED, {
             startDelay: 0,

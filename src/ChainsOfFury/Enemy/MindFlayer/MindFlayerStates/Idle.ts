@@ -30,7 +30,7 @@ export default class Idle extends MindFlayerState {
 			this.finished(MindFlayerStates.TELEPORT);
 		}
 
-		if (timeSinceLastAction > 5000) {
+		if (timeSinceLastAction > 3000) {
 			this.lastActionTime = new Date();
 			this.finished(MindFlayerStates.CAST_FIREBALLS);
 		}

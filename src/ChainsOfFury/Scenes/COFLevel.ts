@@ -602,6 +602,19 @@ export default class COFLevel extends Scene {
             ],
         });
 
+        this.player.tweens.add(AzazelTweens.IFRAME, {
+            startDelay: 0,
+            duration: 150,
+            effects: [
+                {
+                    property: "alpha",
+                    start: 1,
+                    end: .2,
+                    ease: EaseFunctionType.IN_OUT_QUAD,
+                }
+            ]
+        });
+
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
         this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PLAYER_HIT, null);

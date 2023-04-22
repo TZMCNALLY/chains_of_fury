@@ -42,7 +42,8 @@ export const AzazelAnimations = {
 } as const
 
 export const AzazelTweens = {
-    TELEPORTED: "TELEPORTED"
+    TELEPORTED: "TELEPORTED",
+    IFRAME: "IFRAME"
 }
 
 /**
@@ -154,6 +155,9 @@ export default class AzazelController extends StateMachineAI {
 
         if (this.iFrame > 0) {
             this.iFrame -= deltaT;
+        } else {
+            this.owner.tweens.stop(AzazelTweens.IFRAME);
+            this.owner.alpha = 1;
         }
 	}
 
@@ -254,6 +258,8 @@ export default class AzazelController extends StateMachineAI {
             return;
         }
         this.iFrame = .5; // Set iFrame time here.
+
+        this.owner.tweens.play(AzazelTweens.IFRAME, true);
 
         this.health -= 10;
         this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});

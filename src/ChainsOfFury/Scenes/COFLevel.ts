@@ -33,7 +33,6 @@ import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import PlayerController from '../../demos/PlatformerPlayerController';
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
-import { MindFlayerAnimation } from "../Enemy/MindFlayer/MindFlayerController";
 
 /**
  * A const object for the layer names

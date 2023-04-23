@@ -10,15 +10,19 @@ export default class Attack extends ShadowDemonState {
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
-		if (this.parent.getDistanceFromPlayer() > 40) {
+		if (this.parent.getDistanceFromPlayer() > 20) {
 			this.finished(ShadowDemonStates.IDLE);
 		}
 		else if (!this.owner.animation.isPlaying(ShadowDemonAnimation.ATTACK_LEFT) && 
         !this.owner.animation.isPlaying(ShadowDemonAnimation.ATTACK_RIGHT)) {
-            if (this.parent.getXDistanceFromPlayer() < 0)
-                this.owner.animation.playIfNotAlready(ShadowDemonAnimation.ATTACK_RIGHT, true);
-            else
-                this.owner.animation.playIfNotAlready(ShadowDemonAnimation.ATTACK_LEFT, true);
+            if (this.parent.getXDistanceFromPlayer() < 0) {
+                this.emitter.fireEvent(ShadowDemonEvents.SHADOW_DEMON_SWIPE, {id: this.owner.id, direction: 1});
+                this.owner.animation.play(ShadowDemonAnimation.ATTACK_RIGHT, false);
+            }
+            else {
+                this.emitter.fireEvent(ShadowDemonEvents.SHADOW_DEMON_SWIPE, {id: this.owner.id, direction: -1});
+                this.owner.animation.play(ShadowDemonAnimation.ATTACK_LEFT, false);
+            }
 		}
 	}
 

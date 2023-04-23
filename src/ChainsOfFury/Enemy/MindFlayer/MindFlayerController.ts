@@ -38,12 +38,12 @@ export default class MindFlayerController extends EnemyController {
 
     protected _shadowDemonCount : number = 0;
     protected _maxShadowDemonCount : number = 5;
-    protected isDead = false;
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
         this.receiver.subscribe(COFEvents.MINION_DEAD);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_DEAD);
+        this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
 
         this.addState(MindFlayerStates.IDLE, new Idle(this, this.owner));
         this.addState(MindFlayerStates.WALK, new Walk(this, this.owner));
@@ -55,7 +55,7 @@ export default class MindFlayerController extends EnemyController {
 
         this.initialize(MindFlayerStates.IDLE);
 
-        this.maxHealth = 500;
+        this.maxHealth = 2000;
         this.health = this.maxHealth;
     }    
 
@@ -87,17 +87,35 @@ export default class MindFlayerController extends EnemyController {
 				break;
 			}
             case COFEvents.SWING_HIT: {
-                this.changeState(MindFlayerStates.DAMAGED);
+                this.handleSwingHit(event.data.get("id"));
 				break;
 			}
             case MindFlayerEvents.MIND_FLAYER_DEAD: {
-                this.changeState(MindFlayerStates.DEAD);
+                this.handleMindFlayerDead();
                 break;
+            }
+            case COFEvents.FIREBALL_HIT_ENEMY: {
+                this.handleFireballHit(event.data.get("other"));
             }
 		}
 	}
 
     protected handleShadowDemonDead(event: GameEvent) {
         this.shadowDemonCount--;
+    }
+
+    protected handleFireballHit(id: number) {
+        if (this.owner.id === id && !this.isDead) {
+            this.changeState(MindFlayerStates.DAMAGED);
+        }
+    }
+
+    protected handleSwingHit(id: number) {
+        if (this.owner.id === id && !this.isDead)
+            this.changeState(MindFlayerStates.DAMAGED);
+    }
+
+    protected handleMindFlayerDead() {
+        this.changeState(MindFlayerStates.DEAD);
     }
 }

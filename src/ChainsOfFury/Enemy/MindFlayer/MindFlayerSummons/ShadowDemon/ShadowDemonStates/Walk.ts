@@ -37,7 +37,7 @@ export default class Walk extends ShadowDemonState {
 		if (this.parent.getDistanceFromPlayer() > 200) {
 			this.finished(ShadowDemonStates.IDLE)
 		}
-		else if (this.parent.getDistanceFromPlayer() < 40) {
+		else if (this.parent.getDistanceFromPlayer() < 20) {
 			this.finished(ShadowDemonStates.ATTACK)
 		}
 	}

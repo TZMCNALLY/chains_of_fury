@@ -43,6 +43,9 @@ export default class EnemyController extends StateMachineAI {
 	protected receiver: Receiver;
 	protected emitter: Emitter;
 
+    // Whether of not entity is already dead.
+    protected isDead: boolean = false;
+
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
@@ -125,7 +128,7 @@ export default class EnemyController extends StateMachineAI {
         }
         else {
             if (this.health === 0) {
-                this.emitter.fireEvent(COFEvents.MINION_DEAD, {id: id});
+                this.emitter.fireEvent(COFEvents.MINION_DYING, {id: id});
             }
         }
     }
@@ -135,13 +138,13 @@ export default class EnemyController extends StateMachineAI {
             return;
         }
 
-        this.health -= 100;
+        this.health -= 50;
         if (entity !== COFEntities.MINION) {
             this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
         }
         else {
             if (this.health === 0) {
-                this.emitter.fireEvent(COFEvents.MINION_DEAD, {id: id});
+                this.emitter.fireEvent(COFEvents.MINION_DYING, {id: id});
             }
         }
     }

@@ -270,7 +270,7 @@
 		},
 		{
 			"name": "DAMAGED_LEFT",
-			"repeat": true,
+			"repeat": false,
 			"frames": [
 				{
 					"index": 50,

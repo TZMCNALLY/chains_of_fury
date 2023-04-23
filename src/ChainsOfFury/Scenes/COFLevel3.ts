@@ -34,7 +34,7 @@ export default class COFLevel3 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Mind Flayer");
-        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [1000, 550]);
+        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [1000, 500]);
     }
 
     protected handleLevelEnd(): void {
@@ -68,6 +68,10 @@ export default class COFLevel3 extends COFLevel {
             case ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON: {
                 this.handleFireballHitShadowDemon(event.data.get("other"), COFEntities.MINION);
                 this.despawnFireballs(event.data.get("node"));
+                break;
+            }
+            case ShadowDemonEvents.SHADOW_DEMON_SWIPE: {
+                this.handleShadowDemonSwipe(event.data.get("id"), event.data.get("direction"));
                 break;
             }
             case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {
@@ -274,6 +278,25 @@ export default class COFLevel3 extends COFLevel {
         }
     }
 
+    protected handleShadowDemonSwipe(id: number, direction: number) {
+        for (let i = 0; i < this.shadowDemons.length; i++) {
+            if (this.shadowDemons[i].id != id)
+                continue;
+
+            let shadowDemonSwipeHitbox = this.shadowDemons[i].boundary.getHalfSize().clone();
+            shadowDemonSwipeHitbox.x = shadowDemonSwipeHitbox.x-16;
+
+            let swingPosition = this.shadowDemons[i].position.clone();
+            swingPosition.x += direction*14;
+
+            if (this.player.collisionShape.overlaps(new AABB(swingPosition,shadowDemonSwipeHitbox))) {
+                this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
+            }
+
+            break;
+        }
+    }
+
     protected handleMinionDead(id: number): void {
         this.despawnShadowDemon(id);
     }
@@ -288,6 +311,7 @@ export default class COFLevel3 extends COFLevel {
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON);
         this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL);
         this.receiver.subscribe(ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON);
+        this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_SWIPE);
     }
 
     protected handleBossTeleportation(location: Vec2): void { 

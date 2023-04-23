@@ -8,7 +8,10 @@ export const COFEvents = {
     LEVEL_START: "LEVEL_START",
     LEVEL_END: "LEVEL_END",
 
-    // Event when peon health drops to zero
+    // Event when minion health drops to zero
+    MINION_DYING: "MINION_DYING",
+
+    // Event when minion finishes playing dying animation
     MINION_DEAD: "MINION_DEAD",
 
     // Event when level boss health drops to zero.

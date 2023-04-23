@@ -320,7 +320,6 @@
 		},
 		{
 			"name": "DEAD",
-			"frames": "90-95",
 			"repeat": false,
 			"frames": [
 				{

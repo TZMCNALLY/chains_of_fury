@@ -15,6 +15,11 @@ export const COFEvents = {
     BOSS_DEFEATED: "BOSS_DEFEATED",
 
     /**
+     * Event trigger when player is hit by a physical attack.
+     */
+    PHYSICAL_ATTACK_HIT_PLAYER: "PHYSICAL_ATTACK_HIT_PLAYER",
+
+    /**
      * Event trigger when player is hit by a projectile.
      */
     PROJECTILE_HIT_PLAYER: "PROJECTILE_HIT_PLAYER",

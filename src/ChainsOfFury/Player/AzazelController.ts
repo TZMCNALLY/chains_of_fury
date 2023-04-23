@@ -128,6 +128,7 @@ export default class AzazelController extends StateMachineAI {
 
         this.receiver = new Receiver();
         this.emitter = new Emitter();
+        this.receiver.subscribe(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PROJECTILE_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
@@ -163,8 +164,12 @@ export default class AzazelController extends StateMachineAI {
 
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
+            case COFEvents.PHYSICAL_ATTACK_HIT_PLAYER: {
+                this.handlePhysicalPlayerHit(event);
+                break;
+            }
 			case COFEvents.PROJECTILE_HIT_PLAYER: {
-				this.handlePlayerHit(event);
+				this.handleProjectilePlayerHit(event);
 				break;
 			}
             case COFEvents.PLAYER_HURL: {
@@ -253,7 +258,22 @@ export default class AzazelController extends StateMachineAI {
     // ======================================================================
     // Event handlers
 
-    public handlePlayerHit(event: GameEvent): void {
+    public handleProjectilePlayerHit(event: GameEvent): void {
+        if (this.iFrame > 0) {
+            return;
+        }
+        this.iFrame = .5; // Set iFrame time here.
+
+        this.owner.tweens.play(AzazelTweens.IFRAME, true);
+
+        this.health -= 10;
+        this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
+
+        if (this.health > 0)
+            this.changeState(AzazelStates.DAMAGED);
+    }
+
+    public handlePhysicalPlayerHit(event: GameEvent): void {
         if (this.iFrame > 0) {
             return;
         }

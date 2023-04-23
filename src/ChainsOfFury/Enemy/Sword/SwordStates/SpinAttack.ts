@@ -90,13 +90,10 @@ export default class SpinAttack extends SwordState {
                     this.parent.player.position.dirTo(this.owner.position).scale(200).scale(deltaT)
                 );
             }
-
-            this.emitter.fireEvent(SwordEvents.SPIN_ATTACK);
         }
     }
 
     public onExit(): Record<string, any> {
-        this.parent.walkTimer.start();
 		return {};
 	}
 }

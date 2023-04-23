@@ -9,6 +9,7 @@ import Walk from "./SwordStates/Walk"
 import SpinAttack from "./SwordStates/SpinAttack";
 import Damaged from './SwordStates/Damaged';
 import Timer from '../../../Wolfie2D/Timing/Timer';
+import { COFEntities } from "../../Scenes/COFLevel";
 
 export const SwordStates = {
     IDLE: "IDLE",
@@ -37,7 +38,7 @@ export const SwordTweens = {
 
 export default class SwordController extends EnemyController {
 
-    public walkTimer: Timer; // tracks how long the sword has not been attacking
+    public walkTime: Date; // tracks when the sword started walking
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
@@ -48,9 +49,7 @@ export default class SwordController extends EnemyController {
         this.addState(SwordStates.SPIN_ATTACK, new SpinAttack(this, this.owner));
         this.addState(SwordStates.DAMAGED, new Damaged(this, this.owner))
 
-        this.walkTimer = new Timer(3000);
-        this.walkTimer.start()
-
+        this.walkTime = new Date();
         this.initialize(SwordStates.WALK);
 
         this.maxHealth = 10000;
@@ -58,14 +57,11 @@ export default class SwordController extends EnemyController {
     }
 
     public handleEvent(event: GameEvent): void {
+        super.handleEvent(event);
 		switch(event.type) {
 			case COFEvents.SWING_HIT: {
-				super.handleEnemySwingHit(event);
                 this.changeState(SwordStates.DAMAGED);
 				break;
-			}
-			default: {
-				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
 			}
 		}
 	}

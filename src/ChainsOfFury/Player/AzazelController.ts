@@ -123,7 +123,7 @@ export default class AzazelController extends StateMachineAI {
 
         this.receiver = new Receiver();
         this.emitter = new Emitter();
-        this.receiver.subscribe(COFEvents.PLAYER_HIT);
+        this.receiver.subscribe(COFEvents.PROJECTILE_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
@@ -151,7 +151,7 @@ export default class AzazelController extends StateMachineAI {
 
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
-			case COFEvents.PLAYER_HIT: {
+			case COFEvents.PROJECTILE_HIT_PLAYER: {
 				this.handlePlayerHit(event);
 				break;
 			}

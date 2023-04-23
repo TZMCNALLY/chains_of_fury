@@ -15,7 +15,7 @@ export const MindFlayerStates = {
     IDLE: "IDLE",
     WALK: "WALK",
 	DAMAGED: "DAMAGED",
-    CAST_FIREBALLS: "ATTACK",
+    CAST_FIREBALLS: "CAST_FIREBALLS",
     SPAWN_SHADOW_DEMONS: "SPAWN_SHADOW_DEMONS",
     TELEPORT: "TELEPORT",
     DEAD: "DEAD"
@@ -39,6 +39,7 @@ export default class MindFlayerController extends EnemyController {
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
+        this.receiver.subscribe(COFEvents.MINION_DEAD);
 
         this.addState(MindFlayerStates.IDLE, new Idle(this, this.owner));
         this.addState(MindFlayerStates.WALK, new Walk(this, this.owner));
@@ -70,16 +71,17 @@ export default class MindFlayerController extends EnemyController {
         return this._maxShadowDemonCount;
     }
     
-    // public handleEvent(event: GameEvent): void {
-	// 	switch(event.type) {
-	// 		case COFEvents.ENEMY_HIT: {
-	// 			this.handleEnemyHit(event);
-	// 			break;
-	// 		}
-	// 		default: {
-	// 			throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
-	// 		}
-	// 	}
-	// }
+    public handleEvent(event: GameEvent): void {
+        super.handleEvent(event);
+		switch(event.type) {
+			case COFEvents.MINION_DEAD: {
+				this.handleShadowDemonDead(event);
+				break;
+			}
+		}
+	}
 
+    protected handleShadowDemonDead(event: GameEvent) {
+        this.shadowDemonCount--;
+    }
 }

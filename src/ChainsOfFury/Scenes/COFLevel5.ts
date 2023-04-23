@@ -60,7 +60,8 @@ export default class COFLevel5 extends COFLevel {
                 break;
             }
             case SwordEvents.SPIN_ATTACK: {
-                this.handleSpinAttack()
+                this.handleSpinAttack();
+                break;
             }
         }
     }
@@ -139,7 +140,7 @@ export default class COFLevel5 extends COFLevel {
             basicAttackPosition.x += 32;
 
         if (this.player.collisionShape.overlaps(new AABB(basicAttackPosition, basicAttackHitbox))) {
-            this.emitter.fireEvent(COFEvents.PLAYER_HIT);
+            this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
         }
     }
 
@@ -148,7 +149,7 @@ export default class COFLevel5 extends COFLevel {
         let basicAttackPosition = this.enemyBoss.position.clone();
 
         if (this.player.collisionShape.overlaps(new AABB(basicAttackPosition, basicAttackHitbox))) {
-            this.emitter.fireEvent(COFEvents.PLAYER_HIT);
+            this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
         }
     }
 

@@ -636,7 +636,8 @@ export default class COFLevel extends Scene {
         this.player.setGroup(COFPhysicsGroups.PLAYER);
 
         this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PROJECTILE_HIT_PLAYER, null);
-        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PLAYER_HIT, null);
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PHYSICAL_ATTACK_HIT_PLAYER, null);
+    }
 
 
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController,

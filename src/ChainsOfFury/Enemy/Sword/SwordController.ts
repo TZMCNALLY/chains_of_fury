@@ -9,6 +9,7 @@ import Walk from "./SwordStates/Walk"
 import SpinAttack from "./SwordStates/SpinAttack";
 import Damaged from './SwordStates/Damaged';
 import Timer from '../../../Wolfie2D/Timing/Timer';
+import { COFEntities } from "../../Scenes/COFLevel";
 
 export const SwordStates = {
     IDLE: "IDLE",
@@ -59,7 +60,6 @@ export default class SwordController extends EnemyController {
         super.handleEvent(event);
 		switch(event.type) {
 			case COFEvents.SWING_HIT: {
-				super.handleEnemySwingHit(event);
                 this.changeState(SwordStates.DAMAGED);
 				break;
 			}

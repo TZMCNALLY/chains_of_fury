@@ -2,6 +2,7 @@ import COFAnimatedSprite from "../../Nodes/COFAnimatedSprite";
 import EnemyController from "../EnemyController";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { COFEvents } from "../../COFEvents";
+import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
 import Idle from "./MindFlayerStates/Idle";
 import Walk from "./MindFlayerStates/Walk";
@@ -10,6 +11,7 @@ import Damaged from "./MindFlayerStates/Damaged";
 import Dead from "./MindFlayerStates/Dead";
 import CastFireballs from "./MindFlayerStates/CastFireballs";
 import SpawnShadowDemons from "./MindFlayerStates/SpawnShadowDemons";
+import { MindFlayerEvents } from "./MindFlayerEvents";
 
 export const MindFlayerStates = {
     IDLE: "IDLE",
@@ -36,10 +38,12 @@ export default class MindFlayerController extends EnemyController {
 
     protected _shadowDemonCount : number = 0;
     protected _maxShadowDemonCount : number = 5;
+    protected isDead = false;
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
         this.receiver.subscribe(COFEvents.MINION_DEAD);
+        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_DEAD);
 
         this.addState(MindFlayerStates.IDLE, new Idle(this, this.owner));
         this.addState(MindFlayerStates.WALK, new Walk(this, this.owner));
@@ -57,6 +61,10 @@ export default class MindFlayerController extends EnemyController {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
+        if (this.health <= 0 && !this.isDead) {
+            this.emitter.fireEvent(MindFlayerEvents.MIND_FLAYER_DEAD);
+            this.isDead = true;
+        }
 	}
 
     public get shadowDemonCount() : number {
@@ -78,6 +86,14 @@ export default class MindFlayerController extends EnemyController {
 				this.handleShadowDemonDead(event);
 				break;
 			}
+            case COFEvents.SWING_HIT: {
+                this.changeState(MindFlayerStates.DAMAGED);
+				break;
+			}
+            case MindFlayerEvents.MIND_FLAYER_DEAD: {
+                this.changeState(MindFlayerStates.DEAD);
+                break;
+            }
 		}
 	}
 

@@ -72,7 +72,7 @@ export default class EnemyController extends StateMachineAI {
 				break;
 			}
             case COFEvents.FIREBALL_HIT_ENEMY: {
-				this.handleEnemyFireballHit(event);
+				this.handleEnemyFireballHit(event.data.get("other"), event.data.get("entity"));
 				break;
             }
             case COFEvents.ENEMY_STUNNED: {
@@ -105,12 +105,8 @@ export default class EnemyController extends StateMachineAI {
     public get player(): COFAnimatedSprite { return this._player; }
 
     public get health(): number { return this._health; }
-    public set health(health: number) { 
+    public set health(health: number) {
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
-        // If the health hit 0, change the state of the boss
-        // if (this.health === 0) {
-        //     this.changeState(Boss.DEAD);
-        // }
     }
 
     // Getters and setters
@@ -123,12 +119,9 @@ export default class EnemyController extends StateMachineAI {
         if (id !== this.owner.id)
             return;
 
-        this.health -= 100;
-        if (entity === COFEntities.BOSS) {
+        this.health -= 50;
+        if (entity !== COFEntities.MINION) {
             this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
-            if (this.health === 0) {
-                this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
-            }
         }
         else {
             if (this.health === 0) {
@@ -137,12 +130,19 @@ export default class EnemyController extends StateMachineAI {
         }
     }
 
-    public handleEnemyFireballHit(event: GameEvent): void {
-        this.health -= 10;
-        this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+    public handleEnemyFireballHit(id: number, entity: string): void {
+        if (id !== this.owner.id) {
+            return;
+        }
 
-        if (this.health == 0) {
-            this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
+        this.health -= 100;
+        if (entity !== COFEntities.MINION) {
+            this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+        }
+        else {
+            if (this.health === 0) {
+                this.emitter.fireEvent(COFEvents.MINION_DEAD, {id: id});
+            }
         }
     }
 

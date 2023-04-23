@@ -129,7 +129,7 @@ export default class AzazelController extends StateMachineAI {
         this.receiver = new Receiver();
         this.emitter = new Emitter();
         this.receiver.subscribe(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
-        this.receiver.subscribe(COFEvents.PROJECTILE_HIT_PLAYER);
+        this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
@@ -168,7 +168,7 @@ export default class AzazelController extends StateMachineAI {
                 this.handlePhysicalPlayerHit(event);
                 break;
             }
-			case COFEvents.PROJECTILE_HIT_PLAYER: {
+			case COFEvents.ENEMY_PROJECTILE_HIT_PLAYER: {
 				this.handleProjectilePlayerHit(event);
 				break;
 			}

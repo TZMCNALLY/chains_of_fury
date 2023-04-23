@@ -7,6 +7,7 @@ import { SwordStates }from "../SwordController";
 import { COFEvents } from "../../../COFEvents";
 import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 export default class BasicAttack extends SwordState {
 
@@ -40,8 +41,8 @@ export default class BasicAttack extends SwordState {
 			
 			// Slash toward the position of the player
 			this.parent.velocity = this.owner.position.dirTo(this.parent.player.position);
-			this.parent.velocity.x *= 250;
-			this.parent.velocity.y *= 250;
+			this.parent.velocity.x *= 400;
+			this.parent.velocity.y *= 400;
 
 			if(this.parent.getXDistanceFromPlayer() < 0) {
 				this.parent.lastFace = 1

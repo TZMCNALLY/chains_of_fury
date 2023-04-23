@@ -7,18 +7,25 @@ import Input from '../../../../Wolfie2D/Input/Input';
 import { AzazelControls } from '../../../Player/AzazelControls';
 import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
 import { SwordEvents } from '../SwordEvents';
+import COFLevel5 from '../../../Scenes/COFLevel5';
+import { GameEventType } from '../../../../Wolfie2D/Events/GameEventType';
 
 export default class SpinAttack extends SwordState {
 
     protected timer: Timer; // tracks how long the sword has been spinning for
-    protected isCentered: boolean // tracks if the sword is slowing down or not
+    protected isCentered: boolean // tracks if the sword is creating a pull
 
     public onEnter(options: Record<string, any>): void {
         this.isCentered = false;
-        this.timer = new Timer(10000);
+        
+        this.timer = new Timer(2000);
         this.timer.start();
+        
         this.owner.animation.playIfNotAlready(SwordAnimation.ATTACK_RIGHT, true, null)
         this.owner.tweens.play(SwordTweens.SPIN, true);
+        
+        let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: spinAudio, loop: true})
     }
 
     public update(deltaT: number): void{
@@ -41,7 +48,7 @@ export default class SpinAttack extends SwordState {
 
             if(this.timer.isStopped()) {
                 this.owner.tweens.stop(SwordTweens.SPIN);
-                this.finished(SwordStates.WALK)
+                this.finished(SwordStates.BASIC_ATTACK)
             }
 
             let xDistance = this.parent.getXDistanceFromPlayer();
@@ -88,7 +95,7 @@ export default class SpinAttack extends SwordState {
                 && !Input.isPressed(AzazelControls.MOVE_DOWN)) {
                 
                 this.parent.player.move(
-                    this.parent.player.position.dirTo(this.owner.position).scale(200).scale(deltaT)
+                    this.parent.player.position.dirTo(this.owner.position).scale(500).scale(deltaT)
                 );
             }
 

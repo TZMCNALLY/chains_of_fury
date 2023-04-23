@@ -52,7 +52,7 @@ export default class SwordController extends EnemyController {
         this.walkTime = new Date();
         this.initialize(SwordStates.WALK);
 
-        this.maxHealth = 10000;
+        this.maxHealth = 2000;
         this.health = this.maxHealth;
     }
 

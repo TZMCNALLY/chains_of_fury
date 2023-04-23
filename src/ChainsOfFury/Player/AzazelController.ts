@@ -42,7 +42,8 @@ export const AzazelAnimations = {
 } as const
 
 export const AzazelTweens = {
-    TELEPORTED: "TELEPORTED"
+    TELEPORTED: "TELEPORTED",
+    IFRAME: "IFRAME"
 }
 
 /**
@@ -127,7 +128,7 @@ export default class AzazelController extends StateMachineAI {
 
         this.receiver = new Receiver();
         this.emitter = new Emitter();
-        this.receiver.subscribe(COFEvents.PLAYER_HIT);
+        this.receiver.subscribe(COFEvents.PROJECTILE_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
@@ -154,12 +155,15 @@ export default class AzazelController extends StateMachineAI {
 
         if (this.iFrame > 0) {
             this.iFrame -= deltaT;
+        } else {
+            this.owner.tweens.stop(AzazelTweens.IFRAME);
+            this.owner.alpha = 1;
         }
 	}
 
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
-			case COFEvents.PLAYER_HIT: {
+			case COFEvents.PROJECTILE_HIT_PLAYER: {
 				this.handlePlayerHit(event);
 				break;
 			}
@@ -254,6 +258,8 @@ export default class AzazelController extends StateMachineAI {
             return;
         }
         this.iFrame = .5; // Set iFrame time here.
+
+        this.owner.tweens.play(AzazelTweens.IFRAME, true);
 
         this.health -= 10;
         this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});

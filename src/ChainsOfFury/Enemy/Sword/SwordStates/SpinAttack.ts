@@ -6,6 +6,7 @@ import AzazelController, { AzazelAnimations, AzazelStates } from "../../../Playe
 import Input from '../../../../Wolfie2D/Input/Input';
 import { AzazelControls } from '../../../Player/AzazelControls';
 import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
+import { SwordEvents } from '../SwordEvents';
 
 export default class SpinAttack extends SwordState {
 
@@ -90,6 +91,8 @@ export default class SpinAttack extends SwordState {
                     this.parent.player.position.dirTo(this.owner.position).scale(200).scale(deltaT)
                 );
             }
+
+            this.emitter.fireEvent(SwordEvents.SPIN_ATTACK)
         }
     }
 

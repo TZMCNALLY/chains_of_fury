@@ -619,10 +619,24 @@ export default class COFLevel extends Scene {
             ],
         });
 
+        this.player.tweens.add(AzazelTweens.IFRAME, {
+            startDelay: 0,
+            duration: 150,
+            effects: [
+                {
+                    property: "alpha",
+                    start: 1,
+                    end: .2,
+                    ease: EaseFunctionType.IN_OUT_QUAD,
+                }
+            ]
+        });
+
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
+
         this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PROJECTILE_HIT_PLAYER, null);
-    }
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PLAYER_HIT, null);
 
 
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController,

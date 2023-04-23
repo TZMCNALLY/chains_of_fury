@@ -1,5 +1,6 @@
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import Receiver from "../../../../Wolfie2D/Events/Receiver";
 import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import COFAnimatedSprite from "../../../Nodes/COFAnimatedSprite";
 import SwordController from "../SwordController";

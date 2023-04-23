@@ -42,7 +42,8 @@ export const AzazelAnimations = {
 } as const
 
 export const AzazelTweens = {
-    TELEPORTED: "TELEPORTED"
+    TELEPORTED: "TELEPORTED",
+    IFRAME: "IFRAME"
 }
 
 /**
@@ -89,6 +90,8 @@ export default class AzazelController extends StateMachineAI {
 
     protected isDead = false;
 
+    protected iFrame = 0;
+
     // A receiver and emitter to hook into the event queue
 	public receiver: Receiver;
 	public emitter: Emitter;
@@ -108,6 +111,8 @@ export default class AzazelController extends StateMachineAI {
         this.maxMana = 100;
         this.mana = this.maxMana;
         this.lastFace = 1;
+
+        this.iFrame = 0;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
@@ -147,6 +152,13 @@ export default class AzazelController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
+
+        if (this.iFrame > 0) {
+            this.iFrame -= deltaT;
+        } else {
+            this.owner.tweens.stop(AzazelTweens.IFRAME);
+            this.owner.alpha = 1;
+        }
 	}
 
     public handleEvent(event: GameEvent): void {
@@ -242,9 +254,16 @@ export default class AzazelController extends StateMachineAI {
     // Event handlers
 
     public handlePlayerHit(event: GameEvent): void {
+        if (this.iFrame > 0) {
+            return;
+        }
+        this.iFrame = .5; // Set iFrame time here.
+
+        this.owner.tweens.play(AzazelTweens.IFRAME, true);
+
         this.health -= 10;
         this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
-        
+
         if (this.health > 0)
             this.changeState(AzazelStates.DAMAGED);
     }

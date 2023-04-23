@@ -54,7 +54,7 @@ export default class Walk extends SwordState {
         const currentTime = new Date();
         if(currentTime.getTime() - this.parent.walkTime.getTime() > 3000){
 
-            let nextAttack = RandUtils.randInt(0,2);
+            let nextAttack = RandUtils.randInt(0,1);
 
             if(nextAttack == 0) {
                 this.finished(SwordStates.BASIC_ATTACK)

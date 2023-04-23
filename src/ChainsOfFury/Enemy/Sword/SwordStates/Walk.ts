@@ -21,28 +21,13 @@ export default class Walk extends SwordState {
 
 	public update(deltaT: number): void {
         super.update(deltaT);
-
-        // Start attacking once time for walking is up
-        if(this.parent.walkTimer.isStopped()) {
-
-            console.log(this.parent.walkTimer)
-
-            let nextAttack = RandUtils.randInt(0,1);
-
-            if(nextAttack == 0) {
-                this.finished(SwordStates.BASIC_ATTACK)
-            }
-
-            else if(nextAttack == 1) {
-                this.finished(SwordStates.SPIN_ATTACK)
-            }
-        }
+        
+        this.checkToAttack();
 
         // Walk to where the player is
         this.parent.velocity = this.owner.position.dirTo(this.parent.player.position)
         this.parent.velocity.x *= 20;
         this.parent.velocity.y *= 20;
-
 
         // Adjust animation to which way its walking towards the player
         if(this.owner.position.x < this.parent.player.position.x) {
@@ -58,24 +43,26 @@ export default class Walk extends SwordState {
         this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 
-	public handleInput(event: GameEvent): void {
-        switch(event.type) {
-
-            case COFEvents.SWING_HIT: {
-                this.finished(SwordStates.DAMAGED)
-                break;
-            }
-
-            // Default - throw an error
-            default: {
-                throw new Error(`Unhandled event in PlayerState of type ${event.type}`);
-            }
-        }
-	}
-
 	public onExit(): Record<string, any> {
-        console.log(this.parent.walkTimer)
+        
 		this.owner.animation.stop();
 		return {};
 	}
+
+    // Checks if the sword is done walking and should attack the player
+    private checkToAttack() {
+        const currentTime = new Date();
+        if(currentTime.getTime() - this.parent.walkTime.getTime() > 3000){
+
+            let nextAttack = RandUtils.randInt(0,2);
+
+            if(nextAttack == 0) {
+                this.finished(SwordStates.BASIC_ATTACK)
+            }
+
+            else if(nextAttack == 1) {
+                this.finished(SwordStates.SPIN_ATTACK)
+            }
+        }
+    }
 }

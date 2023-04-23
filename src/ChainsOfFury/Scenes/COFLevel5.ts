@@ -1,4 +1,4 @@
-import COFLevel from "./COFLevel";
+import COFLevel, { COFLayers } from "./COFLevel";
 import COFLevel6 from "./COFLevel6";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Input from "../../Wolfie2D/Input/Input";
@@ -15,8 +15,11 @@ import { COFEvents } from "../COFEvents";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Vec2 from '../../Wolfie2D/DataTypes/Vec2';
 import { COFPhysicsGroups } from '../COFPhysicsGroups';
+import FireballBehavior from '../Fireball/FireballBehavior';
 
 export default class COFLevel5 extends COFLevel {
+
+    protected swordProjectiles: Array<AnimatedSprite>
 
     /**
      * @see Scene.update()
@@ -62,6 +65,62 @@ export default class COFLevel5 extends COFLevel {
         }
     }
 
+    protected initObjectPools(): void {
+        super.initObjectPools();
+
+        this.swordProjectiles = new Array(20)
+        for (let i = 0; i < this.swordProjectiles.length; i++) {
+			this.swordProjectiles[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
+
+            // Make our fireballs inactive by default
+			this.swordProjectiles[i].visible = false;
+
+			// Assign them fireball ai
+			this.swordProjectiles[i].addAI(FireballBehavior);
+
+            this.swordProjectiles[i].setGroup(COFPhysicsGroups.FIREBALL);
+			this.swordProjectiles[i].scale.set(1.5, 1.5);
+	    }
+    }
+
+    protected spawnSwordProjectiles(faceDir: Vec2) {
+        for(let i = 0; i < this.swordProjectiles.length; i++) {
+
+            if(!this.swordProjectiles[i].visible) {
+
+                // Bring this fireball to life
+                this.swordProjectiles[i].visible = true;
+
+                let dirToPlayer = this.enemyBoss.position.dirTo(this.player.position)
+
+                // Set the velocity to be in the direction of the mouse
+                dirToPlayer.x *= 400;
+                dirToPlayer.y *= 400;
+
+                (this.swordProjectiles[i]._ai as FireballBehavior).velocity = dirToPlayer
+
+                // Give physics to this fireball
+                let fireballHitbox = new AABB(this.enemyBoss.position.clone(), this.swordProjectiles[i].boundary.getHalfSize().clone());
+                this.swordProjectiles[i].addPhysics(fireballHitbox);
+                this.swordProjectiles[i].setGroup(COFPhysicsGroups.FIREBALL);
+                
+                break;
+            }
+        }
+    }
+
+    protected despawnSwordProjectiles(node: number) : void {
+        for(let i = 0; i < this.swordProjectiles.length; i++) {
+
+            if(this.swordProjectiles[i].id == node) {
+
+                this.swordProjectiles[i].position.copy(Vec2.ZERO);
+                this.swordProjectiles[i].visible = false;
+                break;
+            }
+        }
+    }
+
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number, enemySpawn: number[]): void {
         super.initializeEnemyBoss(key, controller, scaleSize, enemySpawn);
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-32, this.enemyBoss.boundary.getHalfSize().clone().y-16)));
@@ -71,10 +130,7 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleBasicAttack(lastFace: number) {
 
-        let basicAttackHitbox = this.enemyBoss.boundary.getHalfSize().clone();
-        basicAttackHitbox.x -= 40;
-        basicAttackHitbox.y -= 16;
-
+        let basicAttackHitbox = new Vec2(25, 20)
         let basicAttackPosition = this.enemyBoss.position.clone();
 
         if(lastFace == -1)

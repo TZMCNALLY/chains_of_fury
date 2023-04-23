@@ -78,9 +78,6 @@ export default class EnemyController extends StateMachineAI {
                 this.handleEnemyStunned(event);
                 break;
             }
-			default: {
-				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
-			}
 		}
 	}
 

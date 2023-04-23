@@ -48,6 +48,14 @@ export const COFLayers = {
 // The layers as a type
 export type COFLayer = typeof COFLayers[keyof typeof COFLayers]
 
+/**
+ * Consts for the level entities
+ */
+export const COFEntities = {
+    BOSS: "BOSS",
+    MINION: "MINION"
+} as const;
+
 export default class COFLevel extends Scene {
 
     //TODO: ADD KEY STRINGS TO DATA (player, boss, etc.)
@@ -214,7 +222,7 @@ export default class COFLevel extends Scene {
                 this.handlePlayerSwing(event.data.get("faceDir"));
                 break;
             }
-            case COFEvents.ENEMY_TOOK_DAMAGE: {
+            case COFEvents.BOSS_TOOK_DAMAGE: {
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
@@ -248,6 +256,10 @@ export default class COFLevel extends Scene {
             }
             case COFEvents.PLAYER_DEAD: {
                 this.sceneManager.changeToScene(MainMenu);
+                break;
+            }
+            case COFEvents.MINION_DEAD: {
+                this.handleMinionDead(event.data.get("id"));
                 break;
             }
             case COFEvents.BOSS_DEFEATED: {
@@ -298,7 +310,7 @@ export default class COFLevel extends Scene {
 
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
-            this.emitter.fireEvent(COFEvents.SWING_HIT);
+            this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }
     }
     protected initObjectPools(): void {
@@ -361,6 +373,10 @@ export default class COFLevel extends Scene {
                 break;
             }
         }
+    }
+
+    // should be overriden inside of respective levels
+    protected handleMinionDead(id: number): void{
     }
 
     protected handleLevelEnd(): void {
@@ -491,7 +507,7 @@ export default class COFLevel extends Scene {
      */
     protected subscribeToEvents(): void {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
-        this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
+        this.receiver.subscribe(COFEvents.BOSS_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
@@ -499,8 +515,9 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.PLAYER_TOOK_DAMAGE);
-        this.receiver.subscribe(COFEvents.PLAYER_HIT);
+        this.receiver.subscribe(COFEvents.PROJECTILE_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PLAYER_DEAD);
+        this.receiver.subscribe(COFEvents.MINION_DEAD);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.LEVEL_END);
     }
@@ -617,9 +634,9 @@ export default class COFLevel extends Scene {
 
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
-        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PLAYER_HIT, null);
+
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PROJECTILE_HIT_PLAYER, null);
         this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PLAYER_HIT, null);
-    }
 
 
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController,

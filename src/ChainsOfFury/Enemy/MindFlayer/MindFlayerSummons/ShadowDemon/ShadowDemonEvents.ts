@@ -1,0 +1,10 @@
+/**
+ * A set of events for Shadow Demon.
+ */
+
+export const ShadowDemonEvents = {
+    
+    SHADOW_DEMON_FIRE_FIREBALL: "SHADOW_DEMON_FIRE_FIREBALL",
+    SHADOW_DEMON_FIREBALL_HIT_WALL: "SHADOW_DEMON_FIREBALL_HIT_WALL",
+    FIREBALL_HIT_SHADOW_DEMON: "FIREBALL_HIT_SHADOW_DEMON"
+}

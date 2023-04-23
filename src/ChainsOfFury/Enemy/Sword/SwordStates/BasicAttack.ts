@@ -24,12 +24,12 @@ export default class BasicAttack extends SwordState {
 		super.update(deltaT);
 
 		// If animation is not playing, go back to normal group.
-		if (!this.owner.animation.isPlaying(SwordAnimation.ATTACK_RIGHT) && !this.owner.animation.isPlaying(SwordAnimation.ATTACKED_LEFT)) {
-			this.owner.setGroup(COFPhysicsGroups.ENEMY);
-		}
+		// if (!this.owner.animation.isPlaying(SwordAnimation.ATTACK_RIGHT) && !this.owner.animation.isPlaying(SwordAnimation.ATTACKED_LEFT)) {
+		// 	this.owner.setGroup(COFPhysicsGroups.ENEMY);
+		// }
 
 		if(this.numSlashes == 5) {
-			this.owner.setGroup(COFPhysicsGroups.ENEMY);
+			// this.owner.setGroup(COFPhysicsGroups.ENEMY);
 			this.parent.walkTime = new Date();
 			this.finished(SwordStates.WALK)
 		}
@@ -52,8 +52,8 @@ export default class BasicAttack extends SwordState {
 				this.owner.animation.play(SwordAnimation.ATTACK_LEFT)
 			}
 
-			// Set contact damage group.
-			this.owner.setGroup(COFPhysicsGroups.ENEMY_CONTACT_DMG);
+			// // Set contact damage group.
+			// this.owner.setGroup(COFPhysicsGroups.ENEMY_CONTACT_DMG);
 			
 			this.timerChecked = false;
 			this.slashTimer.start();
@@ -72,7 +72,7 @@ export default class BasicAttack extends SwordState {
 		this.owner.animation.stop();
 
 		// Set back to normal enemy group.
-		this.owner.setGroup(COFPhysicsGroups.ENEMY);
+		// this.owner.setGroup(COFPhysicsGroups.ENEMY);
 
 		return {};
 	}

@@ -42,7 +42,7 @@ export default class ShadowDemonController extends EnemyController {
 
         this.initialize(ShadowDemonStates.IDLE);
 
-        this.maxHealth = 100;
+        this.maxHealth = 200;
         this.health = this.maxHealth;
     }    
 

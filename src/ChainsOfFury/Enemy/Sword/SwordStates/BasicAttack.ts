@@ -6,16 +6,17 @@ import { SwordEvents } from '../SwordEvents';
 import { SwordStates }from "../SwordController";
 import { COFEvents } from "../../../COFEvents";
 import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
 
 export default class BasicAttack extends SwordState {
 
-	protected numSlashes: number;
-	protected slashTimer: Timer;
-	protected timerChecked: boolean;
+	protected numSlashes: number; // how many times the sword has already slashed
+	protected slashTimer: Timer; // checks when to check for AABB overlap
+	protected timerChecked: boolean; // checks if the attack has already been check (WILL CHANGE LATER FOR CLEANER IMPLEMENTATION)
 
 	public onEnter(options: Record<string, any>): void { 
 		this.numSlashes = 0; 
-		this.slashTimer = new Timer(400);
+		this.slashTimer = new Timer(275);
 		this.timerChecked = false;
 	}
 
@@ -29,6 +30,7 @@ export default class BasicAttack extends SwordState {
 
 		if(this.numSlashes == 5) {
 			this.owner.setGroup(COFPhysicsGroups.ENEMY);
+			this.parent.walkTime = new Date();
 			this.finished(SwordStates.WALK)
 		}
 		
@@ -38,13 +40,17 @@ export default class BasicAttack extends SwordState {
 			
 			// Slash toward the position of the player
 			this.parent.velocity = this.owner.position.dirTo(this.parent.player.position);
-			this.parent.velocity.x *= 450;
-			this.parent.velocity.y *= 450;
+			this.parent.velocity.x *= 250;
+			this.parent.velocity.y *= 250;
 
-			if(this.parent.getXDistanceFromPlayer() < 0)
+			if(this.parent.getXDistanceFromPlayer() < 0) {
+				this.parent.lastFace = 1
 				this.owner.animation.play(SwordAnimation.ATTACK_RIGHT)
-			else
+			}
+			else {
+				this.parent.lastFace = -1
 				this.owner.animation.play(SwordAnimation.ATTACK_LEFT)
+			}
 
 			// Set contact damage group.
 			this.owner.setGroup(COFPhysicsGroups.ENEMY_CONTACT_DMG);
@@ -63,7 +69,6 @@ export default class BasicAttack extends SwordState {
 	}
 
 	public onExit(): Record<string, any> {
-		this.parent.walkTimer.start(3000);
 		this.owner.animation.stop();
 
 		// Set back to normal enemy group.

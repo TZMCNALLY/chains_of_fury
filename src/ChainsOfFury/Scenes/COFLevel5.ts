@@ -16,10 +16,26 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Vec2 from '../../Wolfie2D/DataTypes/Vec2';
 import { COFPhysicsGroups } from '../COFPhysicsGroups';
 import FireballBehavior from '../Fireball/FireballBehavior';
+import Viewport from '../../Wolfie2D/SceneGraph/Viewport';
+import SceneManager from '../../Wolfie2D/Scene/SceneManager';
+import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
+import Game from "../../Wolfie2D/Loop/Game";
+import { GameEventType } from '../../Wolfie2D/Events/GameEventType';
 
 export default class COFLevel5 extends COFLevel {
 
     protected swordProjectiles: Array<AnimatedSprite>
+    public static readonly BASIC_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_basic_audio.wav";
+    public static readonly SPIN_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_spin_audio.wav";
+    protected basicAttackAudioKey = "BASIC_ATTACK_AUDIO_KEY";
+    protected spinAttackAudioKey = "SPIN_ATTACK_AUDIO_KEY"
+
+    public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
+
+        super(viewport, sceneManager, renderingManager, options);
+
+        //this.add = new HW3FactoryManager(this, this.tilemaps);
+    }
 
     /**
      * @see Scene.update()
@@ -27,6 +43,8 @@ export default class COFLevel5 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
+        this.load.audio(this.basicAttackAudioKey, COFLevel5.BASIC_ATTACK_AUDIO_PATH);
+        this.load.audio(this.spinAttackAudioKey, COFLevel5.SPIN_ATTACK_AUDIO_PATH);
         this.load.spritesheet("flying_sword", "cof_assets/spritesheets/flying_sword.json");
     }
 
@@ -56,6 +74,8 @@ export default class COFLevel5 extends COFLevel {
         super.handleEvent(event);
         switch (event.type) {
             case SwordEvents.BASIC_ATTACK: {
+                //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.spinAttackAudioKey});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.basicAttackAudioKey});
                 this.handleBasicAttack(event.data.get("lastFace"));
                 break;
             }
@@ -131,7 +151,7 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleBasicAttack(lastFace: number) {
 
-        let basicAttackHitbox = new Vec2(25, 20)
+        let basicAttackHitbox = new Vec2(32, 30)
         let basicAttackPosition = this.enemyBoss.position.clone();
 
         if(lastFace == -1)
@@ -165,5 +185,9 @@ export default class COFLevel5 extends COFLevel {
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
         this.sceneManager.changeToScene(COFLevel6)
+    }
+
+    public getSpinAudio(): string {
+        return this.spinAttackAudioKey;
     }
 }

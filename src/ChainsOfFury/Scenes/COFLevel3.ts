@@ -34,7 +34,7 @@ export default class COFLevel3 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Mind Flayer");
-        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [700, 700]);
+        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [1000, 500]);
     }
 
     protected handleLevelEnd(): void {
@@ -57,10 +57,6 @@ export default class COFLevel3 extends COFLevel {
                 this.spawnBossFireball(event.data.get("faceDir"));
                 break;
             }
-            case MindFlayerEvents.MIND_FLAYER_FIREBALL_HIT_WALL: {
-                this.despawnBossFireball(event.data.get("node"));
-                break;
-            }
             case MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON: {
                 this.spawnShadowDemon(event.data.get("location"));
                 break;
@@ -69,11 +65,21 @@ export default class COFLevel3 extends COFLevel {
                 this.spawnShadowDemonFireball(event.data.get("faceDir"), event.data.get("id"));
                 break;
             }
-            case ShadowDemonEvents.SHADOW_DEMON_FIREBALL_HIT_WALL: {
+            case ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON: {
+                this.handleFireballHitShadowDemon(event.data.get("other"), COFEntities.MINION);
+                this.despawnFireballs(event.data.get("node"));
+                break;
+            }
+            case ShadowDemonEvents.SHADOW_DEMON_SWIPE: {
+                this.handleShadowDemonSwipe(event.data.get("id"), event.data.get("direction"));
+                break;
+            }
+            case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {
+                this.despawnBossFireball(event.data.get("node"));
                 this.despawnShadowDemonFireball(event.data.get("node"));
                 break;
             }
-            case COFEvents.PROJECTILE_HIT_PLAYER: {
+            case COFEvents.ENEMY_PROJECTILE_HIT_PLAYER: {
                 this.despawnBossFireball(event.data.get("node"));
                 this.despawnShadowDemonFireball(event.data.get("node"));
                 break;
@@ -123,10 +129,6 @@ export default class COFLevel3 extends COFLevel {
 
     protected initializeTilemap(): void {
         super.initializeTilemap();
-        this.walls.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, MindFlayerEvents.MIND_FLAYER_FIREBALL_HIT_WALL, null);
-        console.log(this.walls)
-        this.walls.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, ShadowDemonEvents.SHADOW_DEMON_FIREBALL_HIT_WALL, null);
-        console.log(this.walls)
     }
     
     /**
@@ -233,7 +235,7 @@ export default class COFLevel3 extends COFLevel {
                     let fireballHitbox = new AABB(this.shadowDemons[i].position.clone(), this.shadowDemonFireballs[i][j].boundary.getHalfSize().clone());
                     this.shadowDemonFireballs[i][j].addPhysics(fireballHitbox);
                     this.shadowDemonFireballs[i][j].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
-
+                    
                     break;
                 }
             }
@@ -251,6 +253,10 @@ export default class COFLevel3 extends COFLevel {
                 }
             }
         }
+    }
+
+    protected handleFireballHitShadowDemon(id: number, entity: string) {
+        this.emitter.fireEvent(COFEvents.FIREBALL_HIT_ENEMY, {other: id, entity: entity});
     }
 
     protected handlePlayerSwing(faceDir: number): void {
@@ -272,6 +278,25 @@ export default class COFLevel3 extends COFLevel {
         }
     }
 
+    protected handleShadowDemonSwipe(id: number, direction: number) {
+        for (let i = 0; i < this.shadowDemons.length; i++) {
+            if (this.shadowDemons[i].id != id)
+                continue;
+
+            let shadowDemonSwipeHitbox = this.shadowDemons[i].boundary.getHalfSize().clone();
+            shadowDemonSwipeHitbox.x = shadowDemonSwipeHitbox.x-16;
+
+            let swingPosition = this.shadowDemons[i].position.clone();
+            swingPosition.x += direction*14;
+
+            if (this.player.collisionShape.overlaps(new AABB(swingPosition,shadowDemonSwipeHitbox))) {
+                this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
+            }
+
+            break;
+        }
+    }
+
     protected handleMinionDead(id: number): void {
         this.despawnShadowDemon(id);
     }
@@ -283,10 +308,10 @@ export default class COFLevel3 extends COFLevel {
         super.subscribeToEvents();
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_TELEPORT);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL);
-        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIREBALL_HIT_WALL);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON);
         this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL);
-        this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_FIREBALL_HIT_WALL);
+        this.receiver.subscribe(ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON);
+        this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_SWIPE);
     }
 
     protected handleBossTeleportation(location: Vec2): void { 

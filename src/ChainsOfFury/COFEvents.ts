@@ -8,7 +8,10 @@ export const COFEvents = {
     LEVEL_START: "LEVEL_START",
     LEVEL_END: "LEVEL_END",
 
-    // Event when peon health drops to zero
+    // Event when minion health drops to zero
+    MINION_DYING: "MINION_DYING",
+
+    // Event when minion finishes playing dying animation
     MINION_DEAD: "MINION_DEAD",
 
     // Event when level boss health drops to zero.
@@ -22,7 +25,12 @@ export const COFEvents = {
     /**
      * Event trigger when player is hit by a projectile.
      */
-    PROJECTILE_HIT_PLAYER: "PROJECTILE_HIT_PLAYER",
+    ENEMY_PROJECTILE_HIT_PLAYER: "PROJECTILE_HIT_PLAYER",
+
+    /**
+     * Event trigger when an enemy projectile hits the wall.
+     */
+    ENEMY_PROJECTILE_HIT_WALL: "PROJECTILE_HIT_WALL",
 
     /**
      * Event trigger when player takes damage.

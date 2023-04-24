@@ -17,7 +17,7 @@ export default class CastFireballs extends ShadowDemonState {
 		if (!this.owner.animation.isPlaying(ShadowDemonAnimation.CAST_LEFT_FIREBALLS) &&
 		 !this.owner.animation.isPlaying(ShadowDemonAnimation.CAST_RIGHT_FIREBALLS) &&
 		 this.fireballsToFire > 0) {
-			let direction = this.owner.position.dirTo(this.parent.player.position)
+			let direction = this.owner.position.dirTo(this.parent.player.position);
 			this.owner.animation.play(ShadowDemonAnimation.CAST_LEFT_FIREBALLS, false, ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL, {faceDir: direction, id: this.owner.id})
 			this.fireballsToFire--;
 		}

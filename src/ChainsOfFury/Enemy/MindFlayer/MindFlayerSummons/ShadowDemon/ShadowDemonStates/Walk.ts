@@ -34,10 +34,10 @@ export default class Walk extends ShadowDemonState {
 		
 		// Check to see whether distance is too close
 		// Check to see whether distance is too close
-		if (this.parent.getDistanceFromPlayer() > 300) {
+		if (this.parent.getDistanceFromPlayer() > 200) {
 			this.finished(ShadowDemonStates.IDLE)
 		}
-		else if (this.parent.getDistanceFromPlayer() < 40) {
+		else if (this.parent.getDistanceFromPlayer() < 20) {
 			this.finished(ShadowDemonStates.ATTACK)
 		}
 	}

@@ -33,7 +33,6 @@ import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import PlayerController from '../../demos/PlatformerPlayerController';
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
-import { MindFlayerAnimation } from "../Enemy/MindFlayer/MindFlayerController";
 
 /**
  * A const object for the layer names
@@ -498,7 +497,7 @@ export default class COFLevel extends Scene {
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
         this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
-        
+        this.walls.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_WALL, null);
         // Allows a trigger to happen when boss charges into the wall.
         this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, null);
     }
@@ -515,7 +514,8 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.PLAYER_TOOK_DAMAGE);
-        this.receiver.subscribe(COFEvents.PROJECTILE_HIT_PLAYER);
+        this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
+        this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_WALL)
         this.receiver.subscribe(COFEvents.PLAYER_DEAD);
         this.receiver.subscribe(COFEvents.MINION_DEAD);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
@@ -635,7 +635,7 @@ export default class COFLevel extends Scene {
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
 
-        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PROJECTILE_HIT_PLAYER, null);
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_PLAYER, null);
         this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PHYSICAL_ATTACK_HIT_PLAYER, null);
     }
 

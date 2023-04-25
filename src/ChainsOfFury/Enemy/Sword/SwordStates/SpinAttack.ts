@@ -47,66 +47,68 @@ export default class SpinAttack extends SwordState {
         
         else {
 
-            if(this.timer.isStopped())
+            if(this.timer.isStopped()) {
+                (this.parent.player.ai as AzazelController).speed = 150;
+                this.owner.tweens.stop(SwordTweens.SPIN);
                 this.finished(SwordStates.BASIC_ATTACK)
-
-            let xDistance = this.parent.getXDistanceFromPlayer();
-            let yDistance = this.parent.getYDistanceFromPlayer();
-
-            // Player in front
-            if(xDistance < 0) {
-
-                // Player below
-                if(yDistance < 0) {
-
-                    if(!Input.isPressed(AzazelControls.MOVE_UP) && !Input.isPressed(AzazelControls.MOVE_LEFT))
-                        (this.parent.player.ai as AzazelController).speed = 50
-                }
-
-                // Player above
-                else {
-                    if(!Input.isPressed(AzazelControls.MOVE_DOWN) && !Input.isPressed(AzazelControls.MOVE_LEFT))
-                        (this.parent.player.ai as AzazelController).speed = 50
-                }
             }
 
-            // Player behind
             else {
 
-                // Player below
-                if(yDistance < 0) {
+                let xDistance = this.parent.getXDistanceFromPlayer();
+                let yDistance = this.parent.getYDistanceFromPlayer();
 
-                    if(!Input.isPressed(AzazelControls.MOVE_UP) && !Input.isPressed(AzazelControls.MOVE_RIGHT))
-                        (this.parent.player.ai as AzazelController).speed = 50
+                // Player in front
+                if(xDistance < 0) {
+
+                    // Player below
+                    if(yDistance < 0) {
+
+                        if(!Input.isPressed(AzazelControls.MOVE_UP) && !Input.isPressed(AzazelControls.MOVE_LEFT))
+                            (this.parent.player.ai as AzazelController).speed = 50
+                    }
+
+                    // Player above
+                    else {
+                        if(!Input.isPressed(AzazelControls.MOVE_DOWN) && !Input.isPressed(AzazelControls.MOVE_LEFT))
+                            (this.parent.player.ai as AzazelController).speed = 50
+                    }
                 }
 
-                // Player above
+                // Player behind
                 else {
-                    if(!Input.isPressed(AzazelControls.MOVE_DOWN) && !Input.isPressed(AzazelControls.MOVE_RIGHT))
-                        (this.parent.player.ai as AzazelController).speed = 50
+
+                    // Player below
+                    if(yDistance < 0) {
+
+                        if(!Input.isPressed(AzazelControls.MOVE_UP) && !Input.isPressed(AzazelControls.MOVE_RIGHT))
+                            (this.parent.player.ai as AzazelController).speed = 50
+                    }
+
+                    // Player above
+                    else {
+                        if(!Input.isPressed(AzazelControls.MOVE_DOWN) && !Input.isPressed(AzazelControls.MOVE_RIGHT))
+                            (this.parent.player.ai as AzazelController).speed = 50
+                    }
                 }
-            }
 
-            // If the player isn't moving, pull him towards the sword
-            if(!Input.isPressed(AzazelControls.MOVE_RIGHT)
-                && !Input.isPressed(AzazelControls.MOVE_LEFT)
-                && !Input.isPressed(AzazelControls.MOVE_UP)
-                && !Input.isPressed(AzazelControls.MOVE_DOWN)) {
-                
-                this.parent.player.move(
-                    this.parent.player.position.dirTo(this.owner.position).scale(500).scale(deltaT)
-                );
-            }
+                // If the player isn't moving, pull him towards the sword
+                if(!Input.isPressed(AzazelControls.MOVE_RIGHT)
+                    && !Input.isPressed(AzazelControls.MOVE_LEFT)
+                    && !Input.isPressed(AzazelControls.MOVE_UP)
+                    && !Input.isPressed(AzazelControls.MOVE_DOWN)) {
+                    
+                    this.parent.player.move(
+                        this.parent.player.position.dirTo(this.owner.position).scale(500).scale(deltaT)
+                    );
+                }
 
-            this.emitter.fireEvent(SwordEvents.SPIN_ATTACK)
+                this.emitter.fireEvent(SwordEvents.SPIN_ATTACK)
+            }
         }
     }
 
     public onExit(): Record<string, any> {
-        this.parent.speed = 150;
-        this.owner.tweens.stop(SwordTweens.SPIN);
-        let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: spinAudio})
 		return {};
 	}
 }

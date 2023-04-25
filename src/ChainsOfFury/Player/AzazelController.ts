@@ -21,6 +21,7 @@ import { COFEvents } from "../COFEvents";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import { COFCheats } from "../COFCheats";
 /**
  * Animation keys for the Azazel spritesheet
  */
@@ -156,6 +157,8 @@ export default class AzazelController extends StateMachineAI {
     public update(deltaT: number): void {
 		super.update(deltaT);
 
+        console.log(this.speed)
+
         if (this._iframe > 0) {
             this._iframe -= deltaT;
         } else {
@@ -165,6 +168,11 @@ export default class AzazelController extends StateMachineAI {
 
         if (this._dashCooldown > 0) {
             this._dashCooldown -= deltaT;
+        }
+
+        if(Input.isPressed(COFCheats.INFINITE_HEALTH)) {
+            this.maxHealth = Number.MAX_SAFE_INTEGER;
+            this.health = Number.MAX_SAFE_INTEGER;
         }
 	}
 

@@ -21,7 +21,7 @@ export default class Walk extends SwordState {
 
 	public update(deltaT: number): void {
         super.update(deltaT);
-        
+
         this.checkToAttack();
 
         // Walk to where the player is
@@ -52,7 +52,7 @@ export default class Walk extends SwordState {
     // Checks if the sword is done walking and should attack the player
     private checkToAttack() {
         const currentTime = new Date();
-        if(currentTime.getTime() - this.parent.walkTime.getTime() > 3000){
+        if(currentTime.getTime() - this.parent.walkTime.getTime() > 2000){
 
             let nextAttack = RandUtils.randInt(0,2);
 

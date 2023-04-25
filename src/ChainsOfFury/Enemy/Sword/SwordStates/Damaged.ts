@@ -14,6 +14,7 @@ export default class Damaged extends SwordState {
 	}
 
 	public update(deltaT: number): void {
+	
 		if(!this.owner.animation.isPlaying(SwordAnimation.ATTACKED_RIGHT)
 			&& !this.owner.animation.isPlaying(SwordAnimation.ATTACKED_LEFT))
 			this.finished(SwordStates.WALK);

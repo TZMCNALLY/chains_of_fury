@@ -74,13 +74,16 @@ export default class COFLevel5 extends COFLevel {
         super.handleEvent(event);
         switch (event.type) {
             case SwordEvents.BASIC_ATTACK: {
-                //this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.spinAttackAudioKey});
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.basicAttackAudioKey});
                 this.handleBasicAttack(event.data.get("lastFace"));
                 break;
             }
             case SwordEvents.SPIN_ATTACK: {
                 this.handleSpinAttack();
+                break;
+            }
+            case COFEvents.BOSS_DEFEATED: {
+                this.handleLevelEnd();
                 break;
             }
         }
@@ -151,7 +154,7 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleBasicAttack(lastFace: number) {
 
-        let basicAttackHitbox = new Vec2(32, 30)
+        let basicAttackHitbox = new Vec2(32, 64)
         let basicAttackPosition = this.enemyBoss.position.clone();
 
         if(lastFace == -1)
@@ -179,7 +182,8 @@ export default class COFLevel5 extends COFLevel {
     protected subscribeToEvents(): void {
         super.subscribeToEvents();
         this.receiver.subscribe(SwordEvents.BASIC_ATTACK);
-        this.receiver.subscribe(SwordEvents.SPIN_ATTACK)
+        this.receiver.subscribe(SwordEvents.SPIN_ATTACK);
+        this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
     }
 
     protected handleLevelEnd(): void {

@@ -349,6 +349,62 @@
 					"duration": 10
 				}
 			]
+		},
+		{
+			"name": "CHARGE",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 5,
+					"duration": 3
+				},
+				{
+					"index": 6,
+					"duration": 4
+				},
+				{
+					"index": 0,
+					"duration": 3
+				},
+				{
+					"index": 7,
+					"duration": 2
+				},
+				{
+					"index": 8,
+					"duration": 3
+				},
+				{
+					"index": 0,
+					"duration": 4
+				}
+			]
+		},
+		{
+			"name": "MAGIC",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 15
+				},
+				{
+					"index": 22,
+					"duration": 30
+				},
+				{
+					"index": 23,
+					"duration": 10
+				},
+				{
+					"index": 24,
+					"duration": 15
+				},
+				{
+					"index": 25,
+					"duration": 120
+				}
+			]
 		}
 	]
 }

@@ -9,6 +9,7 @@ import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
 import { SwordEvents } from '../SwordEvents';
 import COFLevel5 from '../../../Scenes/COFLevel5';
 import { GameEventType } from '../../../../Wolfie2D/Events/GameEventType';
+import Game from "../../../../Wolfie2D/Loop/Game";
 
 export default class SpinAttack extends SwordState {
 
@@ -25,7 +26,7 @@ export default class SpinAttack extends SwordState {
         this.owner.tweens.play(SwordTweens.SPIN, true);
         
         let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: spinAudio, loop: true})
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: spinAudio})
     }
 
     public update(deltaT: number): void{
@@ -104,6 +105,8 @@ export default class SpinAttack extends SwordState {
     }
 
     public onExit(): Record<string, any> {
+        let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: spinAudio})
 		return {};
 	}
 }

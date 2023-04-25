@@ -1,7 +1,7 @@
 import COFLevel from "./COFLevel";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Input from "../../Wolfie2D/Input/Input";
-import MoonDogController from "../Enemy/MoonDog/MoonDogController";
+import DemonKingController from "../Enemy/DemonKing/DemonKingController";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import MainMenu from "./MainMenu";
@@ -14,13 +14,13 @@ export default class COFLevel6 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
+        this.load.spritesheet("wraith", "cof_assets/spritesheets/wraith.json");
     }
 
     public startScene(): void {
         super.startScene();
-        super.initializeBossUI("Moon Dog");
-        this.initializeEnemyBoss("moondog", MoonDogController, 1, [700, 700], -15, -15);
+        super.initializeBossUI("Demon King");
+        this.initializeEnemyBoss("wraith", DemonKingController, 1, [700, 700], -15, -15);
     }
 
     protected handleLevelEnd(): void {

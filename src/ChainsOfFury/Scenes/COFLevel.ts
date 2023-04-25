@@ -21,7 +21,6 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Sprite from '../../Wolfie2D/Nodes/Sprites/Sprite';
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import AzazelController, { AzazelTweens } from '../Player/AzazelController';
-import FireballShaderType from "../Shaders/FireballShaderType";
 import FireballAI from "../Fireball/FireballBehavior";
 import MainMenu from "./MainMenu";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";

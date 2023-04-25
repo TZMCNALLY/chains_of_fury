@@ -12,6 +12,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 import Input from "../../Wolfie2D/Input/Input";
 import { COFEntities } from "../Scenes/COFLevel";
+import { COFCheats } from "../COFCheats";
 
 /**
  * The controller that controls the player.
@@ -21,6 +22,9 @@ export default class EnemyController extends StateMachineAI {
     /** Health and max health for the player */
     protected _health: number;
     protected _maxHealth: number;
+
+    protected _damageFromPhysical: number;
+    protected _damageFromProjectile: number;
 
     /** The boss game node */
     protected owner: COFAnimatedSprite;
@@ -49,6 +53,9 @@ export default class EnemyController extends StateMachineAI {
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
+        this.damageFromPhysical = 50;
+        this.damageFromProjectile = 100;
+
         this._player = options.player;
 
         this.receiver = new Receiver();
@@ -66,6 +73,11 @@ export default class EnemyController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
+
+        if(Input.isPressed(COFCheats.INFINITE_DAMAGE)) {
+            this.damageFromPhysical = Number.MAX_SAFE_INTEGER;
+            this.damageFromProjectile = Number.MAX_SAFE_INTEGER;
+        }
 	}
 
     public handleEvent(event: GameEvent): void {
@@ -90,6 +102,12 @@ export default class EnemyController extends StateMachineAI {
 
     public get lastFace(): number { return this._lastFace; }
     public set lastFace(x: number) { this._lastFace = x; }
+
+    public get damageFromPhysical(): number { return this._damageFromPhysical; }
+    public set damageFromPhysical(damage: number) { this._damageFromPhysical = damage; }
+
+    public get damageFromProjectile(): number { return this._damageFromProjectile; }
+    public set damageFromProjectile(damage: number) { this._damageFromProjectile = damage; }
 
     public get velocity(): Vec2 { return this._velocity; }
     public set velocity(velocity: Vec2) { this._velocity = velocity; }
@@ -122,7 +140,7 @@ export default class EnemyController extends StateMachineAI {
         if (id !== this.owner.id)
             return;
 
-        this.health -= 50;
+        this.health -= this.damageFromPhysical;
         if (entity !== COFEntities.MINION) {
             this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
         }
@@ -138,7 +156,7 @@ export default class EnemyController extends StateMachineAI {
             return;
         }
 
-        this.health -= 100;
+        this.health -= this.damageFromProjectile;
         if (entity !== COFEntities.MINION) {
             this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
         }

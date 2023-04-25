@@ -43,7 +43,6 @@ export default class MindFlayerController extends EnemyController {
         super.initializeAI(owner, options);
         this.receiver.subscribe(COFEvents.MINION_DEAD);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_DEAD);
-        this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
 
         this.addState(MindFlayerStates.IDLE, new Idle(this, this.owner));
         this.addState(MindFlayerStates.WALK, new Walk(this, this.owner));
@@ -71,12 +70,16 @@ export default class MindFlayerController extends EnemyController {
         return this._shadowDemonCount;
     }
 
-    public set shadowDemonCount(count : number) {
+    public set shadowDemonCount(count: number) {
         this._shadowDemonCount = count;
     }
     
     public get maxShadowDemonCount() : number {
         return this._maxShadowDemonCount;
+    }
+
+    public set maxShadowDemonCount(count: number) {
+        this._maxShadowDemonCount = count;
     }
     
     public handleEvent(event: GameEvent): void {

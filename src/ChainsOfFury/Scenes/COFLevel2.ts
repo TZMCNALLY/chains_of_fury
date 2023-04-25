@@ -5,6 +5,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
+import DarkStalkerController from "../Enemy/DarkStalker copy/DealthStalkerStates/DarkStalkerController";
 
 export default class COFLevel2 extends COFLevel {
 
@@ -14,13 +15,13 @@ export default class COFLevel2 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
+        this.load.spritesheet("darkstalker", "cof_assets/spritesheets/dark_stalker.json");
     }
 
     public startScene(): void {
         super.startScene();
-        super.initializeBossUI("Moon Dog");
-        this.initializeEnemyBoss("moondog", MoonDogController, 1, [700, 700], -15, -15);
+        super.initializeBossUI("darkstalker");
+        this.initializeEnemyBoss("darkstalker", DarkStalkerController, 1, [700, 700], -15, -15);
     }
 
     protected handleLevelEnd(): void {

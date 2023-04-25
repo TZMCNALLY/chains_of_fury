@@ -1,6 +1,7 @@
 import ShadowDemonState from "./ShadowDemonState";
 import { ShadowDemonAnimation } from "../ShadowDemonController";
 import { COFEvents } from "../../../../../COFEvents";
+import { ShadowDemonStates } from "../ShadowDemonController";
 
 export default class Dead extends ShadowDemonState {
 
@@ -14,6 +15,7 @@ export default class Dead extends ShadowDemonState {
 		if (!this.owner.animation.isPlaying(ShadowDemonAnimation.DYING) && 
         !this.owner.animation.isPlaying(ShadowDemonAnimation.DEAD)) {
             this.emitter.fireEvent(COFEvents.MINION_DEAD, {id: this.owner.id});
+			this.finished(ShadowDemonStates.IDLE);
         }
 	}
 

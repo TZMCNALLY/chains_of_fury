@@ -7,6 +7,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
 import MainMenu from "./MainMenu";
 import SplashScreen from "./SplashScreen";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -122,7 +123,7 @@ export default class Help extends Scene {
 
     public unloadScene(): void {
         // The scene is being destroyed, so we can stop playing the song
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
     }
 
     // Creates a text label and appends it onto main layer.

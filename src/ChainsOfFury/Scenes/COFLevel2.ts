@@ -6,6 +6,7 @@ import MoonDogController from "../Enemy/MoonDog/MoonDogController";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import DarkStalkerController from "../Enemy/DarkStalker copy/DealthStalkerStates/DarkStalkerController";
+import COFLevel3 from "./COFLevel3";
 
 export default class COFLevel2 extends COFLevel {
 
@@ -26,6 +27,6 @@ export default class COFLevel2 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
-        this.sceneManager.changeToScene(COFLevel5)
+        this.sceneManager.changeToScene(COFLevel3)
     }
 }

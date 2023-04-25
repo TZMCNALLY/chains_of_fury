@@ -142,7 +142,7 @@
         },
         {
             "name": "TAKING_DAMAGE_RIGHT",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 25,
@@ -168,7 +168,7 @@
         },
         {
             "name": "TAKING_DAMAGE_LEFT",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 30,

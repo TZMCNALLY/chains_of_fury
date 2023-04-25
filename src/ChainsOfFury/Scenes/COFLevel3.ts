@@ -191,7 +191,7 @@ export default class COFLevel3 extends COFLevel {
                 let shadowDemonHitbox = new AABB(this.shadowDemons[i].position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15));
                 this.shadowDemons[i].addPhysics(shadowDemonHitbox);
                 this.shadowDemons[i].setGroup(COFPhysicsGroups.ENEMY);
-                this.shadowDemons[i].setTrigger(COFPhysicsGroups.FIREBALL, ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON, null);
+                this.shadowDemons[i].setTrigger(COFPhysicsGroups.FIREBALL, ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON, "");
 
                 break;
             }

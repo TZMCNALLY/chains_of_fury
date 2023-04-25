@@ -5,7 +5,7 @@ import { ReaperAnimation } from "../ReaperController";
 export default class Dead extends ReaperState {
 
 	public onEnter(options: Record<string, any>): void {
-		this.owner.animation.play(ReaperAnimation.DYING, false, null);
+		this.owner.animation.play(ReaperAnimation.DYING, false, "");
         this.owner.animation.queue(ReaperAnimation.DEAD);
 	}
 

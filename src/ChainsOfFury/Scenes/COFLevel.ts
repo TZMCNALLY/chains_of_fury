@@ -161,9 +161,6 @@ export default class COFLevel extends Scene {
         // Load the tilemap
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
         
-        // Load dummy enemy
-        this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
-
         this.load.spritesheet("fireball", "cof_assets/spritesheets/fireball.json")
     }
 
@@ -496,10 +493,10 @@ export default class COFLevel extends Scene {
         // Add physics to the wall layer
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
-        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
-        this.walls.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_WALL, null);
+        this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, "");
+        this.walls.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_WALL, "");
         // Allows a trigger to happen when boss charges into the wall.
-        this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, null);
+        this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, "");
     }
     /**
      * Handles all subscriptions to events
@@ -635,8 +632,8 @@ export default class COFLevel extends Scene {
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
 
-        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_PLAYER, null);
-        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PHYSICAL_ATTACK_HIT_PLAYER, null);
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_PLAYER, "");
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PHYSICAL_ATTACK_HIT_PLAYER, "");
     }
 
 
@@ -665,9 +662,8 @@ export default class COFLevel extends Scene {
         this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), 
         new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x+hitBoxModifierX, this.enemyBoss.boundary.getHalfSize().clone().y+hitBoxModifierY)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
-        this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
+        this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, "");
     }
-
 
     /**
      * Initializes the viewport
@@ -680,8 +676,6 @@ export default class COFLevel extends Scene {
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
     }
-
-    
 
     private createBar(posX: number, posY: number, sizeX: number, sizeY: number, color: Color, font?: number) : Label {
         let bar = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, {position: new Vec2(posX, posY), text: ""});
@@ -710,5 +704,4 @@ export default class COFLevel extends Scene {
         
         return barLabel;
     }
-
 }

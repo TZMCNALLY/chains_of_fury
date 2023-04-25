@@ -6,7 +6,7 @@ import { COFEvents } from "../../../COFEvents";
 export default class Dead extends MindFlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-		this.owner.animation.play(MindFlayerAnimation.DYING, false, null);
+		this.owner.animation.play(MindFlayerAnimation.DYING, false, "");
         this.owner.animation.queue(MindFlayerAnimation.DEAD);
 	}
 

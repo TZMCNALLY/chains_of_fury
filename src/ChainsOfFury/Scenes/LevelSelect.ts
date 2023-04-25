@@ -67,12 +67,12 @@ export default class LevelSelect extends Scene {
 
 
         // Buttons:
-        let level1 = this.makeLevelBox(size.x-350, size.y-100, "level1");
-        let level2 = this.makeLevelBox(size.x, size.y-100, "level2");
-        let level3 = this.makeLevelBox(size.x+350, size.y-100, "level3");
-        let level4 = this.makeLevelBox(size.x-350, size.y+200, "level4");
-        let level5 = this.makeLevelBox(size.x, size.y+200, "level5");
-        let level6 = this.makeLevelBox(size.x+350, size.y+200, "level6");
+        let level1 = this.makeLevelBox(size.x-350, size.y-100, "Level 1");
+        let level2 = this.makeLevelBox(size.x, size.y-100, "Level 2");
+        let level3 = this.makeLevelBox(size.x+350, size.y-100, "Level 3");
+        let level4 = this.makeLevelBox(size.x-350, size.y+200, "Level 4");
+        let level5 = this.makeLevelBox(size.x, size.y+200, "Level 5");
+        let level6 = this.makeLevelBox(size.x+350, size.y+200, "Level 6");
 
         // Scene transitions:
         level1.onClick = () => {

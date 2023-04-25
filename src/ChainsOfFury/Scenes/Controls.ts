@@ -102,11 +102,11 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x+270, size.y, 500, 150);
 
-        this.createText(size.x+130, size.y-10, "Hold Right-Click -");
-        this.createText(size.x+130, size.y+10, "Guard");
+        this.createText(size.x+130, size.y-10, "Shift (while running) -");
+        this.createText(size.x+130, size.y+10, "Dashes foward");
 
         // TODO: Guard animation
-        this.createSprite(size.x*2-160, size.y, 1, 1, "player", "IDLE_RIGHT");
+        this.createSprite(size.x*2-160, size.y, 1, 1, "player", "RUN_RIGHT");
 
         // Guard Section
         // ================================================================================

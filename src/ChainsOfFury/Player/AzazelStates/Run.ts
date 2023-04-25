@@ -1,4 +1,4 @@
-import { AzazelStates, AzazelAnimations } from "../AzazelController";
+import { AzazelStates, AzazelAnimations, AzazelTweens } from "../AzazelController";
 import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
 import PlayerState from "./PlayerState";
@@ -7,17 +7,26 @@ import { COFEvents } from "../../COFEvents";
 
 export default class Run extends PlayerState {
 
+    protected dashDuration: number;
+
 	onEnter(options: Record<string, any>): void {
 		this.parent.speed = 150;
         if(this.parent.lastFace == -1)
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT);
         else
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT);
+
+        this.dashDuration = 0;
 	}
 
 	update(deltaT: number): void {
         // Fires running event so HUD knows to decrease stamina.
         this.parent.emitter.fireEvent(COFEvents.PLAYER_RUN);
+
+        this.dashDuration -= deltaT;
+        if (this.dashDuration < 0) {
+            this.dashDuration = 0;
+        }
 
         // Call getter to update last face.
         this.parent.lastFace;
@@ -54,10 +63,31 @@ export default class Run extends PlayerState {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT);
         }
 
-        // Move player
-        this.owner.move(
-            this.parent.inputDir.scale(this.parent.speed).scale(deltaT)
-        );
+        if (Input.isPressed(AzazelControls.DASH) && this.parent.dashCooldown <= 0 /** Stamina clause can be added here */) {
+            console.log(this.parent.dashCooldown);
+
+            this.dashDuration = .1;
+            this.parent.dashCooldown = 2;
+
+            // Can emit a dash event to lower stamina.
+
+            // Doesn't seem enough to time to notice.
+            // this.parent.iFrames = .1;
+            // this.owner.tweens.play(AzazelTweens.IFRAME, true);
+        }
+
+        if (this.dashDuration == 0) {
+             // Move player
+            this.owner.move(
+                this.parent.inputDir.scale(this.parent.speed).scale(deltaT)
+            );
+        } else {
+            // Move player
+            this.owner.move(
+                // this.parent.inputDir.scale(this.parent.speed*6).scale(deltaT)
+                this.parent.faceDir.scale(this.parent.speed*(5+(3*(this.dashDuration/2)))).scale(deltaT)
+            );
+        }
 	}
 
 	onExit(): Record<string, any> {

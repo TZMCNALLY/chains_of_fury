@@ -12,8 +12,6 @@ export default class Idle extends MoonDogState {
         this.owner.animation.play(MoonDogAnimation.IDLE);
 
 		this.lastActionTime = 2; // How many seconds it takes until it goes into new state.
-
-		this.owner.alpha = .1;
 	}
 
 	public update(deltaT: number): void {
@@ -25,6 +23,11 @@ export default class Idle extends MoonDogState {
 
 			if (this.parent.health > 300) {
 				// Stage 1
+
+				if (rnd > 21) {
+					// Testing only
+					this.finished(MoonDogStates.HORIZONTAL_CHARGE);
+				}
 
 				if (rnd < 21) {
 					// 20% chance to try to use magic attack.

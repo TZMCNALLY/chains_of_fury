@@ -12,11 +12,9 @@ export default class Dead extends SwordState {
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
-        console.log(this.owner.animation.isPlaying(SwordAnimation.DYING))
-        console.log(this.owner.animation.isPlaying(SwordAnimation.DEAD))
+
 		if (!this.owner.animation.isPlaying(SwordAnimation.DYING) && 
         !this.owner.animation.isPlaying(SwordAnimation.DEAD)) {
-            console.log("jkdfls")
             this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
         }
 	}

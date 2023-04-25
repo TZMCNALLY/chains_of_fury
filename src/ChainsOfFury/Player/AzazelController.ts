@@ -90,7 +90,9 @@ export default class AzazelController extends StateMachineAI {
 
     protected isDead = false;
 
-    protected iFrame = 0;
+    protected _iframe = 0;
+
+    protected _dashCooldown = 0;
 
     // A receiver and emitter to hook into the event queue
 	public receiver: Receiver;
@@ -112,7 +114,7 @@ export default class AzazelController extends StateMachineAI {
         this.mana = this.maxMana;
         this.lastFace = 1;
 
-        this.iFrame = 0;
+        this._iframe = 0;
 
         // Add the different states the player can be in to the PlayerController 
 		this.addState(AzazelStates.IDLE, new Idle(this, this.owner));
@@ -153,11 +155,15 @@ export default class AzazelController extends StateMachineAI {
     public update(deltaT: number): void {
 		super.update(deltaT);
 
-        if (this.iFrame > 0) {
-            this.iFrame -= deltaT;
+        if (this._iframe > 0) {
+            this._iframe -= deltaT;
         } else {
             this.owner.tweens.stop(AzazelTweens.IFRAME);
             this.owner.alpha = 1;
+        }
+
+        if (this._dashCooldown > 0) {
+            this._dashCooldown -= deltaT;
         }
 	}
 
@@ -246,6 +252,16 @@ export default class AzazelController extends StateMachineAI {
         this._mana = MathUtils.clamp(mana, 0, this.maxMana);
     }
 
+    public get dashCooldown(): number { return this._dashCooldown; }
+    public set dashCooldown(dashCooldown: number) {
+        this._dashCooldown = dashCooldown;
+    }
+
+    public get iFrames(): number { return this._iframe; }
+    public set iFrames(iFrame: number) {
+        this._iframe = iFrame;
+    }
+
     // Setters and getters
     // ======================================================================
 
@@ -254,10 +270,10 @@ export default class AzazelController extends StateMachineAI {
     // Event handlers
 
     public handlePlayerHit(event: GameEvent): void {
-        if (this.iFrame > 0) {
+        if (this._iframe > 0) {
             return;
         }
-        this.iFrame = .5; // Set iFrame time here.
+        this._iframe = .5; // Set _iframe time here.
 
         this.owner.tweens.play(AzazelTweens.IFRAME, true);
 

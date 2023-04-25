@@ -640,8 +640,18 @@ export default class COFLevel extends Scene {
     }
 
 
+    /**
+     * Method to initialize the enemy boss.
+     * 
+     * @param key the string containing the name of the boss
+     * @param controller the AI the boss uses
+     * @param scaleSize the scale factor of the boss
+     * @param enemySpawn an length 2 array containing the coordinates of the spawn location of the boss
+     * @param hitBoxModifierX the number to increase/decrease the x-value of the hitbox by
+     * @param hitBoxModifierY the number to increase/decrease the y-value of the hitbox by
+     */
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController,
-     scaleSize: number, enemySpawn: number[]): void {
+     scaleSize: number, enemySpawn: number[], hitBoxModifierX: number, hitBoxModifierY: number): void {
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
         this.enemyBoss.scale.set(scaleSize, scaleSize);
         this.enemyBoss.position.copy(new Vec2(enemySpawn[0], enemySpawn[1]));
@@ -652,8 +662,8 @@ export default class COFLevel extends Scene {
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
 
-        //this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
-        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), 
+        new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x+hitBoxModifierX, this.enemyBoss.boundary.getHalfSize().clone().y+hitBoxModifierY)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
         this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
     }

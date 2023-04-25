@@ -51,7 +51,7 @@ export default class COFLevel5 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Satan's Blade");
-        this.initializeEnemyBoss("flying_sword", SwordController, 1, [700, 700]);
+        this.initializeEnemyBoss("flying_sword", SwordController, 1, [700, 700], -32, -16);
         this.enemyBoss.tweens.add(SwordTweens.SPIN, {
             startDelay: 0,
             duration: 100,
@@ -143,13 +143,6 @@ export default class COFLevel5 extends COFLevel {
                 break;
             }
         }
-    }
-
-    protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController, scaleSize: number, enemySpawn: number[]): void {
-        super.initializeEnemyBoss(key, controller, scaleSize, enemySpawn);
-        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-32, this.enemyBoss.boundary.getHalfSize().clone().y-16)));
-        this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
-        this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
     }
 
     protected handleBasicAttack(lastFace: number) {

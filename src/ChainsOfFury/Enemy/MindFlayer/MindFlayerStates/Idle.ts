@@ -26,7 +26,8 @@ export default class Idle extends MindFlayerState {
 		}
 
 		// If target is too close, teleport away to a safe distance
-		if ((this.parent.getDistanceFromPlayer() < 200 && timeSinceLastAction > 3000)) {
+		if ((this.parent.getDistanceFromPlayer() < 200 && timeSinceLastAction > 3000 &&
+		!this.owner.animation.isPlaying(MindFlayerStates.SPAWN_SHADOW_DEMONS))) {
 			this.lastActionTime = new Date();
 			this.finished(MindFlayerStates.TELEPORT);
 		}

@@ -138,7 +138,7 @@ export default class EnemyController extends StateMachineAI {
             return;
         }
 
-        this.health -= 50;
+        this.health -= 100;
         if (entity !== COFEntities.MINION) {
             this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
         }

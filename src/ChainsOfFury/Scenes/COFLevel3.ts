@@ -12,6 +12,7 @@ import { COFEvents } from "../COFEvents";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import ShadowDemonController from "../Enemy/MindFlayer/MindFlayerSummons/ShadowDemon/ShadowDemonController";
 import { ShadowDemonEvents } from "../Enemy/MindFlayer/MindFlayerSummons/ShadowDemon/ShadowDemonEvents";
+import EnemyController from "../Enemy/EnemyController";
 
 export default class COFLevel3 extends COFLevel {
 
@@ -34,7 +35,7 @@ export default class COFLevel3 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Mind Flayer");
-        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [1000, 500]);
+        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [1000, 500], -5, -5);
     }
 
     protected handleLevelEnd(): void {

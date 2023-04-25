@@ -41,8 +41,8 @@ export default class BasicAttack extends SwordState {
 			
 			// Slash toward the position of the player
 			this.parent.velocity = this.owner.position.dirTo(this.parent.player.position);
-			this.parent.velocity.x *= 400;
-			this.parent.velocity.y *= 400;
+			this.parent.velocity.x *= 500;
+			this.parent.velocity.y *= 500;
 
 			if(this.parent.getXDistanceFromPlayer() < 0) {
 				this.parent.lastFace = 1
@@ -71,10 +71,6 @@ export default class BasicAttack extends SwordState {
 
 	public onExit(): Record<string, any> {
 		this.owner.animation.stop();
-
-		// Set back to normal enemy group.
-		// this.owner.setGroup(COFPhysicsGroups.ENEMY);
-
 		return {};
 	}
 }

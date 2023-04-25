@@ -8,15 +8,18 @@ import BasicAttack from "./SwordStates/BasicAttack";
 import Walk from "./SwordStates/Walk"
 import SpinAttack from "./SwordStates/SpinAttack";
 import Damaged from './SwordStates/Damaged';
+import Dead from './SwordStates/Dead';
 import Timer from '../../../Wolfie2D/Timing/Timer';
 import { COFEntities } from "../../Scenes/COFLevel";
+import { SwordEvents } from './SwordEvents';
 
 export const SwordStates = {
     IDLE: "IDLE",
     WALK: "WALK",
     BASIC_ATTACK: "BASIC_ATTACK",
     SPIN_ATTACK: "SPIN_ATTACK",
-    DAMAGED: "DAMAGED"
+    DAMAGED: "DAMAGED",
+    DEAD: "DEAD"
 } as const
 
 export const SwordAnimation = {
@@ -47,12 +50,13 @@ export default class SwordController extends EnemyController {
         this.addState(SwordStates.BASIC_ATTACK, new BasicAttack(this, this.owner));
         this.addState(SwordStates.WALK, new Walk(this, this.owner));
         this.addState(SwordStates.SPIN_ATTACK, new SpinAttack(this, this.owner));
-        this.addState(SwordStates.DAMAGED, new Damaged(this, this.owner))
+        this.addState(SwordStates.DAMAGED, new Damaged(this, this.owner));
+        this.addState(SwordStates.DEAD, new Dead(this, this.owner));
 
         this.walkTime = new Date();
         this.initialize(SwordStates.WALK);
 
-        this.maxHealth = 2000;
+        this.maxHealth = 10;
         this.health = this.maxHealth;
     }
 
@@ -60,9 +64,17 @@ export default class SwordController extends EnemyController {
         super.handleEvent(event);
 		switch(event.type) {
 			case COFEvents.SWING_HIT: {
-                this.changeState(SwordStates.DAMAGED);
+                if(this.health <= 0)
+			        this.changeState(SwordStates.DEAD);
+
+                else if(this.currentState == this.stateMap.get(SwordStates.WALK))
+                    this.changeState(SwordStates.DAMAGED);
 				break;
 			}
+            case SwordEvents.SWORD_DEAD: {
+                this.changeState(SwordStates.DEAD);
+                break;
+            }
 		}
 	}
 

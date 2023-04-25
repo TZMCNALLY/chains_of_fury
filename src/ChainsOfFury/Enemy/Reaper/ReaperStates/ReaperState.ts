@@ -15,8 +15,8 @@ export default abstract class ReaperState extends State {
 
     // direction the boss should be facing
 	// -1 or left and down, 1 for up and right
-	protected faceXDir = -1
-	protected faceYDir = -1
+	protected faceXDir = -1;
+	protected faceYDir = -1;
 
 	public constructor(parent: ReaperController, owner: COFAnimatedSprite){
 		super(parent);

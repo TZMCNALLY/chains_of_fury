@@ -2,13 +2,13 @@ import COFAnimatedSprite from "../../Nodes/COFAnimatedSprite";
 import EnemyController from "../EnemyController";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { COFEvents } from "../../COFEvents";
-import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import { ReaperEvents } from "./ReaperEvents";
 
 import Idle from "./ReaperStates/Idle";
 import Walk from "./ReaperStates/Walk";
 import Damaged from "./ReaperStates/Damaged";
 import Dead from "./ReaperStates/Dead";
+import Attack from "./ReaperStates/Attack";
 
 export const ReaperStates = {
     IDLE: "IDLE",
@@ -38,6 +38,7 @@ export default class ReaperController extends EnemyController {
 
         this.addState(ReaperStates.IDLE, new Idle(this, this.owner));
         this.addState(ReaperStates.WALK, new Walk(this, this.owner));
+        this.addState(ReaperStates.ATTACK, new Attack(this, this.owner));
         this.addState(ReaperStates.DAMAGED, new Damaged(this, this.owner));
         this.addState(ReaperStates.DEAD, new Dead(this, this.owner));
 

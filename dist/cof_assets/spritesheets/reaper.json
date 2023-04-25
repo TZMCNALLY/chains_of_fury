@@ -195,7 +195,6 @@
         {
             "name": "DYING",
             "repeat": false,
-            "next": "DEAD",
             "frames": [
                 {
                     "index": 35,

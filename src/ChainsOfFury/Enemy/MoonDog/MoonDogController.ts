@@ -10,6 +10,8 @@ import Charge from "./MoonDogStates/Charge";
 import Damaged from "./MoonDogStates/Damaged";
 import Dead from "./MoonDogStates/Dead";
 import Stunned from "./MoonDogStates/Stunned";
+import HorizontalCharge from "./MoonDogStates/HorizontalCharge";
+import Magic from "./MoonDogStates/Magic";
 
 export const MoonDogStates = {
     IDLE: "IDLE",
@@ -18,7 +20,10 @@ export const MoonDogStates = {
     ATTACK: "ATTACK",
     CHARGE: "CHARGE",
     DEAD: "DEAD",
-    STUNNED: "STUNNED"
+    STUNNED: "STUNNED",
+
+    HORIZONTAL_CHARGE: "HORIZONTAL_CHARGE",
+    MAGIC: "MAGIC"
 } as const
 
 export const MoonDogAnimation = {
@@ -35,9 +40,15 @@ export const MoonDogAnimation = {
     DEAD_LEFT: "DEAD_LEFT",
     CHARGE_RIGHT: "WALKING_RIGHT",
     CHARGE_LEFT: "WALKING_LEFT",
+
+    CHARGE: "CHARGE",
+    MAGIC: "MAGIC"
 } as const
 
 export default class MoonDogController extends EnemyController {
+
+    protected _chargeSpeed: number;
+    protected _walkSpeed: number;
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
@@ -50,13 +61,28 @@ export default class MoonDogController extends EnemyController {
         this.addState(MoonDogStates.DEAD, new Dead(this, this.owner));
         this.addState(MoonDogStates.STUNNED, new Stunned(this, this.owner));
 
+        this.addState(MoonDogStates.HORIZONTAL_CHARGE, new HorizontalCharge(this, this.owner));
+        this.addState(MoonDogStates.MAGIC, new Magic(this, this.owner));
+
         this.initialize(MoonDogStates.IDLE);
 
         this.maxHealth = 500;
         this.health = this.maxHealth;
+        this.walkSpeed = 4;
+        this.chargeSpeed = 18;
     }    
 
     public update(deltaT: number): void {
 		super.update(deltaT);
 	}
+
+    public get chargeSpeed(): number { return this._chargeSpeed; }
+    public set chargeSpeed(chargeSpeed: number) {
+        this._chargeSpeed = chargeSpeed;
+    }
+
+    public get walkSpeed(): number { return this._walkSpeed; }
+    public set walkSpeed(walkSpeed: number) {
+        this._walkSpeed = walkSpeed;
+    }
 }

@@ -132,27 +132,27 @@
 			"frames": [
 				{
 					"index": 36,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 38,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 39,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 40,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 41,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 42,
-					"duration": 6
+					"duration": 8
 				}
 			]
 		},
@@ -162,27 +162,27 @@
 			"frames": [
 				{
 					"index": 45,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 47,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 48,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 49,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 50,
-					"duration": 6
+					"duration": 8
 				},
 				{
 					"index": 51,
-					"duration": 6
+					"duration": 8
 				}
 			]
 		},
@@ -222,27 +222,27 @@
 			"frames": [
 				{
 					"index": 63,
-					"duration": 6
+					"duration": 3
 				},
 				{
 					"index": 64,
-					"duration": 4
+					"duration": 3
 				},
 				{
 					"index": 65,
-					"duration": 4
+					"duration": 3
 				},
 				{
 					"index": 66,
-					"duration": 8
+					"duration": 3
 				},
 				{
 					"index": 67,
-					"duration": 8
+					"duration": 3
 				},
 				{
 					"index": 68,
-					"duration": 8
+					"duration": 3
 				}
 			]
 		},
@@ -320,7 +320,6 @@
 		},
 		{
 			"name": "DEAD",
-			"frames": "90-95",
 			"repeat": false,
 			"frames": [
 				{

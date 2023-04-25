@@ -33,7 +33,6 @@ import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import PlayerController from '../../demos/PlatformerPlayerController';
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
-import { MindFlayerAnimation } from "../Enemy/MindFlayer/MindFlayerController";
 
 /**
  * A const object for the layer names
@@ -47,6 +46,14 @@ export const COFLayers = {
 
 // The layers as a type
 export type COFLayer = typeof COFLayers[keyof typeof COFLayers]
+
+/**
+ * Consts for the level entities
+ */
+export const COFEntities = {
+    BOSS: "BOSS",
+    MINION: "MINION"
+} as const;
 
 export default class COFLevel extends Scene {
 
@@ -214,7 +221,7 @@ export default class COFLevel extends Scene {
                 this.handlePlayerSwing(event.data.get("faceDir"));
                 break;
             }
-            case COFEvents.ENEMY_TOOK_DAMAGE: {
+            case COFEvents.BOSS_TOOK_DAMAGE: {
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
@@ -248,6 +255,10 @@ export default class COFLevel extends Scene {
             }
             case COFEvents.PLAYER_DEAD: {
                 this.sceneManager.changeToScene(MainMenu);
+                break;
+            }
+            case COFEvents.MINION_DEAD: {
+                this.handleMinionDead(event.data.get("id"));
                 break;
             }
             case COFEvents.BOSS_DEFEATED: {
@@ -298,7 +309,7 @@ export default class COFLevel extends Scene {
 
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
-            this.emitter.fireEvent(COFEvents.SWING_HIT);
+            this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }
     }
     protected initObjectPools(): void {
@@ -361,6 +372,10 @@ export default class COFLevel extends Scene {
                 break;
             }
         }
+    }
+
+    // should be overriden inside of respective levels
+    protected handleMinionDead(id: number): void{
     }
 
     protected handleLevelEnd(): void {
@@ -482,7 +497,7 @@ export default class COFLevel extends Scene {
         this.walls.addPhysics();
         this.walls.setGroup(COFPhysicsGroups.WALL);
         this.walls.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_WALL, null);
-        
+        this.walls.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_WALL, null);
         // Allows a trigger to happen when boss charges into the wall.
         this.walls.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.ENEMY_STUNNED, null);
     }
@@ -491,7 +506,7 @@ export default class COFLevel extends Scene {
      */
     protected subscribeToEvents(): void {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
-        this.receiver.subscribe(COFEvents.ENEMY_TOOK_DAMAGE);
+        this.receiver.subscribe(COFEvents.BOSS_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
@@ -499,8 +514,10 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_WALL);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.PLAYER_TOOK_DAMAGE);
-        this.receiver.subscribe(COFEvents.PLAYER_HIT);
+        this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
+        this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_WALL)
         this.receiver.subscribe(COFEvents.PLAYER_DEAD);
+        this.receiver.subscribe(COFEvents.MINION_DEAD);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.LEVEL_END);
     }
@@ -617,13 +634,24 @@ export default class COFLevel extends Scene {
 
         this.player.addPhysics(new AABB(this.player.position.clone(), playerHitbox));
         this.player.setGroup(COFPhysicsGroups.PLAYER);
-        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.PLAYER_HIT, null);
-        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PLAYER_HIT, null);
+
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_PROJECTILE, COFEvents.ENEMY_PROJECTILE_HIT_PLAYER, null);
+        this.player.setTrigger(COFPhysicsGroups.ENEMY_CONTACT_DMG, COFEvents.PHYSICAL_ATTACK_HIT_PLAYER, null);
     }
 
 
+    /**
+     * Method to initialize the enemy boss.
+     * 
+     * @param key the string containing the name of the boss
+     * @param controller the AI the boss uses
+     * @param scaleSize the scale factor of the boss
+     * @param enemySpawn an length 2 array containing the coordinates of the spawn location of the boss
+     * @param hitBoxModifierX the number to increase/decrease the x-value of the hitbox by
+     * @param hitBoxModifierY the number to increase/decrease the y-value of the hitbox by
+     */
     protected initializeEnemyBoss(key: string, controller: new (...a: any[]) => EnemyController,
-     scaleSize: number, enemySpawn: number[]): void {
+     scaleSize: number, enemySpawn: number[], hitBoxModifierX: number, hitBoxModifierY: number): void {
         this.enemyBoss = this.add.animatedSprite(key, COFLayers.PRIMARY);
         this.enemyBoss.scale.set(scaleSize, scaleSize);
         this.enemyBoss.position.copy(new Vec2(enemySpawn[0], enemySpawn[1]));
@@ -634,8 +662,8 @@ export default class COFLevel extends Scene {
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
 
-        //this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), enemyHitbox));
-        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x-15, this.enemyBoss.boundary.getHalfSize().clone().y-15)));
+        this.enemyBoss.addPhysics(new AABB(this.enemyBoss.position.clone(), 
+        new Vec2(this.enemyBoss.boundary.getHalfSize().clone().x+hitBoxModifierX, this.enemyBoss.boundary.getHalfSize().clone().y+hitBoxModifierY)));
         this.enemyBoss.setGroup(COFPhysicsGroups.ENEMY);
         this.enemyBoss.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
     }

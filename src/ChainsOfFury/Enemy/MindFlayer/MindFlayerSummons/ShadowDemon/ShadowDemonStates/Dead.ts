@@ -1,19 +1,26 @@
-// import { MindFlayerAnimation } from "../MindFlayerController";
-// import MindFlayerState from "./MindFlayerState";
-// import MindFlayerController from "../MindFlayerController";
+import ShadowDemonState from "./ShadowDemonState";
+import { ShadowDemonAnimation } from "../ShadowDemonController";
+import { COFEvents } from "../../../../../COFEvents";
+import { ShadowDemonStates } from "../ShadowDemonController";
 
-// export default class Dead extends MindFlayerState {
+export default class Dead extends ShadowDemonState {
 
-// 	public onEnter(options: Record<string, any>): void {
-//         this.owner.animation.play(MindFlayerAnimation.DEAD);
-// 	}
+	public onEnter(options: Record<string, any>): void {
+        this.owner.animation.play(ShadowDemonAnimation.DYING, false, null);
+        this.owner.animation.queue(ShadowDemonAnimation.DEAD);
+	}
 
-// 	public update(deltaT: number): void {
-// 		super.update(deltaT);
-// 	}
+	public update(deltaT: number): void {
+		super.update(deltaT);
+		if (!this.owner.animation.isPlaying(ShadowDemonAnimation.DYING) && 
+        !this.owner.animation.isPlaying(ShadowDemonAnimation.DEAD)) {
+            this.emitter.fireEvent(COFEvents.MINION_DEAD, {id: this.owner.id});
+			this.finished(ShadowDemonStates.IDLE);
+        }
+	}
 
-// 	public onExit(): Record<string, any> {
-// 		this.owner.animation.stop();
-// 		return {};
-// 	}
-// }
+	public onExit(): Record<string, any> {
+		this.owner.animation.stop();
+		return {};
+	}
+}

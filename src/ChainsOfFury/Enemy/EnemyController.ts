@@ -11,6 +11,7 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 import Input from "../../Wolfie2D/Input/Input";
+import { COFEntities } from "../Scenes/COFLevel";
 
 /**
  * The controller that controls the player.
@@ -42,6 +43,9 @@ export default class EnemyController extends StateMachineAI {
 	protected receiver: Receiver;
 	protected emitter: Emitter;
 
+    // Whether of not entity is already dead.
+    protected isDead: boolean = false;
+
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
@@ -67,20 +71,17 @@ export default class EnemyController extends StateMachineAI {
     public handleEvent(event: GameEvent): void {
 		switch(event.type) {
 			case COFEvents.SWING_HIT: {
-				this.handleEnemySwingHit(event);
+				this.handleEnemySwingHit(event.data.get("id"), event.data.get("entity"));
 				break;
 			}
             case COFEvents.FIREBALL_HIT_ENEMY: {
-				this.handleEnemyFireballHit(event);
+				this.handleEnemyFireballHit(event.data.get("other"), event.data.get("entity"));
 				break;
             }
             case COFEvents.ENEMY_STUNNED: {
                 this.handleEnemyStunned(event);
                 break;
             }
-			default: {
-				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
-			}
 		}
 	}
 
@@ -107,36 +108,44 @@ export default class EnemyController extends StateMachineAI {
     public get player(): COFAnimatedSprite { return this._player; }
 
     public get health(): number { return this._health; }
-    public set health(health: number) { 
+    public set health(health: number) {
         this._health = MathUtils.clamp(health, 0, this.maxHealth);
-        // If the health hit 0, change the state of the boss
-        // if (this.health === 0) {
-        //     this.changeState(Boss.DEAD);
-        // }
     }
 
     // Getters and setters
     // ======================================================================
     
-
     // ======================================================================
     // Event handlers
 
-    public handleEnemySwingHit(event: GameEvent): void {
-        this.health -= 100;
-        this.emitter.fireEvent(COFEvents.ENEMY_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+    public handleEnemySwingHit(id: number, entity: string): void {
+        if (id !== this.owner.id)
+            return;
 
-        if (this.health == 0) {
-            this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
+        this.health -= 50;
+        if (entity !== COFEntities.MINION) {
+            this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+        }
+        else {
+            if (this.health === 0) {
+                this.emitter.fireEvent(COFEvents.MINION_DYING, {id: id});
+            }
         }
     }
 
-    public handleEnemyFireballHit(event: GameEvent): void {
-        this.health -= 10;
-        this.emitter.fireEvent(COFEvents.ENEMY_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+    public handleEnemyFireballHit(id: number, entity: string): void {
+        if (id !== this.owner.id) {
+            return;
+        }
 
-        if (this.health == 0) {
-            this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
+        this.health -= 100;
+        if (entity !== COFEntities.MINION) {
+            this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+        }
+        else {
+            if (this.health === 0) {
+                this.emitter.fireEvent(COFEvents.MINION_DYING, {id: id});
+            }
         }
     }
 

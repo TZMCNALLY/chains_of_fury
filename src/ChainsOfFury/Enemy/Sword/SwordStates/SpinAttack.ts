@@ -1,20 +1,32 @@
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import SwordState from "./SwordState";
-import { SwordStates, SwordTweens } from '../SwordController';
+import { SwordAnimation, SwordStates, SwordTweens } from '../SwordController';
 import Vec2 from '../../../../Wolfie2D/DataTypes/Vec2';
-import AzazelController, { AzazelAnimations } from "../../../Player/AzazelController";
+import AzazelController, { AzazelAnimations, AzazelStates } from "../../../Player/AzazelController";
 import Input from '../../../../Wolfie2D/Input/Input';
 import { AzazelControls } from '../../../Player/AzazelControls';
 import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
+import { SwordEvents } from '../SwordEvents';
+import COFLevel5 from '../../../Scenes/COFLevel5';
+import { GameEventType } from '../../../../Wolfie2D/Events/GameEventType';
+import Game from "../../../../Wolfie2D/Loop/Game";
 
 export default class SpinAttack extends SwordState {
 
     protected timer: Timer; // tracks how long the sword has been spinning for
-    protected isCentered: boolean // tracks if the sword is slowing down or not
+    protected isCentered: boolean // tracks if the sword is creating a pull
 
     public onEnter(options: Record<string, any>): void {
         this.isCentered = false;
-        this.owner.tweens.play(SwordTweens.SPIN, true)
+        
+        this.timer = new Timer(2000);
+        this.timer.start();
+        
+        this.owner.animation.playIfNotAlready(SwordAnimation.ATTACK_RIGHT, true, null)
+        this.owner.tweens.play(SwordTweens.SPIN, true);
+        
+        let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: spinAudio})
     }
 
     public update(deltaT: number): void{
@@ -34,6 +46,11 @@ export default class SpinAttack extends SwordState {
         }
         
         else {
+
+            if(this.timer.isStopped()) {
+                this.owner.tweens.stop(SwordTweens.SPIN);
+                this.finished(SwordStates.BASIC_ATTACK)
+            }
 
             let xDistance = this.parent.getXDistanceFromPlayer();
             let yDistance = this.parent.getYDistanceFromPlayer();
@@ -71,36 +88,25 @@ export default class SpinAttack extends SwordState {
                         (this.parent.player.ai as AzazelController).speed = 50
                 }
             }
-            
 
-            // if(this.parent.getYDistanceFromPlayer() < 0) {
-
-            //     if(inputDir.y == 1) {
-            //         console.log(inputDir);
-            //         (this.parent.player.ai as AzazelController).speed = 50
-            //     }
-            // }
-
-            // else {
-
-            //     if(inputDir.x == -1 || (inputDir.x == 0 && inputDir.y != 0))
-            //         (this.parent.player.ai as AzazelController).speed = 50
-            // }
-
+            // If the player isn't moving, pull him towards the sword
             if(!Input.isPressed(AzazelControls.MOVE_RIGHT)
                 && !Input.isPressed(AzazelControls.MOVE_LEFT)
                 && !Input.isPressed(AzazelControls.MOVE_UP)
                 && !Input.isPressed(AzazelControls.MOVE_DOWN)) {
                 
                 this.parent.player.move(
-                    this.parent.player.position.dirTo(this.owner.position).scale(200).scale(deltaT)
+                    this.parent.player.position.dirTo(this.owner.position).scale(500).scale(deltaT)
                 );
             }
+
+            this.emitter.fireEvent(SwordEvents.SPIN_ATTACK)
         }
     }
 
     public onExit(): Record<string, any> {
-		this.owner.animation.stop();
+        let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: spinAudio})
 		return {};
 	}
 }

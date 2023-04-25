@@ -1,19 +1,22 @@
-import State from "../../../../Wolfie2D/DataTypes/State/State";
-import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import Receiver from "../../../../Wolfie2D/Events/Receiver";
-import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
-import COFAnimatedSprite from "../../../Nodes/COFAnimatedSprite";
-import SwordController from "../SwordController";
+import ShadowDemonController from "../ShadowDemonController";
+import COFAnimatedSprite from "../../../../../Nodes/COFAnimatedSprite";
+import State from "../../../../../../Wolfie2D/DataTypes/State/State";
+import GameEvent from "../../../../../../Wolfie2D/Events/GameEvent";
 
 /**
  * An abstract state for the PlayerController 
  */
-export default abstract class SwordState extends State {
+export default abstract class ShadowDemonState extends State {
 
-    protected parent: SwordController;
+    protected parent: ShadowDemonController;
 	protected owner: COFAnimatedSprite;
 
-	public constructor(parent: SwordController, owner: COFAnimatedSprite){
+    // direction the demon should be facing
+	// -1 or left and down, 1 for up and right
+	protected faceXDir = -1
+	protected faceYDir = -1
+
+	public constructor(parent: ShadowDemonController, owner: COFAnimatedSprite){
 		super(parent);
 		this.owner = owner;
 	}

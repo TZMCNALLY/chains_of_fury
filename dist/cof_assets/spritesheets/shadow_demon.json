@@ -11,7 +11,7 @@
 	"rows": 12,
 	"animations": [
 		{
-			"name": "Idle",
+			"name": "IDLE",
 			"repeat": true,
 			"frames": [
 				{
@@ -37,8 +37,8 @@
 			]
 		},
 		{
-			"name": "Dying",
-			"repeat": true,
+			"name": "DYING",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 5,
@@ -83,8 +83,8 @@
 			]
 		},
 		{
-			"name": "Dead",
-			"repeat": true,
+			"name": "DEAD",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 55,
@@ -93,8 +93,8 @@
 			]
 		},
 		{
-			"name": "Dancing",
-			"repeat": true,
+			"name": "DANCING",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 15,
@@ -139,8 +139,8 @@
 			]
 		},
 		{
-			"name": "Walking_Right",
-			"repeat": true,
+			"name": "WALKING_RIGHT",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 25,
@@ -165,8 +165,8 @@
 			]
 		},
 		{
-			"name": "Attacking_Right",
-			"repeat": true,
+			"name": "ATTACKING_RIGHT",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 30,
@@ -191,8 +191,8 @@
 			]
 		},
 		{
-			"name": "Damaged_Right",
-			"repeat": true,
+			"name": "DAMAGED_RIGHT",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 35,
@@ -217,8 +217,8 @@
 			]
 		},
 		{
-			"name": "Walking_Left",
-			"repeat": true,
+			"name": "WALKING_LEFT",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 40,
@@ -243,8 +243,8 @@
 			]
 		},
 		{
-			"name": "Attacking_Left",
-			"repeat": true,
+			"name": "ATTACKING_LEFT",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 45,
@@ -269,8 +269,8 @@
 			]
 		},
 		{
-			"name": "Damaged_Left",
-			"repeat": true,
+			"name": "DAMAGED_LEFT",
+			"repeat": false,
 			"frames": [
 				{
 					"index": 50,

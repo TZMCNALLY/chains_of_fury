@@ -8,13 +8,29 @@ export const COFEvents = {
     LEVEL_START: "LEVEL_START",
     LEVEL_END: "LEVEL_END",
 
-    // Player when level boss health drops to zero.
+    // Event when minion health drops to zero
+    MINION_DYING: "MINION_DYING",
+
+    // Event when minion finishes playing dying animation
+    MINION_DEAD: "MINION_DEAD",
+
+    // Event when level boss health drops to zero.
     BOSS_DEFEATED: "BOSS_DEFEATED",
 
     /**
-     * Event trigger when player is hit.
+     * Event trigger when player is hit by a physical attack.
      */
-    PLAYER_HIT: "PLAYER_HIT",
+    PHYSICAL_ATTACK_HIT_PLAYER: "PHYSICAL_ATTACK_HIT_PLAYER",
+
+    /**
+     * Event trigger when player is hit by a projectile.
+     */
+    ENEMY_PROJECTILE_HIT_PLAYER: "PROJECTILE_HIT_PLAYER",
+
+    /**
+     * Event trigger when an enemy projectile hits the wall.
+     */
+    ENEMY_PROJECTILE_HIT_WALL: "PROJECTILE_HIT_WALL",
 
     /**
      * Event trigger when player takes damage.
@@ -37,11 +53,11 @@ export const COFEvents = {
     ENEMY_STUNNED: "ENEMY_STUNNED",
 
     /**
-     * Event trigger when enemy entity takes damage.
+     * Event trigger when the boss entity takes damage.
      * 
      * Has data: { currHealth : number, maxHealth: number }
      */
-    ENEMY_TOOK_DAMAGE: "ENEMY_TOOK_DAMAGE",
+    BOSS_TOOK_DAMAGE: "BOSS_TOOK_DAMAGE",
 
     /**
      * Event trigger when player swing.

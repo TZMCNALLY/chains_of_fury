@@ -10,5 +10,6 @@ export const AzazelControls = {
     SWING: "SWING",
     GUARD: "GUARD",
     HURL: "HURL",
-    RELEASE: "RELEASE"
+    RELEASE: "RELEASE",
+    DASH: "DASH"
 } as const;

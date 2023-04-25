@@ -102,7 +102,7 @@ export default class AzazelController extends StateMachineAI {
        // this.weapon = options.weaponSystem;
 
         //this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
-        this.speed = 1000;
+        this.speed = 150;
         this.velocity = new Vec2(100, 0)
         this.maxHealth = 100;
         this.health = this.maxHealth;

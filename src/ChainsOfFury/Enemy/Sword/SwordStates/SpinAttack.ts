@@ -47,10 +47,8 @@ export default class SpinAttack extends SwordState {
         
         else {
 
-            if(this.timer.isStopped()) {
-                this.owner.tweens.stop(SwordTweens.SPIN);
+            if(this.timer.isStopped())
                 this.finished(SwordStates.BASIC_ATTACK)
-            }
 
             let xDistance = this.parent.getXDistanceFromPlayer();
             let yDistance = this.parent.getYDistanceFromPlayer();
@@ -105,6 +103,8 @@ export default class SpinAttack extends SwordState {
     }
 
     public onExit(): Record<string, any> {
+        this.parent.speed = 150;
+        this.owner.tweens.stop(SwordTweens.SPIN);
         let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: spinAudio})
 		return {};

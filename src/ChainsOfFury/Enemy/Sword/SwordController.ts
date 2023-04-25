@@ -64,11 +64,14 @@ export default class SwordController extends EnemyController {
         super.handleEvent(event);
 		switch(event.type) {
 			case COFEvents.SWING_HIT: {
-                if(this.health <= 0)
-			        this.changeState(SwordStates.DEAD);
+                if(this.health <= 0) {
+                    this.owner.tweens.stop(SwordTweens.SPIN)
+                    this.changeState(SwordStates.DEAD);
+                }
 
                 else if(this.currentState == this.stateMap.get(SwordStates.WALK))
                     this.changeState(SwordStates.DAMAGED);
+                
 				break;
 			}
             case SwordEvents.SWORD_DEAD: {

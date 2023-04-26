@@ -3,6 +3,7 @@ import { MoonDogStates }from "../MoonDogController";
 import MoonDogState from "./MoonDogState";
 import MoonDogController from "../MoonDogController";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
+import { COFEvents } from "../../../COFEvents";
 
 export default class Idle extends MoonDogState {
 

@@ -5,6 +5,8 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import SplashScreen from "./SplashScreen";
+import MainMenu from "./MainMenu";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import COFLevel1 from "./COFLevel1";
 import COFLevel2 from "./COFLevel2";

@@ -3,6 +3,7 @@ import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import COFAnimatedSprite from "../../../Nodes/COFAnimatedSprite";
 import MoonDogController from "../MoonDogController";
+import { COFEvents } from "../../../COFEvents";
 
 /**
  * An abstract state for the PlayerController 
@@ -40,6 +41,9 @@ export default abstract class MoonDogState extends State {
 		// if(direction.x !== 0){
 		// 	this.owner.invertX = MathUtils.sign(direction.x) < 0;
 		// }
+        if (this.parent.health === 0) {
+			this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
+		}
     }
 
     public abstract onExit(): Record<string, any>;

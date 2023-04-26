@@ -8,6 +8,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
 import MainMenu from "./MainMenu";
 import SplashScreen from "./SplashScreen";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -172,6 +173,7 @@ export default class Controls extends Scene {
         // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
 
         this.load.unloadAllResources();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
     }
 
     // Creates a text label and appends it onto main layer.

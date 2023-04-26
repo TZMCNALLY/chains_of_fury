@@ -1,3 +1,4 @@
+import { COFEvents } from "../../../../COFEvents";
 import { DarkStalkerAnimations } from "../DarkStalkerController";
 import DarkStalkerState from "./DarkStalkerState";
 

@@ -42,6 +42,7 @@ export const MoonDogAnimation = {
     CHARGE_LEFT: "WALKING_LEFT",
 
     CHARGE: "CHARGE",
+    PREPARING_MAGIC: "PREPARING_MAGIC",
     MAGIC: "MAGIC"
 } as const
 

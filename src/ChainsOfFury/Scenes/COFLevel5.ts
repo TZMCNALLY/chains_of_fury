@@ -89,7 +89,6 @@ export default class COFLevel5 extends COFLevel {
         super.handleEvent(event);
         switch (event.type) {
             case SwordEvents.BASIC_ATTACK: {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.basicAttackAudioKey});
                 this.handleBasicAttack(event.data.get("lastFace"));
                 break;
             }
@@ -224,5 +223,9 @@ export default class COFLevel5 extends COFLevel {
 
     public getSpinAudio(): string {
         return this.spinAttackAudioKey;
+    }
+
+    public getBasicAttackAudio(): string {
+        return this.basicAttackAudioKey;
     }
 }

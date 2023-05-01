@@ -26,7 +26,6 @@ export default class Frenzy extends SwordState {
 		this.hitboxEnded = false;
         this.attackStarted = false;
         this.spinTimer = new Timer(1000)
-        this.numFrenzies = 0
 
         this.owner.animation.play(SwordAnimations.IDLE)
         this.owner.tweens.play(SwordTweens.TWIRL)

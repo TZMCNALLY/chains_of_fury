@@ -9,6 +9,7 @@ import { COFPhysicsGroups } from "../../../COFPhysicsGroups";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
+import COFLevel5 from '../../../Scenes/COFLevel5';
 
 export default class BasicAttack extends SwordState {
 
@@ -48,6 +49,7 @@ export default class BasicAttack extends SwordState {
 					this.owner.animation.play(SwordAnimations.ATTACK_LEFT);
 				}
 
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: (this.owner.getScene() as COFLevel5).getBasicAttackAudio()})
 				this.hitboxTimer.start();
 				this.numSlashes++;
 			}

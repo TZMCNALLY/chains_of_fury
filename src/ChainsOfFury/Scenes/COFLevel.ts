@@ -155,12 +155,12 @@ export default class COFLevel extends Scene {
      */
     public loadScene(): void {
         // Load the player and enemy spritesheets
-        this.load.spritesheet("azazel", "cof_assets/spritesheets/chain_devil.json");
+        this.load.spritesheet("azazel", "cof_assets/spritesheets/Player/chain_devil.json");
 
         // Load the tilemap
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
         
-        this.load.spritesheet("fireball", "cof_assets/spritesheets/fireball.json")
+        this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/fireball.json")
     }
 
     public startScene(): void {

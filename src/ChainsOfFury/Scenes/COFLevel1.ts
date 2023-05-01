@@ -14,7 +14,7 @@ export default class COFLevel1 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("moondog", "cof_assets/spritesheets/moondog.json");
+        this.load.spritesheet("moondog", "cof_assets/spritesheets/Enemies/moondog.json");
     }
 
     public startScene(): void {

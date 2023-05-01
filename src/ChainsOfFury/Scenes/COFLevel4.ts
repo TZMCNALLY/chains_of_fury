@@ -16,7 +16,7 @@ export default class COFLevel4 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("reaper", "cof_assets/spritesheets/reaper.json");
+        this.load.spritesheet("reaper", "cof_assets/spritesheets/Enemies/reaper.json");
     }
 
     public startScene(): void {

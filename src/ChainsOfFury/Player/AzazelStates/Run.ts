@@ -63,13 +63,13 @@ export default class Run extends PlayerState {
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT);
         }
 
-        if (Input.isPressed(AzazelControls.DASH) && this.parent.dashCooldown <= 0 /** Stamina clause can be added here */) {
-            console.log(this.parent.dashCooldown);
+        if (Input.isPressed(AzazelControls.DASH) && this.parent.dashCooldown <= 0 && this.parent.stamina > 5) {
 
             this.dashDuration = .1;
-            this.parent.dashCooldown = 2;
+            this.parent.dashCooldown = 1;
 
             // Can emit a dash event to lower stamina.
+            this.emitter.fireEvent(COFEvents.PLAYER_DASH);
 
             // Doesn't seem enough to time to notice.
             // this.parent.iFrames = .1;

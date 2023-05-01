@@ -14,7 +14,7 @@ export default class COFLevel6 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("wraith", "cof_assets/spritesheets/wraith.json");
+        this.load.spritesheet("wraith", "cof_assets/spritesheets/Enemies/wraith.json");
     }
 
     public startScene(): void {

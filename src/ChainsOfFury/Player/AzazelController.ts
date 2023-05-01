@@ -324,7 +324,7 @@ export default class AzazelController extends StateMachineAI {
     }
 
     public handlePlayerSwing(event : GameEvent) : void {
-        this.stamina -= 10;
+        this.stamina -= 5;
         this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
     }
 

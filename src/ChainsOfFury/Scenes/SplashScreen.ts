@@ -15,12 +15,11 @@ export default class SplashScreen extends Scene {
 
     // TODO: Add music / sound effect?
 
-    // public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    // public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
+    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
+    public static readonly MUSIC_PATH = "cof_assets/music/cofmusic1.wav";
 
     public loadScene(): void {
-        // Load the menu song
-        // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+        this.load.audio(SplashScreen.MUSIC_KEY, SplashScreen.MUSIC_PATH);
     }
 
     public startScene(): void {
@@ -49,8 +48,7 @@ export default class SplashScreen extends Scene {
             this.sceneManager.changeToScene(MainMenu);
         };
 
-        // Scene has started, so start playing music
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: SplashScreen.MUSIC_KEY, loop: true, holdReference: true});
     }
 
     public unloadScene(): void {

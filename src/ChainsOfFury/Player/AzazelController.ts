@@ -157,8 +157,6 @@ export default class AzazelController extends StateMachineAI {
     public update(deltaT: number): void {
 		super.update(deltaT);
 
-        console.log(this.speed)
-
         if (this._iframe > 0) {
             this._iframe -= deltaT;
         } else {

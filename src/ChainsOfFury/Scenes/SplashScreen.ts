@@ -13,13 +13,8 @@ export const MenuLayers = {
 
 export default class SplashScreen extends Scene {
 
-    // TODO: Add music / sound effect?
-
-    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    public static readonly MUSIC_PATH = "cof_assets/music/cofmusic1.wav";
-
     public loadScene(): void {
-        this.load.audio(SplashScreen.MUSIC_KEY, SplashScreen.MUSIC_PATH);
+        this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
     }
 
     public startScene(): void {
@@ -46,13 +41,11 @@ export default class SplashScreen extends Scene {
         // When the play button is clicked, go to the main menu
         playBtn.onClick = () => {
             this.sceneManager.changeToScene(MainMenu);
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
         };
-
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: SplashScreen.MUSIC_KEY, loop: true, holdReference: true});
     }
 
     public unloadScene(): void {
-        // The scene is being destroyed, so we can stop playing the song
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
+        this.resourceManager.keepAudio(MainMenu.MUSIC_KEY);
     }
 }

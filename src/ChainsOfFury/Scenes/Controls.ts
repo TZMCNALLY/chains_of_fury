@@ -8,6 +8,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
 import MainMenu from "./MainMenu";
 import SplashScreen from "./SplashScreen";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -102,11 +103,11 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x+270, size.y, 500, 150);
 
-        this.createText(size.x+130, size.y-10, "Hold Right-Click -");
-        this.createText(size.x+130, size.y+10, "Guard");
+        this.createText(size.x+130, size.y-10, "Shift (while running) -");
+        this.createText(size.x+130, size.y+10, "Dashes foward");
 
         // TODO: Guard animation
-        this.createSprite(size.x*2-160, size.y, 1, 1, "player", "IDLE_RIGHT");
+        this.createSprite(size.x*2-160, size.y, 1, 1, "player", "RUN_RIGHT");
 
         // Guard Section
         // ================================================================================
@@ -155,23 +156,14 @@ export default class Controls extends Scene {
         back.textColor = Color.RED;
         back.size.set(100, 60);
         
-
-
         // Scene transitions:
 
         back.onClick = () => {
             this.sceneManager.changeToScene(MainMenu);
         }
-
-        // Scene has started, so start playing music
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
     }
 
     public unloadScene(): void {
-        // The scene is being destroyed, so we can stop playing the song
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
-
-        this.load.unloadAllResources();
     }
 
     // Creates a text label and appends it onto main layer.

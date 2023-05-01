@@ -5,12 +5,18 @@ import { ReaperStates } from "../ReaperController";
 export default class Damaged extends ReaperState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(ReaperAnimation.TAKING_DAMAGE_LEFT);
+        if (this.parent.getXDistanceFromPlayer() < 0) {
+            this.owner.animation.play(ReaperAnimation.TAKING_DAMAGE_RIGHT);
+        }
+        else {
+            this.owner.animation.play(ReaperAnimation.TAKING_DAMAGE_LEFT);
+        }
 	}
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
-		if (!this.owner.animation.isPlaying(ReaperAnimation.TAKING_DAMAGE_LEFT)) {
+		if (!this.owner.animation.isPlaying(ReaperAnimation.TAKING_DAMAGE_LEFT) &&
+		!this.owner.animation.isPlaying(ReaperAnimation.TAKING_DAMAGE_RIGHT)) {
 			this.finished(ReaperStates.IDLE);
 		}
 	}

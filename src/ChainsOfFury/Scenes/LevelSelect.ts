@@ -5,6 +5,8 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import SplashScreen from "./SplashScreen";
+import MainMenu from "./MainMenu";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 import COFLevel1 from "./COFLevel1";
 import COFLevel2 from "./COFLevel2";
@@ -51,7 +53,7 @@ export default class LevelSelect extends Scene {
             }
         );
         title.fontSize = 55;
-        title.textColor = Color.WHITE;
+        title.textColor = Color.RED;
 
 
         let subTitle = <Label>this.add.uiElement(
@@ -63,16 +65,16 @@ export default class LevelSelect extends Scene {
             }
         );
         subTitle.fontSize = 25;
-        subTitle.textColor = Color.WHITE;
+        subTitle.textColor = Color.RED;
 
 
         // Buttons:
-        let level1 = this.makeLevelBox(size.x-350, size.y-100, "level1");
-        let level2 = this.makeLevelBox(size.x, size.y-100, "level2");
-        let level3 = this.makeLevelBox(size.x+350, size.y-100, "level3");
-        let level4 = this.makeLevelBox(size.x-350, size.y+200, "level4");
-        let level5 = this.makeLevelBox(size.x, size.y+200, "level5");
-        let level6 = this.makeLevelBox(size.x+350, size.y+200, "level6");
+        let level1 = this.makeLevelBox(size.x-350, size.y-100, "Level 1");
+        let level2 = this.makeLevelBox(size.x, size.y-100, "Level 2");
+        let level3 = this.makeLevelBox(size.x+350, size.y-100, "Level 3");
+        let level4 = this.makeLevelBox(size.x-350, size.y+200, "Level 4");
+        let level5 = this.makeLevelBox(size.x, size.y+200, "Level 5");
+        let level6 = this.makeLevelBox(size.x+350, size.y+200, "Level 6");
 
         // Scene transitions:
         level1.onClick = () => {
@@ -99,13 +101,29 @@ export default class LevelSelect extends Scene {
             this.sceneManager.changeToScene(COFLevel6);
         };
 
-        // Scene has started, so start playing music
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        // Back button:
+        let back = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            MenuLayers.MAIN,
+            {
+                position: new Vec2(size.x-500, size.y+340),
+                text: "Back"
+            }
+        );
+        back.backgroundColor = Color.BLACK;
+        back.borderColor = Color.BLACK;
+        back.borderRadius = 0;
+        back.font = "PixelSimple";
+        back.fontSize = 30;
+        back.textColor = Color.RED;
+        back.size.set(100, 60);
+
+        back.onClick = () => {
+            this.sceneManager.changeToScene(MainMenu);
+        }
     }
 
     public unloadScene(): void {
-        // The scene is being destroyed, so we can stop playing the song
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
     }
 
     // Creates a level box and appends it onto main layer.

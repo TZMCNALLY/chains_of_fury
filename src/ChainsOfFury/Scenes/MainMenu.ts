@@ -10,7 +10,7 @@ import Help from "./Help";
 import Controls from "./Controls";
 import COFLevel1 from "./COFLevel1";
 import COFLevel3 from "./COFLevel3";
-
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -18,18 +18,17 @@ export const MenuLayers = {
 } as const;
 
 export default class MainMenu extends Scene {
+    
+    // TODO: Add music / sound effect?
+
+    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
+    public static readonly MUSIC_PATH = "cof_assets/music/cofmusic2.mp3";
 
     // TODO:
-    // - Music (maybe start playing from splash screen)
     // - Background
     // - Sprite/logo on top.
 
-    // public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    // public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
-
     public loadScene(): void {
-        // Load the menu song
-        // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
     }
 
     public startScene(): void {
@@ -78,12 +77,10 @@ export default class MainMenu extends Scene {
         };
 
         // Scene has started, so start playing music
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
     }
 
     public unloadScene(): void {
-        // The scene is being destroyed, so we can stop playing the song
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
     }
 
     // Creates a button and appends it onto main layer.

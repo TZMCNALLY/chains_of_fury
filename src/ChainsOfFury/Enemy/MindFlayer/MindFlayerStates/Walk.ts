@@ -19,16 +19,16 @@ export default class Walk extends MindFlayerState {
 
 		// Set appropriate player direction
 		if (this.parent.getXDistanceFromPlayer() < 0) {
-			this.faceXDir = 1
+			this.faceXDir = 1;
 			this.owner.animation.playIfNotAlready(MindFlayerAnimation.WALK_RIGHT);
 		} else {
-			this.faceXDir = -1
+			this.faceXDir = -1;
 			this.owner.animation.playIfNotAlready(MindFlayerAnimation.WALK_LEFT);
 		}
 		if (this.parent.getYDistanceFromPlayer() < 0) {
-        	this.faceYDir = 1
+        	this.faceYDir = 1;
 		} else {
-			this.faceYDir = -1
+			this.faceYDir = -1;
 		}
 
 		// Move mind flayer towards player
@@ -36,7 +36,7 @@ export default class Walk extends MindFlayerState {
 		
 		// Check to see whether distance is too close
 		if (this.parent.getDistanceFromPlayer() < 500) {
-			this.finished(MindFlayerStates.IDLE)
+			this.finished(MindFlayerStates.IDLE);
 		}
 	}
 

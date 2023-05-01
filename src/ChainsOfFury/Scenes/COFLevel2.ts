@@ -16,7 +16,7 @@ export default class COFLevel2 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("darkstalker", "cof_assets/spritesheets/dark_stalker.json");
+        this.load.spritesheet("darkstalker", "cof_assets/spritesheets/Enemies/dark_stalker.json");
     }
 
     public startScene(): void {

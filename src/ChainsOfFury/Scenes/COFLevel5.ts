@@ -46,8 +46,8 @@ export default class COFLevel5 extends COFLevel {
         super.loadScene();
         this.load.audio(this.basicAttackAudioKey, COFLevel5.BASIC_ATTACK_AUDIO_PATH);
         this.load.audio(this.spinAttackAudioKey, COFLevel5.SPIN_ATTACK_AUDIO_PATH);
-        this.load.spritesheet("flying_sword", "cof_assets/spritesheets/flying_sword.json");
-        this.load.spritesheet("flying_sword_minion", "cof_assets/spritesheets/flying_sword_minion.json");
+        this.load.spritesheet("flying_sword", "cof_assets/spritesheets/Enemies/flying_sword.json");
+        this.load.spritesheet("flying_sword_minion", "cof_assets/spritesheets/Enemies/flying_sword_minion.json");
     }
 
     public startScene(): void {

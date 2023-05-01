@@ -108,22 +108,15 @@ export default class Help extends Scene {
         back.fontSize = 30;
         back.textColor = Color.RED;
         back.size.set(100, 60);
-        
-
 
         // Scene transitions:
 
         back.onClick = () => {
             this.sceneManager.changeToScene(MainMenu);
         }
-
-        // Scene has started, so start playing music
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
     }
 
     public unloadScene(): void {
-        // The scene is being destroyed, so we can stop playing the song
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
     }
 
     // Creates a text label and appends it onto main layer.

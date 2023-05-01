@@ -53,7 +53,7 @@ export default class LevelSelect extends Scene {
             }
         );
         title.fontSize = 55;
-        title.textColor = Color.WHITE;
+        title.textColor = Color.RED;
 
 
         let subTitle = <Label>this.add.uiElement(
@@ -65,7 +65,7 @@ export default class LevelSelect extends Scene {
             }
         );
         subTitle.fontSize = 25;
-        subTitle.textColor = Color.WHITE;
+        subTitle.textColor = Color.RED;
 
 
         // Buttons:
@@ -101,13 +101,29 @@ export default class LevelSelect extends Scene {
             this.sceneManager.changeToScene(COFLevel6);
         };
 
-        // Scene has started, so start playing music
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        // Back button:
+        let back = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            MenuLayers.MAIN,
+            {
+                position: new Vec2(size.x-500, size.y+340),
+                text: "Back"
+            }
+        );
+        back.backgroundColor = Color.BLACK;
+        back.borderColor = Color.BLACK;
+        back.borderRadius = 0;
+        back.font = "PixelSimple";
+        back.fontSize = 30;
+        back.textColor = Color.RED;
+        back.size.set(100, 60);
+
+        back.onClick = () => {
+            this.sceneManager.changeToScene(MainMenu);
+        }
     }
 
     public unloadScene(): void {
-        // The scene is being destroyed, so we can stop playing the song
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
     }
 
     // Creates a level box and appends it onto main layer.

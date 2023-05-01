@@ -28,8 +28,8 @@ export default class COFLevel3 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.spritesheet("mind_flayer", "cof_assets/spritesheets/mind_flayer.json");
-        this.load.spritesheet("shadow_demon", "cof_assets/spritesheets/shadow_demon.json")
+        this.load.spritesheet("mind_flayer", "cof_assets/spritesheets/Enemies/mind_flayer.json");
+        this.load.spritesheet("shadow_demon", "cof_assets/spritesheets/Enemies/shadow_demon.json")
     }
 
     public startScene(): void {

@@ -22,7 +22,7 @@ export default class COFLevel4 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Reaper");
-        this.initializeEnemyBoss("reaper", ReaperController, 1, [700, 700], -15, -15);
+        this.initializeEnemyBoss("reaper", ReaperController, 1, [700, 700], -25, -15);
     }
 
     protected handleLevelEnd(): void {

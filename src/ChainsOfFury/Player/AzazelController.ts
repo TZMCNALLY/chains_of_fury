@@ -135,6 +135,7 @@ export default class AzazelController extends StateMachineAI {
         this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
+        this.receiver.subscribe(COFEvents.PLAYER_DASH);
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.PLAYER_TELEPORT);
         this.receiver.subscribe(COFEvents.REGENERATE_STAMINA);
@@ -156,8 +157,6 @@ export default class AzazelController extends StateMachineAI {
 
     public update(deltaT: number): void {
 		super.update(deltaT);
-
-        console.log(this.speed)
 
         if (this._iframe > 0) {
             this._iframe -= deltaT;
@@ -194,6 +193,10 @@ export default class AzazelController extends StateMachineAI {
 				this.handlePlayerRun(event);
 				break;
 			}
+            case COFEvents.PLAYER_DASH: {
+                this.handlePlayerDash(event);
+                break;
+            }
             case COFEvents.PLAYER_SWING: {
 				this.handlePlayerSwing(event);
 				break;
@@ -320,6 +323,11 @@ export default class AzazelController extends StateMachineAI {
 
     public handlePlayerRun(event : GameEvent) : void {
         this.stamina -= 0.05;
+        this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
+    }
+
+    public handlePlayerDash(event : GameEvent) : void {
+        this.stamina -= 5;
         this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
     }
 

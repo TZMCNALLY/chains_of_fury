@@ -72,6 +72,11 @@ export const COFEvents = {
     PLAYER_RUN: "PLAYER_RUN",
 
     /**
+     * Event trigger when player performs a dash.
+     */
+    PLAYER_DASH: "PLAYER_DASH",
+
+    /**
      * Event trigger when player entity throws a projectile
      * 
      * Has data: { faceDir: number, pos: Vec2 }

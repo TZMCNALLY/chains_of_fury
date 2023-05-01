@@ -4,5 +4,7 @@ export const SwordEvents = {
 
     SPIN_ATTACK: "SPIN_ATTACK",
 
-    SWORD_DEAD: "SWORD_DEAD"
+    SWORD_DEAD: "SWORD_DEAD",
+
+    MINION_SUMMONED: "MINION_SUMMONED"
 }

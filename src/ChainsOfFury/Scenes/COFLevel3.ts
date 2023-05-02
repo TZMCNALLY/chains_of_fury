@@ -44,6 +44,19 @@ export default class COFLevel3 extends COFLevel {
     }
 
     /**
+     * Handles all subscriptions to events
+     */
+    protected subscribeToEvents(): void {
+        super.subscribeToEvents();
+        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_TELEPORT);
+        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL);
+        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON);
+        this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL);
+        this.receiver.subscribe(ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON);
+        this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_SWIPE);
+    }
+
+    /**
      * Handle game events. 
      * @param event the game event
      */
@@ -127,10 +140,6 @@ export default class COFLevel3 extends COFLevel {
             }
         }
     }
-
-    protected initializeTilemap(): void {
-        super.initializeTilemap();
-    }
     
     /**
     * Displays a fire projectile on the map
@@ -138,7 +147,7 @@ export default class COFLevel3 extends COFLevel {
     * @param faceDir the direction the fireball should go
     */
     protected spawnBossFireball(faceDir: Vec2) {
-        for(let i = 0; i < this.bossFireballs.length; i++) {
+        for (let i = 0; i < this.bossFireballs.length; i++) {
 
             if(!this.bossFireballs[i].visible) {
 
@@ -300,19 +309,6 @@ export default class COFLevel3 extends COFLevel {
 
     protected handleMinionDead(id: number): void {
         this.despawnShadowDemon(id);
-    }
-
-    /**
-     * Handles all subscriptions to events
-     */
-    protected subscribeToEvents(): void {
-        super.subscribeToEvents();
-        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_TELEPORT);
-        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL);
-        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON);
-        this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL);
-        this.receiver.subscribe(ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON);
-        this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_SWIPE);
     }
 
     protected handleBossTeleportation(location: Vec2): void { 

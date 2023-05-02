@@ -32,6 +32,7 @@ export default class Tornado extends SwordState {
 
             (this.parent.player.ai as AzazelController).speed = 150;
             this.owner.tweens.stop(SwordTweens.SPIN);
+            this.owner.tweens.play(SwordTweens.SPIN, false); //readjust to standing upright
             this.finished(SwordStates.BASIC_ATTACK)
         }
 

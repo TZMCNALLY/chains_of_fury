@@ -5,6 +5,7 @@ import DemonKingController from "../Enemy/DemonKing/DemonKingController";
 import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import MainMenu from "./MainMenu";
+import GameEvent from '../../Wolfie2D/Events/GameEvent';
 
 export default class COFLevel6 extends COFLevel {
 
@@ -21,6 +22,17 @@ export default class COFLevel6 extends COFLevel {
         super.startScene();
         super.initializeBossUI("Demon King");
         this.initializeEnemyBoss("wraith", DemonKingController, 1, [700, 700], -15, -15);
+    }
+
+    /**
+     * Handle game events. 
+     * @param event the game event
+     */
+    protected handleEvent(event: GameEvent): void {
+        super.handleEvent(event);
+        switch (event.type) {
+            
+        }
     }
 
     protected handleLevelEnd(): void {

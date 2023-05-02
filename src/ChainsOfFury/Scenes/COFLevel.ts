@@ -221,6 +221,10 @@ export default class COFLevel extends Scene {
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
+            case COFEvents.BOSS_HEALED: {
+                this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
+                break;
+            }
             case COFEvents.CHANGE_MANA: {
                 this.handlePlayerManaChange(event.data.get("currMana"), event.data.get("maxMana"));
                 break;
@@ -458,7 +462,6 @@ export default class COFLevel extends Scene {
         
 		this.enemyHealthBar.size.set(this.enemyHealthBarBg.size.x - unit * (maxHealth - currentHealth), this.enemyHealthBarBg.size.y);
 		this.enemyHealthBar.position.set(this.enemyHealthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.enemyHealthBarBg.position.y);
-        // TODO: fire event boss_dead; play dying and dead scene before moving onto next lvl
 	}
 
 
@@ -503,6 +506,7 @@ export default class COFLevel extends Scene {
     protected subscribeToEvents(): void {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.BOSS_TOOK_DAMAGE);
+        this.receiver.subscribe(COFEvents.BOSS_HEALED);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);

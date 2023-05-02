@@ -36,9 +36,14 @@ export default class BasicAttack extends SwordState {
 			else {
 				// Slash toward the position of the player
 				this.parent.velocity = this.owner.position.dirTo(this.parent.player.position);
-				//let rand = RandUtils.randInt(500, 800)
-				this.parent.velocity.x *= 800;
-				this.parent.velocity.y *= 800;
+				
+				let randInt = RandUtils.randInt(-200, 200);
+				
+
+				randInt = RandUtils.randInt(0, 100)
+
+				this.parent.velocity.x *= 800 + randInt;
+				this.parent.velocity.y *= 800 + randInt;
 
 				if(this.parent.getXDistanceFromPlayer() < 0) {
 					this.parent.lastFace = 1;
@@ -56,7 +61,7 @@ export default class BasicAttack extends SwordState {
 		}
 
 		// If the hitbox is still active, check for overlap
-		else if(this.hitboxTimer.timeLeft < 50 && this.hitboxTimer.timeLeft > 0) {
+		else if(this.hitboxTimer.timeLeft < 100 && this.hitboxTimer.timeLeft > 0) {
 			this.emitter.fireEvent(SwordEvents.BASIC_ATTACK, {lastFace: this.parent.lastFace})
 			this.parent.velocity.x = 0;
 			this.parent.velocity.y = 0;

@@ -6,5 +6,5 @@ export const SwordEvents = {
 
     SWORD_DEAD: "SWORD_DEAD",
 
-    MINION_SUMMONED: "MINION_SUMMONED"
+    ASSIST_SUMMONED: "ASSIST_SUMMONED",
 }

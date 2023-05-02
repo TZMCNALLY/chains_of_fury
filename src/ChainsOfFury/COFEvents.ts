@@ -59,6 +59,12 @@ export const COFEvents = {
      */
     BOSS_TOOK_DAMAGE: "BOSS_TOOK_DAMAGE",
 
+    BOSS_RECEIVE_HEAL: "BOSS_RECEIVE_HEAL",
+
+    BOSS_HEALED: "BOSS_HEALED",
+
+    HEAL_BOSS: "HEAL_BOSS",
+
     /**
      * Event trigger when player swing.
      * 

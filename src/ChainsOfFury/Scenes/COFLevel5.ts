@@ -1,9 +1,10 @@
-import COFLevel, { COFLayers } from "./COFLevel";
+import COFLevel, { COFEntities, COFLayers } from "./COFLevel";
 import COFLevel6 from "./COFLevel6";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Input from "../../Wolfie2D/Input/Input";
 import SwordController from "../Enemy/Sword/SwordController";
 import EnemyController from "../Enemy/EnemyController";
+import AssistController, { AssistTweens } from "../Enemy/Sword/AssistController"
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import { SwordTweens } from "../Enemy/Sword/SwordController";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
@@ -21,11 +22,13 @@ import SceneManager from '../../Wolfie2D/Scene/SceneManager';
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import Game from "../../Wolfie2D/Loop/Game";
 import { GameEventType } from '../../Wolfie2D/Events/GameEventType';
+import { AssistEvents } from "../Enemy/Sword/AssistEvents";
 
 export default class COFLevel5 extends COFLevel {
 
-    protected swordMinion: AnimatedSprite
-    protected swordProjectiles: Array<AnimatedSprite>
+    protected swordAssist: AnimatedSprite;
+    public assistExists: boolean;
+    protected swordBeams: Array<AnimatedSprite>;
     public static readonly BASIC_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_basic_audio.wav";
     public static readonly SPIN_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_spin_audio.wav";
     protected basicAttackAudioKey = "BASIC_ATTACK_AUDIO_KEY";
@@ -47,7 +50,8 @@ export default class COFLevel5 extends COFLevel {
         this.load.audio(this.basicAttackAudioKey, COFLevel5.BASIC_ATTACK_AUDIO_PATH);
         this.load.audio(this.spinAttackAudioKey, COFLevel5.SPIN_ATTACK_AUDIO_PATH);
         this.load.spritesheet("flying_sword", "cof_assets/spritesheets/Enemies/flying_sword.json");
-        this.load.spritesheet("flying_sword_minion", "cof_assets/spritesheets/Enemies/flying_sword_minion.json");
+        this.load.spritesheet("flying_sword_assist", "cof_assets/spritesheets/Enemies/flying_sword_assist.json");
+        this.load.spritesheet("sword_beam", "cof_assets/spritesheets/Projectiles/sword_beam.json")
     }
 
     public startScene(): void {
@@ -66,7 +70,6 @@ export default class COFLevel5 extends COFLevel {
                 }
             ]
         });
-        //A slower version of spin, except for spin it's an attack while twirl is for visual effect
         this.enemyBoss.tweens.add(SwordTweens.TWIRL, {
             startDelay: 0,
             duration: 300,
@@ -79,6 +82,8 @@ export default class COFLevel5 extends COFLevel {
                 }
             ]
         });
+
+        this.assistExists = false
     }
 
     /**
@@ -88,12 +93,29 @@ export default class COFLevel5 extends COFLevel {
     protected handleEvent(event: GameEvent): void {
         super.handleEvent(event);
         switch (event.type) {
+            case AssistEvents.BEAM_THROWN: {
+                this.spawnSwordBeams();
+                break;
+            }
+            case COFEvents.PLAYER_SWING: {
+                if(this.assistExists)
+                    this.handlePlayerSwingAssist(event.data.get("faceDir"));
+                break;
+            }
+            case COFEvents.ENEMY_PROJECTILE_HIT_PLAYER: {
+                this.despawnSwordBeams(event.data.get("node"));
+                break;
+            }
+            case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {
+                this.despawnSwordBeams(event.data.get("node"));
+                break;
+            }
             case SwordEvents.BASIC_ATTACK: {
                 this.handleBasicAttack(event.data.get("lastFace"));
                 break;
             }
-            case SwordEvents.MINION_SUMMONED: {
-                this.initializeMinion("flying_sword_minion", SwordController, 1, [600, 700], -32, -16)
+            case SwordEvents.ASSIST_SUMMONED: {
+                this.initializeAssist("flying_sword_assist", AssistController, 1, [632, 480], -32, -16)
             }
             case SwordEvents.SPIN_ATTACK: {
                 this.handleSpinAttack();
@@ -109,72 +131,87 @@ export default class COFLevel5 extends COFLevel {
     protected initObjectPools(): void {
         super.initObjectPools();
 
-        this.swordProjectiles = new Array(20)
-        for (let i = 0; i < this.swordProjectiles.length; i++) {
-			this.swordProjectiles[i] = this.add.animatedSprite("flying_sword", COFLayers.PRIMARY);
+        this.swordBeams = new Array(50)
+        for (let i = 0; i < this.swordBeams.length; i++) {
+			this.swordBeams[i] = this.add.animatedSprite("sword_beam", COFLayers.PRIMARY);
 
             // Make our fireballs inactive by default
-			this.swordProjectiles[i].visible = false;
+			this.swordBeams[i].visible = false;
 
 			// Assign them fireball ai
-			this.swordProjectiles[i].addAI(FireballBehavior);
+			this.swordBeams[i].addAI(FireballBehavior);
 
-            this.swordProjectiles[i].setGroup(COFPhysicsGroups.FIREBALL);
-			this.swordProjectiles[i].scale.set(1.5, 1.5);
+            this.swordBeams[i].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
+			this.swordBeams[i].scale.set(1.5, 1.5);
+            this.swordBeams[i].tweens.add(AssistTweens.PROJECTILE, {
+                startDelay: 0,
+                duration: 50,
+                effects: [
+                    {
+                        property: "rotation",
+                        start: 0,
+                        end: Math.PI * 2,
+                        ease: EaseFunctionType.IN_OUT_QUAD
+                    }
+                ]
+            });
 	    }
     }
 
-    protected initializeMinion(key: string, controller: new (...a: any[]) => EnemyController,
+    protected initializeAssist(key: string, controller: new (...a: any[]) => EnemyController,
      scaleSize: number, enemySpawn: number[], hitBoxModifierX: number, hitBoxModifierY: number): void {
-        this.swordMinion = this.add.animatedSprite(key, COFLayers.PRIMARY);
-        this.swordMinion.scale.set(scaleSize, scaleSize);
-        this.swordMinion.position.copy(new Vec2(enemySpawn[0], enemySpawn[1]));
+        this.swordAssist = this.add.animatedSprite(key, COFLayers.PRIMARY);
+        this.swordAssist.scale.set(scaleSize, scaleSize);
+        this.swordAssist.position.copy(new Vec2(enemySpawn[0], enemySpawn[1]));
 
-        // Give enemy boss its AI
-        this.swordMinion.addAI(controller, {player: this.player});
+        this.swordAssist.addAI(controller, {player: this.player});
 
-        let enemyHitbox = this.swordMinion.boundary.getHalfSize().clone();
+        let enemyHitbox = this.swordAssist.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
 
-        this.swordMinion.addPhysics(new AABB(this.swordMinion.position.clone(), 
-        new Vec2(this.swordMinion.boundary.getHalfSize().clone().x+hitBoxModifierX, this.swordMinion.boundary.getHalfSize().clone().y+hitBoxModifierY)));
-        this.swordMinion.setGroup(COFPhysicsGroups.ENEMY);
-        this.swordMinion.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
+        this.swordAssist.addPhysics(new AABB(this.swordAssist.position.clone(), 
+        new Vec2(this.swordAssist.boundary.getHalfSize().clone().x+hitBoxModifierX, this.swordAssist.boundary.getHalfSize().clone().y+hitBoxModifierY)));
+        this.swordAssist.setGroup(COFPhysicsGroups.ENEMY);
+        this.swordAssist.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
+
+        this.assistExists = true;
     }
 
-    protected spawnSwordProjectiles(faceDir: Vec2) {
-        for(let i = 0; i < this.swordProjectiles.length; i++) {
+    protected spawnSwordBeams() {
+        for(let i = 0; i < this.swordBeams.length; i++) {
 
-            if(!this.swordProjectiles[i].visible) {
+            if(!this.swordBeams[i].visible) {
 
                 // Bring this fireball to life
-                this.swordProjectiles[i].visible = true;
+                this.swordBeams[i].visible = true;
 
-                let dirToPlayer = this.swordMinion.position.dirTo(this.player.position)
+                let dirToPlayer = this.swordAssist.position.dirTo(this.player.position)
 
-                // Set the velocity to be in the direction of the mouse
-                dirToPlayer.x *= 400;
-                dirToPlayer.y *= 400;
+                dirToPlayer.x *= 100;
+                dirToPlayer.y *= 100;
 
-                (this.swordProjectiles[i]._ai as FireballBehavior).velocity = dirToPlayer
+                (this.swordBeams[i]._ai as FireballBehavior).velocity = dirToPlayer
+
+                // Set the starting position of the fireball
+                this.swordBeams[i].position.copy(this.swordAssist.position);
 
                 // Give physics to this fireball
-                let fireballHitbox = new AABB(this.swordMinion.position.clone(), this.swordProjectiles[i].boundary.getHalfSize().clone());
-                this.swordProjectiles[i].addPhysics(fireballHitbox);
-                this.swordProjectiles[i].setGroup(COFPhysicsGroups.FIREBALL);
-                
+                let swordBeamHitbox = new AABB(this.swordAssist.position.clone(), this.swordBeams[i].boundary.getHalfSize().clone());
+                this.swordBeams[i].addPhysics(swordBeamHitbox);
+                this.swordBeams[i].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);           
+                this.swordBeams[i].tweens.play(AssistTweens.PROJECTILE, true)     
                 break;
             }
         }
     }
 
-    protected despawnSwordProjectiles(node: number) : void {
-        for(let i = 0; i < this.swordProjectiles.length; i++) {
+    protected despawnSwordBeams(node: number) : void {
+        for(let i = 0; i < this.swordBeams.length; i++) {
 
-            if(this.swordProjectiles[i].id == node) {
+            if(this.swordBeams[i].id == node) {
 
-                this.swordProjectiles[i].position.copy(Vec2.ZERO);
-                this.swordProjectiles[i].visible = false;
+                this.swordBeams[i].position.copy(Vec2.ZERO);
+                this.swordBeams[i].visible = false;
                 break;
             }
         }
@@ -182,13 +219,14 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleBasicAttack(lastFace: number) {
 
-        let basicAttackHitbox = new Vec2(16, 40)
+        let basicAttackHitbox = new Vec2(16, 45)
         let basicAttackPosition = this.enemyBoss.position.clone();
 
         if(lastFace == -1)
             basicAttackPosition.x -= 32;
         else
             basicAttackPosition.x += 32;
+            
 
         if (this.player.collisionShape.overlaps(new AABB(basicAttackPosition, basicAttackHitbox))) {
             this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
@@ -196,12 +234,27 @@ export default class COFLevel5 extends COFLevel {
     }
 
     protected handleSpinAttack() {
-        let basicAttackHitbox = this.enemyBoss.boundary.getHalfSize().clone();
-        let basicAttackPosition = this.enemyBoss.position.clone();
+        let spinAttackHitbox = this.enemyBoss.boundary.getHalfSize().clone();
+        spinAttackHitbox.x -= 16;
+        spinAttackHitbox.y -= 16;
+        let spinAttackPosition = this.enemyBoss.position.clone();
 
-        //dmg number
-        if (this.player.collisionShape.overlaps(new AABB(basicAttackPosition, basicAttackHitbox))) {
+        if (this.player.collisionShape.overlaps(new AABB(spinAttackPosition, spinAttackHitbox))) {
             this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
+        }
+    }
+
+    protected handlePlayerSwingAssist(faceDir: number) {
+
+        let playerSwingHitbox = this.player.boundary.getHalfSize().clone();
+        playerSwingHitbox.x = playerSwingHitbox.x-16;
+
+        let swingPosition = this.player.position.clone();
+        swingPosition.x += faceDir*14;
+
+        // This should loop through all hitable object? and fire event.
+        if (this.swordAssist.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }
     }
 
@@ -212,8 +265,11 @@ export default class COFLevel5 extends COFLevel {
         super.subscribeToEvents();
         this.receiver.subscribe(SwordEvents.BASIC_ATTACK);
         this.receiver.subscribe(SwordEvents.SPIN_ATTACK);
-        this.receiver.subscribe(SwordEvents.MINION_SUMMONED)
+        this.receiver.subscribe(SwordEvents.ASSIST_SUMMONED)
+        this.receiver.subscribe(AssistEvents.BEAM_THROWN)
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
+        this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
+        this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_WALL);
     }
 
     protected handleLevelEnd(): void {

@@ -52,6 +52,8 @@ export default class SwordController extends EnemyController {
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
 
+        this.receiver.subscribe(COFEvents.BOSS_RECEIVE_HEAL);
+
         this.addState(SwordStates.IDLE, new Idle(this, this.owner));
         this.addState(SwordStates.BASIC_ATTACK, new BasicAttack(this, this.owner));
         this.addState(SwordStates.WALK, new Walk(this, this.owner));
@@ -74,20 +76,28 @@ export default class SwordController extends EnemyController {
 			case COFEvents.SWING_HIT: {
                 if(this.health <= 0 && this.currentState != this.stateMap.get(SwordStates.DEAD)) {
                     this.owner.tweens.stop(SwordTweens.SPIN);
+                    //this.owner.tweens.play(SwordTweens.TWIRL) // readjust to standing upright
                     this.changeState(SwordStates.DEAD);
+                    this.emitter.fireEvent(SwordEvents.SWORD_DEAD)
                 }
 
                 else if(this.currentState == this.stateMap.get(SwordStates.WALK) || this.currentState == this.stateMap.get(SwordStates.IDLE))
                     this.changeState(SwordStates.DAMAGED);
-                
-				break;
-			}
-            case SwordEvents.SWORD_DEAD: {
-                this.changeState(SwordStates.DEAD);
+
+                break;
+            }
+
+            case COFEvents.BOSS_RECEIVE_HEAL: {
+                this.handleEnemyHeal(event.data.get("heal"));
                 break;
             }
 		}
 	}
+
+    public handleEnemyHeal(heal: number): void {
+        this.health += heal;
+        this.emitter.fireEvent(COFEvents.BOSS_HEALED, {currHealth: this.health, maxHealth: this.maxHealth});
+    }
 
     public update(deltaT: number): void {
 		super.update(deltaT);

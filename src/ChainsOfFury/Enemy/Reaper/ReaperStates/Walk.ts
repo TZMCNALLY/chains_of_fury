@@ -6,7 +6,7 @@ import { ReaperAnimation, ReaperStates } from "../ReaperController";
 export default class Walk extends ReaperState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.parent.speed = 120;
+        this.parent.speed = 100;
 		if (this.parent.getXDistanceFromPlayer() > 0)
         	this.owner.animation.play(ReaperAnimation.WALK_LEFT);
 		else
@@ -15,6 +15,8 @@ export default class Walk extends ReaperState {
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
+		const currentTime = new Date();
+		let timeSinceLastAction = currentTime.getTime() - this.parent.lastActionTime.getTime();
 
 		// Set appropriate player direction
 		if (this.parent.getXDistanceFromPlayer() < 0) {
@@ -33,8 +35,8 @@ export default class Walk extends ReaperState {
 		// Move reaper towards player
         this.owner.move(new Vec2(this.faceXDir, this.faceYDir).scale(this.parent.speed).scale(deltaT));
 
-		if (this.parent.getDistanceFromPlayer() < 50) {
-			this.finished(ReaperStates.ATTACK);
+		if (timeSinceLastAction > 8000 || this.parent.getDistanceFromPlayer() < 50) {
+			this.finished(ReaperStates.IDLE);
 		}
 	}
 

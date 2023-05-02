@@ -9,11 +9,13 @@ import Walk from "./ReaperStates/Walk";
 import Damaged from "./ReaperStates/Damaged";
 import Dead from "./ReaperStates/Dead";
 import Attack from "./ReaperStates/Attack";
+import CreateDeathCircles from "./ReaperStates/CreateDeathCircles";
 
 export const ReaperStates = {
     IDLE: "IDLE",
     WALK: "WALK",
     ATTACK: "ATTACK",
+    SPAWN_DEATH_CIRCLES: "SPAWN_DEATH_CIRCLES",
 	DAMAGED: "DAMAGED",
     DEAD: "DEAD"
 } as const
@@ -24,6 +26,7 @@ export const ReaperAnimation = {
     WALK_LEFT: "WALKING_LEFT",
     ATTACKING_RIGHT: "ATTACKING_RIGHT",
     ATTACKING_LEFT: "ATTACKING_LEFT",
+    SPAWN_DEATH_CIRCLES: "DANCING",
     TAKING_DAMAGE_RIGHT: "TAKING_DAMAGE_RIGHT",
     TAKING_DAMAGE_LEFT: "TAKING_DAMAGE_LEFT",
     DYING: "DYING",
@@ -32,6 +35,16 @@ export const ReaperAnimation = {
 
 export default class ReaperController extends EnemyController {
 
+    protected _lastActionTime : Date;
+
+    public get lastActionTime() : Date {
+        return this._lastActionTime;
+    }
+
+    public set lastActionTime(time: Date) {
+        this._lastActionTime = time;
+    }
+
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
         this.receiver.subscribe(ReaperEvents.REAPER_DEAD);
@@ -39,10 +52,12 @@ export default class ReaperController extends EnemyController {
         this.addState(ReaperStates.IDLE, new Idle(this, this.owner));
         this.addState(ReaperStates.WALK, new Walk(this, this.owner));
         this.addState(ReaperStates.ATTACK, new Attack(this, this.owner));
+        this.addState(ReaperStates.SPAWN_DEATH_CIRCLES, new CreateDeathCircles(this, this.owner));
         this.addState(ReaperStates.DAMAGED, new Damaged(this, this.owner));
         this.addState(ReaperStates.DEAD, new Dead(this, this.owner));
 
         this.initialize(ReaperStates.IDLE);
+        this.lastActionTime = new Date();
 
         this.maxHealth = 2000;
         this.health = this.maxHealth;
@@ -63,12 +78,12 @@ export default class ReaperController extends EnemyController {
                 this.handleSwingHit(event.data.get("id"));
 				break;
 			}
+            case COFEvents.FIREBALL_HIT_ENEMY: {
+                this.handleFireballHit(event.data.get("other"));
+            }
             case ReaperEvents.REAPER_DEAD: {
                 this.handleReaperDead();
                 break;
-            }
-            case COFEvents.FIREBALL_HIT_ENEMY: {
-                this.handleFireballHit(event.data.get("other"));
             }
 		}
 	}

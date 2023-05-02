@@ -28,6 +28,11 @@ export const COFEvents = {
     ENEMY_PROJECTILE_HIT_PLAYER: "PROJECTILE_HIT_PLAYER",
 
     /**
+     * Event trigger when player is hit by a projectile.
+     */
+    ENEMY_SPELL_HIT_PLAYER: "SPELL_HIT_PLAYER",
+    
+    /**
      * Event trigger when an enemy projectile hits the wall.
      */
     ENEMY_PROJECTILE_HIT_WALL: "PROJECTILE_HIT_WALL",

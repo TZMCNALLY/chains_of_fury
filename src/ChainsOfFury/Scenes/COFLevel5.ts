@@ -219,13 +219,13 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleBasicAttack(lastFace: number) {
 
-        let basicAttackHitbox = new Vec2(16, 45)
+        let basicAttackHitbox = new Vec2(16, 30)
         let basicAttackPosition = this.enemyBoss.position.clone();
 
         if(lastFace == -1)
-            basicAttackPosition.x -= 32;
+            basicAttackPosition.x -= 28;
         else
-            basicAttackPosition.x += 32;
+            basicAttackPosition.x += 28;
             
 
         if (this.player.collisionShape.overlaps(new AABB(basicAttackPosition, basicAttackHitbox))) {

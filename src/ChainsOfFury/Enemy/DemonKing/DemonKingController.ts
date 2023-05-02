@@ -4,6 +4,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { COFEvents } from "../../COFEvents";
 import Idle from "./DemonKingStates/Idle"
 import Timer from "../../../Wolfie2D/Timing/Timer";
+import Walk from "./DemonKingStates/Walk";
 
 export const DemonKingStates = {
     IDLE: "IDLE",
@@ -29,14 +30,15 @@ export const DemonKingAnimations = {
 
 export default class DemonKingController extends EnemyController {
 
-    protected phase = 1;
     protected walkTime: Date;
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
 
         this.addState(DemonKingStates.IDLE, new Idle(this, this.owner));
-        this.initialize(DemonKingStates.IDLE);
+        this.addState(DemonKingStates.WALK, new Walk(this, this.owner))
+        
+        this.initialize(DemonKingStates.WALK);
 
         this.walkTime = new Date()
         this.maxHealth = 2000;

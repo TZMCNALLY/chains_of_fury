@@ -5,13 +5,23 @@ import DemonKingController from "../DemonKingController";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 
-export default class Idle extends DemonKingState {
+export default class Walk extends DemonKingState {
+
+    
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(DemonKingAnimations.IDLE_LEFT, true, null);
+
+        if(this.parent.lastFace == -1)
+            this.owner.animation.playIfNotAlready(DemonKingAnimations.WALKING_LEFT)
+
+        else
+            this.owner.animation.playIfNotAlready(DemonKingAnimations.WALKING_RIGHT)
+        
 	}
 
 	public update(deltaT: number): void {
+
+
 	}
 
 	public onExit(): Record<string, any> {

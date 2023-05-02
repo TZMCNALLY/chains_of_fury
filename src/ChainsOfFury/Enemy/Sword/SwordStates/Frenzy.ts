@@ -12,21 +12,15 @@ import Vec2 from '../../../../Wolfie2D/DataTypes/Vec2';
 
 export default class Frenzy extends SwordState {
 
-	protected hitboxTimer: Timer; // when to start checking for overlap
-	protected hitboxEnded: boolean; // TAKE OUT LATER
     protected toPlayer: Vec2; // vector to original player direction
     protected attackStarted: boolean
     protected spinTimer: Timer; // when the spin tween ends
-    protected numFrenzies: number;
 
 	public onEnter(options: Record<string, any>): void { 
         this.owner.animation.playIfNotAlready(SwordAnimations.IDLE);
 
-		this.hitboxTimer = new Timer(250);
-		this.hitboxEnded = false;
         this.attackStarted = false;
         this.spinTimer = new Timer(1000)
-        this.numFrenzies = 0
 
         this.owner.animation.play(SwordAnimations.IDLE)
         this.owner.tweens.play(SwordTweens.TWIRL)

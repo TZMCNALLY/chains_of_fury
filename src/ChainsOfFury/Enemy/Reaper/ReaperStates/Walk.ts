@@ -6,7 +6,11 @@ import { ReaperAnimation, ReaperStates } from "../ReaperController";
 export default class Walk extends ReaperState {
 
 	public onEnter(options: Record<string, any>): void {
-        this.parent.speed = 100;
+		if (this.parent.berserkState)
+        	this.parent.speed = 150;
+		else
+			this.parent.speed = 100;
+			
 		if (this.parent.getXDistanceFromPlayer() > 0)
         	this.owner.animation.play(ReaperAnimation.WALK_LEFT);
 		else

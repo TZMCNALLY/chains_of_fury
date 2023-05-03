@@ -10,12 +10,14 @@ import Damaged from "./ReaperStates/Damaged";
 import Dead from "./ReaperStates/Dead";
 import Attack from "./ReaperStates/Attack";
 import CreateDeathCircles from "./ReaperStates/CreateDeathCircles";
+import ThrowSlashes from "./ReaperStates/ThrowSlashes";
 
 export const ReaperStates = {
     IDLE: "IDLE",
     WALK: "WALK",
     ATTACK: "ATTACK",
     SPAWN_DEATH_CIRCLES: "SPAWN_DEATH_CIRCLES",
+    THROW_SLASHES: "THROW_SLASHES",
 	DAMAGED: "DAMAGED",
     DEAD: "DEAD"
 } as const
@@ -27,6 +29,8 @@ export const ReaperAnimation = {
     ATTACKING_RIGHT: "ATTACKING_RIGHT",
     ATTACKING_LEFT: "ATTACKING_LEFT",
     SPAWN_DEATH_CIRCLES: "DANCING",
+    THROW_SLASHES_LEFT: "THROW_SLASHES_LEFT",
+    THROW_SLASHES_RIGHT: "THROW_SLASHES_RIGHT",
     TAKING_DAMAGE_RIGHT: "TAKING_DAMAGE_RIGHT",
     TAKING_DAMAGE_LEFT: "TAKING_DAMAGE_LEFT",
     DYING: "DYING",
@@ -35,14 +39,21 @@ export const ReaperAnimation = {
 
 export default class ReaperController extends EnemyController {
 
-    protected _lastActionTime : Date;
+    protected _lastActionTime : Date ;
+    protected _berserkState: boolean;
 
     public get lastActionTime() : Date {
         return this._lastActionTime;
     }
-
     public set lastActionTime(time: Date) {
         this._lastActionTime = time;
+    }
+
+    public get berserkState() : boolean {
+        return this._berserkState;
+    }
+    public set berserkState(isActive: boolean) {
+        this._berserkState = isActive;
     }
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
@@ -53,11 +64,13 @@ export default class ReaperController extends EnemyController {
         this.addState(ReaperStates.WALK, new Walk(this, this.owner));
         this.addState(ReaperStates.ATTACK, new Attack(this, this.owner));
         this.addState(ReaperStates.SPAWN_DEATH_CIRCLES, new CreateDeathCircles(this, this.owner));
+        this.addState(ReaperStates.THROW_SLASHES, new ThrowSlashes(this, this.owner));
         this.addState(ReaperStates.DAMAGED, new Damaged(this, this.owner));
         this.addState(ReaperStates.DEAD, new Dead(this, this.owner));
 
         this.initialize(ReaperStates.IDLE);
         this.lastActionTime = new Date();
+        this.berserkState = false;
 
         this.maxHealth = 2000;
         this.health = this.maxHealth;

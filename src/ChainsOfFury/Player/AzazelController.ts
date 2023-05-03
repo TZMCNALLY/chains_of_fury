@@ -22,6 +22,7 @@ import Receiver from "../../Wolfie2D/Events/Receiver";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { COFCheats } from "../COFCheats";
+import { SpellEffects } from "../Spells/SpellEffects";
 /**
  * Animation keys for the Azazel spritesheet
  */
@@ -133,6 +134,7 @@ export default class AzazelController extends StateMachineAI {
         this.emitter = new Emitter();
         this.receiver.subscribe(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
+        this.receiver.subscribe(COFEvents.ENEMY_SPELL_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
         this.receiver.subscribe(COFEvents.PLAYER_RUN);
         this.receiver.subscribe(COFEvents.PLAYER_DASH);
@@ -185,6 +187,9 @@ export default class AzazelController extends StateMachineAI {
 				this.handleProjectilePlayerHit(event);
 				break;
 			}
+            case COFEvents.ENEMY_SPELL_HIT_PLAYER: {
+                this.handleSpellPlayerHit(event.data.get("effect"));
+            }
             case COFEvents.PLAYER_HURL: {
 				this.handlePlayerHurl(event);
 				break;
@@ -285,6 +290,20 @@ export default class AzazelController extends StateMachineAI {
     // ======================================================================
     // Event handlers
 
+    public handlePhysicalPlayerHit(event: GameEvent): void {
+        if (this._iframe > 0) {
+            return;
+        }
+        this._iframe = .5; // Set _iframe time here.
+
+        this.owner.tweens.play(AzazelTweens.IFRAME, true);
+
+        this.health -= 10;
+        this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
+
+        if (this.health > 0)
+            this.changeState(AzazelStates.DAMAGED);
+    }
 
     public handleProjectilePlayerHit(event: GameEvent): void {
         if (this._iframe > 0) {
@@ -301,19 +320,11 @@ export default class AzazelController extends StateMachineAI {
             this.changeState(AzazelStates.DAMAGED);
     }
 
-    public handlePhysicalPlayerHit(event: GameEvent): void {
-        if (this._iframe > 0) {
-            return;
+    public handleSpellPlayerHit(effect: String) {
+        if (effect === SpellEffects.INSTADEATH) {
+            this.health -= 100;
+            this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
         }
-        this._iframe = .5; // Set _iframe time here.
-
-        this.owner.tweens.play(AzazelTweens.IFRAME, true);
-
-        this.health -= 10;
-        this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
-
-        if (this.health > 0)
-            this.changeState(AzazelStates.DAMAGED);
     }
 
     public handlePlayerHurl(event: GameEvent): void {

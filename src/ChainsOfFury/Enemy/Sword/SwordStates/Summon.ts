@@ -18,8 +18,6 @@ export default class Summon extends SwordState {
 
 	public update(deltaT: number): void {
 
-        console.log(this.numDances)
-
         if(!this.owner.animation.isPlaying(SwordAnimations.DANCE)) {
 
             if(this.numDances == 3) {

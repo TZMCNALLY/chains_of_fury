@@ -1,0 +1,32 @@
+{
+    "name": "Tornado",
+    "spriteSheetImage": "tornado.png",
+    "spriteWidth": 16,
+    "spriteHeight": 16,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 2,
+    "rows": 1,
+    "animations": [
+        {
+            "name": "SPIN",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 2
+                },
+                {
+                    "index": 1,
+                    "duration": 2
+                },
+                {
+                    "index": 2,
+                    "duration": 2
+                }
+            ]
+        }
+    ]
+}

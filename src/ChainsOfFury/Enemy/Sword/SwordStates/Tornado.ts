@@ -19,9 +19,15 @@ export default class Tornado extends SwordState {
         this.timer = new Timer(3000);
         this.timer.start();
         
+        // Start spinning
         this.owner.tweens.play(SwordTweens.SPIN, true);
         this.owner.animation.play(SwordAnimations.IDLE, true, null)
+        this.owner.tweens.play(SwordTweens.FADE_OUT)
         
+        // Spawn tornado
+        this.emitter.fireEvent(SwordEvents.SPIN_BEGAN)
+        
+        // Play tornado sound effect
         let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: spinAudio})
     }
@@ -33,6 +39,7 @@ export default class Tornado extends SwordState {
             (this.parent.player.ai as AzazelController).speed = 150;
             this.owner.tweens.stop(SwordTweens.SPIN);
             this.owner.tweens.play(SwordTweens.SPIN, false); //readjust to standing upright
+            this.emitter.fireEvent(SwordEvents.SPIN_ENDED)
             this.finished(SwordStates.BASIC_ATTACK)
         }
 
@@ -87,24 +94,6 @@ export default class Tornado extends SwordState {
             }
 
             this.emitter.fireEvent(SwordEvents.SPIN_ATTACK)
-
-            // Walk to where the player is
-            this.parent.velocity = this.owner.position.dirTo(this.parent.player.position)
-            this.parent.velocity.x *= 10;
-            this.parent.velocity.y *= 10;
-
-            // Adjust animation to which way its walking towards the player
-            if(this.owner.position.x < this.parent.player.position.x) {
-                this.owner.animation.playIfNotAlready(SwordAnimations.MOVE_RIGHT)
-                this.parent.lastFace = 1
-            }
-
-            else {
-                this.owner.animation.playIfNotAlready(SwordAnimations.MOVE_LEFT)
-                this.parent.lastFace = -1
-            }
-
-            this.owner.move(this.parent.velocity.scaled(deltaT));
         }
     }
 

@@ -6,6 +6,8 @@ import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import MainMenu from "./MainMenu";
 import GameEvent from '../../Wolfie2D/Events/GameEvent';
+import { COFEvents } from '../COFEvents';
+import { DemonKingEvents } from "../Enemy/DemonKing/DemonKingStates/DemonKingEvents";
 
 export default class COFLevel6 extends COFLevel {
 
@@ -31,8 +33,28 @@ export default class COFLevel6 extends COFLevel {
     protected handleEvent(event: GameEvent): void {
         super.handleEvent(event);
         switch (event.type) {
-            
+            case DemonKingEvents.STRUCK_LIGHTNING: {
+                this.handleLightningStrike();
+            }
+            case COFEvents.BOSS_DEFEATED: {
+                this.handleLevelEnd();
+                break;
+            }
         }
+    }
+
+    protected handleLightningStrike(): void {
+
+        
+    }
+
+    /**
+     * Handles all subscriptions to events
+     */
+    protected subscribeToEvents(): void {
+        super.subscribeToEvents();
+        this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
+        this.receiver.subscribe(DemonKingEvents.STRUCK_LIGHTNING);
     }
 
     protected handleLevelEnd(): void {

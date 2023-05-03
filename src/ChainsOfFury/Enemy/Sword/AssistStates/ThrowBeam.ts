@@ -14,7 +14,7 @@ export default class ThrowBeam extends AssistState {
 
 	public onEnter(options: Record<string, any>): void {
 
-        this.throwTimer = new Timer(400)
+        this.throwTimer = new Timer(700)
         this.throwTimer.start()
         this.numThrows = 0
 	}

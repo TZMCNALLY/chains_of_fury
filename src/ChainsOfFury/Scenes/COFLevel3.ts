@@ -40,7 +40,7 @@ export default class COFLevel3 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
-        this.sceneManager.changeToScene(COFLevel4)
+        this.sceneManager.changeToScene(COFLevel4);
     }
 
     /**

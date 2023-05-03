@@ -141,6 +141,58 @@
             ]
         },
         {
+            "name": "THROW_SLASHES_RIGHT",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 15,
+                    "duration": 10
+                },
+                {
+                    "index": 16,
+                    "duration": 10
+                },
+                {
+                    "index": 17,
+                    "duration": 10
+                },
+                {
+                    "index": 18,
+                    "duration": 10
+                },
+                {
+                    "index": 19,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "THROW_SLASHES_LEFT",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 20,
+                    "duration": 10
+                },
+                {
+                    "index": 21,
+                    "duration": 10
+                },
+                {
+                    "index": 22,
+                    "duration": 10
+                },
+                {
+                    "index": 23,
+                    "duration": 10
+                },
+                {
+                    "index": 24,
+                    "duration": 10
+                }
+            ]
+        },
+        {
             "name": "TAKING_DAMAGE_RIGHT",
             "repeat": false,
             "frames": [

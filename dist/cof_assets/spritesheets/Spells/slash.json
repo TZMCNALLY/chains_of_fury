@@ -1,0 +1,24 @@
+{
+    "name": "Slash",
+    "spriteSheetImage": "slash.png",
+    "spriteWidth": 64,
+    "spriteHeight": 64,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 1,
+    "rows": 1,
+    "animations": [
+        {
+            "name": "SPAWN",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 10
+                }
+            ]
+        }
+    ]
+}

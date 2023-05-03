@@ -63,6 +63,7 @@ export default class COFLevel4 extends COFLevel {
         this.receiver.subscribe(ReaperEvents.SPAWN_DEATH_CIRCLE);
         this.receiver.subscribe(DeathCircleEvents.CIRCLE_ACTIVE);
         this.receiver.subscribe(DeathCircleEvents.CIRCLE_END);
+        this.receiver.subscribe(ReaperEvents.THROW_SLASH);
     }
 
      /**
@@ -83,6 +84,9 @@ export default class COFLevel4 extends COFLevel {
             case DeathCircleEvents.CIRCLE_END: {
                 this.handleDespawnDeathCircle(event.data.get("id"));
                 break;
+            }
+            case ReaperEvents.THROW_SLASH: {
+                this.handleThrowSlash(event.data.get("spawn"), event.data.get("direction"), event.data.get("speed"));
             }
         }
     }
@@ -118,6 +122,12 @@ export default class COFLevel4 extends COFLevel {
                 break;
             }
         }
+    }
+
+    public handleThrowSlash(spawn: Vec2, direction: number, speed: number) {
+        console.log(spawn)
+        console.log(direction)
+        console.log(speed)
     }
 
     /**

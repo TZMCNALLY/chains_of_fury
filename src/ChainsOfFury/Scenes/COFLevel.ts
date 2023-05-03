@@ -51,7 +51,7 @@ export type COFLayer = typeof COFLayers[keyof typeof COFLayers]
  */
 export const COFEntities = {
     BOSS: "BOSS",
-    MINION: "MINION"
+    MINION: "MINION",
 } as const;
 
 export default class COFLevel extends Scene {

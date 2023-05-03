@@ -7,4 +7,8 @@ export const SwordEvents = {
     SWORD_DEAD: "SWORD_DEAD",
 
     ASSIST_SUMMONED: "ASSIST_SUMMONED",
+
+    SPIN_BEGAN: "SPIN_BEGAN",
+    
+    SPIN_ENDED: "SPIN_ENDED"
 }

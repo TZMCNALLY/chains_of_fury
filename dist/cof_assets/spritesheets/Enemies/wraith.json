@@ -72,7 +72,7 @@
 		},
 		{
 			"name":"WALKING_LEFT",
-			"repeat":false,
+			"repeat":true,
 			"frames":[
 				{
 					"index":31,
@@ -98,7 +98,7 @@
 		},
 		{
 			"name":"WALKING_RIGHT",
-			"repeat":false,
+			"repeat":true,
 			"frames":[
 				{
 					"index":44,

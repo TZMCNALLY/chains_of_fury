@@ -42,7 +42,9 @@ export const SwordAnimations = {
 
 export const SwordTweens = {
     SPIN: "SPIN",
-    TWIRL: "TWIRL"
+    TWIRL: "TWIRL",
+    FADE_OUT: "FADE_OUT",
+    FADE_IN: "FADE_IN"
 } as const
 
 export default class SwordController extends EnemyController {

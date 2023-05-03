@@ -66,7 +66,7 @@ export default class Walk extends SwordState {
 				this.finished(SwordStates.TORNADO);
 
 			else {
-                if(RandUtils.randInt(1,5) == 1)
+                if(RandUtils.randInt(1,4) == 1)
                     this.finished(SwordStates.FRENZY);
 
                 else

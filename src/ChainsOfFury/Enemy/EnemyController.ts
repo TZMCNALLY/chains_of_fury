@@ -64,8 +64,6 @@ export default class EnemyController extends StateMachineAI {
         // Subscribe to Events.
         this.receiver.subscribe(COFEvents.SWING_HIT);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
-
-        // this.receiver.subscribe(COFEvents.ENEMY_HIT);
         this.receiver.subscribe(COFEvents.ENEMY_STUNNED);
 
         this._stunned = false;
@@ -149,6 +147,8 @@ export default class EnemyController extends StateMachineAI {
                 this.emitter.fireEvent(COFEvents.MINION_DYING, {id: id});
             }
         }
+
+        console.log(this.health)
     }
 
     public handleEnemyFireballHit(id: number, entity: string): void {

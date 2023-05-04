@@ -10,10 +10,16 @@ export default class Idle extends ReaperState {
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
+		const currentTime = new Date();
+		let timeSinceLastAction = currentTime.getTime() - this.parent.lastActionTime.getTime();
+
 		if (this.parent.getDistanceFromPlayer() < 50) {
 			this.finished(ReaperStates.ATTACK);
 		}
-		else if (this.parent.getDistanceFromPlayer() > 0) {
+		else if (timeSinceLastAction > 8000) {
+			this.finished(ReaperStates.SPAWN_DEATH_CIRCLES);
+		}
+		else if (this.parent.getDistanceFromPlayer() > 10) {
 			this.finished(ReaperStates.WALK);
 		}
 	}

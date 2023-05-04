@@ -28,6 +28,11 @@ export const COFEvents = {
     ENEMY_PROJECTILE_HIT_PLAYER: "PROJECTILE_HIT_PLAYER",
 
     /**
+     * Event trigger when player is hit by a projectile.
+     */
+    ENEMY_SPELL_HIT_PLAYER: "SPELL_HIT_PLAYER",
+    
+    /**
      * Event trigger when an enemy projectile hits the wall.
      */
     ENEMY_PROJECTILE_HIT_WALL: "PROJECTILE_HIT_WALL",
@@ -58,6 +63,12 @@ export const COFEvents = {
      * Has data: { currHealth : number, maxHealth: number }
      */
     BOSS_TOOK_DAMAGE: "BOSS_TOOK_DAMAGE",
+
+    BOSS_RECEIVE_HEAL: "BOSS_RECEIVE_HEAL",
+
+    BOSS_HEALED: "BOSS_HEALED",
+
+    HEAL_BOSS: "HEAL_BOSS",
 
     /**
      * Event trigger when player swing.

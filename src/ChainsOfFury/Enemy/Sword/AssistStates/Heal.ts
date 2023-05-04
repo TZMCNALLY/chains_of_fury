@@ -1,37 +1,28 @@
 import { SwordAnimations } from "../SwordController";
 import { SwordStates }from "../SwordController";
-import SwordState from "./SwordState";
 import SwordController from "../SwordController";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import { SwordEvents } from "../SwordEvents";
+import AssistState from './AssistState';
+import { AssistAnimations } from "../AssistController";
+import { COFEvents } from "../../../COFEvents";
 
-export default class Summon extends SwordState {
+export default class Heal extends AssistState {
 
-    protected numDances: number
 
 	public onEnter(options: Record<string, any>): void {
 
-        this.numDances = 0;
+        this.owner.animation.playIfNotAlready(AssistAnimations.DANCE)
 	}
 
 	public update(deltaT: number): void {
 
-        console.log(this.numDances)
+        if(!this.owner.animation.isPlaying(AssistAnimations.DANCE)){
 
-        if(!this.owner.animation.isPlaying(SwordAnimations.DANCE)) {
-
-            if(this.numDances == 3) {
-                this.emitter.fireEvent(SwordEvents.ASSIST_SUMMONED);
-                this.finished(SwordStates.WALK)
-            }
-
-            else {
-
-                this.numDances++;
-                this.owner.animation.play(SwordAnimations.DANCE);
-            }
+            this.owner.animation.play(AssistAnimations.DANCE)
+            this.emitter.fireEvent(COFEvents.BOSS_RECEIVE_HEAL, {heal: 10})
         }
 	}
 

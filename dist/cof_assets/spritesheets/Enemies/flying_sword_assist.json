@@ -1,6 +1,6 @@
 {
 	"name": "Flying Sword Minion",
-	"spriteSheetImage": "flying_sword_minion.png",
+	"spriteSheetImage": "flying_sword_assist.png",
 	"spriteWidth": 128,
 	"spriteHeight": 128,
 	"leftBuffer": 0,
@@ -188,7 +188,7 @@
 		},
 		{
 			"name": "DANCE",
-			"repeat": true,
+			"repeat": false,
 			"frames": [
 				{
 					"index": 54,

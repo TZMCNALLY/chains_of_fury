@@ -1,25 +1,25 @@
-import { SwordAnimations } from "../SwordController";
-import { SwordStates }from "../SwordController";
-import SwordState from "./SwordState";
-import SwordController from "../SwordController";
+import { AssistAnimations } from "../AssistController";
+import { AssistStates }from "../AssistController";
+import AssistState from "./AssistState";
+import AssistController from "../AssistController";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import GameEvent from '../../../../Wolfie2D/Events/GameEvent';
 import { COFEvents } from "../../../COFEvents";
 import Receiver from '../../../../Wolfie2D/Events/Receiver';
 import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
-import COFLevel5 from "../../../Scenes/COFLevel5";
-import { SwordEvents } from "../SwordEvents";
 
-export default class Walk extends SwordState {
+export default class Walk extends AssistState {
 
 	public onEnter(options: Record<string, any>): void {
 
+        this.parent.walkTime = new Date();
+
         if(this.parent.lastFace == -1)
-            this.owner.animation.playIfNotAlready(SwordAnimations.MOVE_RIGHT)
+            this.owner.animation.playIfNotAlready(AssistAnimations.MOVE_RIGHT)
 
         else
-            this.owner.animation.playIfNotAlready(SwordAnimations.MOVE_LEFT)
+            this.owner.animation.playIfNotAlready(AssistAnimations.MOVE_LEFT)
 	}
 
 	public update(deltaT: number): void {
@@ -34,12 +34,12 @@ export default class Walk extends SwordState {
 
         // Adjust animation to which way its walking towards the player
         if(this.owner.position.x < this.parent.player.position.x) {
-            this.owner.animation.playIfNotAlready(SwordAnimations.MOVE_RIGHT)
+            this.owner.animation.playIfNotAlready(AssistAnimations.MOVE_RIGHT)
             this.parent.lastFace = 1
         }
 
         else {
-            this.owner.animation.playIfNotAlready(SwordAnimations.MOVE_LEFT)
+            this.owner.animation.playIfNotAlready(AssistAnimations.MOVE_LEFT)
             this.parent.lastFace = -1
         }
 
@@ -47,30 +47,21 @@ export default class Walk extends SwordState {
 	}
 
 	public onExit(): Record<string, any> {
-        
 		this.owner.animation.stop();
 		return {};
 	}
 
-    // Checks if the sword is done walking and should do different action
+    // Checks if the Assist is done walking and should do different action
     private checkToFinish() {
         const currentTime = new Date();
         if(currentTime.getTime() - this.parent.walkTime.getTime() > 2000){
 
-            let distance = this.parent.getDistanceFromPlayer()
+            if(this.parent.getDistanceFromPlayer() > 200)
+                this.finished(AssistStates.HEAL);
 
-            if(this.parent.health <= this.parent.maxHealth/2 && (this.owner.getScene() as COFLevel5).assistExists == false)
-                this.finished(SwordStates.SUMMON)
-
-			else if(distance < 120)
-				this.finished(SwordStates.TORNADO);
-
+            // ADD OPTION TO SWAP PLACES LATER
 			else {
-                if(RandUtils.randInt(1,5) == 1)
-                    this.finished(SwordStates.FRENZY);
-
-                else
-                    this.finished(SwordStates.BASIC_ATTACK);
+                this.finished(AssistStates.THROW_BEAM);
             }
         }
     }

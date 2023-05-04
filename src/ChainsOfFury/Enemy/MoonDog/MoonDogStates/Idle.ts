@@ -32,6 +32,7 @@ export default class Idle extends MoonDogState {
 
 				if (rnd < 21) {
 					// 20% chance to try to use magic attack.
+					this.finished(MoonDogStates.MAGIC);
 				}
 			} else {
 				// Stage 2

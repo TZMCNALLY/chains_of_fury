@@ -6,16 +6,22 @@ import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 
 export default class Magic extends MoonDogState {
 
-    protected _target: Vec2 = undefined;
-    protected _attackChargeUpTime: number;
+    protected _stateTime: number; // How long does this take.
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(MoonDogAnimation.MAGIC);
+        this.owner.animation.play(MoonDogAnimation.PREPARING_MAGIC);
+        this.owner.animation.queue(MoonDogAnimation.MAGIC, true);
+
+        this._stateTime = 10; // 10 seconds in this state?
 	}
 
 	public update(deltaT: number): void {
         // Adjust the direction the player is facing
-		super.update(deltaT);   
+		super.update(deltaT);
+
+        // Literally do nothing except decrement time.
+
+        // Just going to handle projectile logic in COFLevel1.ts
 	}
 
 

@@ -1,5 +1,5 @@
-import COFAnimatedSprite from "../../../Nodes/COFAnimatedSprite";
-import EnemyController from "../../EnemyController";
+import COFAnimatedSprite from "../../Nodes/COFAnimatedSprite";
+import EnemyController from "../EnemyController";
 import Idle from "./DarkStalkerStates/Idle";
 
 export const DarkStalkerStates = {

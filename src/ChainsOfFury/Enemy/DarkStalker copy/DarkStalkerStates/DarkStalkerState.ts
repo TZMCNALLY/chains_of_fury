@@ -1,8 +1,8 @@
-import State from "../../../../../Wolfie2D/DataTypes/State/State";
-import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
-import COFAnimatedSprite from "../../../../Nodes/COFAnimatedSprite";
+import State from "../../../../Wolfie2D/DataTypes/State/State";
+import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import COFAnimatedSprite from "../../../Nodes/COFAnimatedSprite";
 import DarkStalkerController from "../DarkStalkerController";
-import { COFEvents } from "../../../../COFEvents";
+import { COFEvents } from "../../../COFEvents";
 
 /**
  * An abstract state for the Dark Stalker 

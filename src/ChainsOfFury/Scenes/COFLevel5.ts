@@ -152,7 +152,7 @@ export default class COFLevel5 extends COFLevel {
                 break;
             }
             case SwordEvents.SPIN_ENDED: {
-                this.destroyTornado();
+                this.despawnTornado();
                 break;
             }
             case AssistEvents.FIREBALL_HIT_ASSIST: {
@@ -195,6 +195,10 @@ export default class COFLevel5 extends COFLevel {
                 ]
             });
 	    }
+
+        this.tornado = this.add.animatedSprite("tornado", COFLayers.PRIMARY);
+        this.tornado.scale.set(6, 6)
+        this.tornado.visible = false;
     }
 
     protected initializeAssist(key: string, controller: new (...a: any[]) => EnemyController,
@@ -217,14 +221,13 @@ export default class COFLevel5 extends COFLevel {
     }
     
     protected spawnTornado() {
-        this.tornado = this.add.animatedSprite("tornado", COFLayers.PRIMARY);
-        this.tornado.scale.set(6, 6)
         this.tornado.position.copy(new Vec2(this.enemyBoss.position.x, this.enemyBoss.position.y))
+        this.tornado.visible = true
         this.tornado.animation.play("SPIN", true, null)
     }
 
-    protected destroyTornado() {
-        this.remove(this.tornado);
+    protected despawnTornado() {
+        this.tornado.visible = false
         this.enemyBoss.tweens.play(SwordTweens.FADE_IN)
     }
 

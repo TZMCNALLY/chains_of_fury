@@ -17,12 +17,12 @@ export default class Frenzy extends SwordState {
     protected spinTimer: Timer; // when the spin tween ends
 
 	public onEnter(options: Record<string, any>): void { 
-        this.owner.animation.playIfNotAlready(SwordAnimations.IDLE);
 
         this.attackStarted = false;
         this.spinTimer = new Timer(1000)
 
         this.owner.animation.play(SwordAnimations.IDLE)
+        this.owner.animation.stop();
         this.owner.tweens.play(SwordTweens.TWIRL)
         this.spinTimer.start()
 	}

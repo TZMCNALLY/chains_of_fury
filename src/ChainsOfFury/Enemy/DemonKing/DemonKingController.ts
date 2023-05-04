@@ -43,7 +43,7 @@ export default class DemonKingController extends EnemyController {
         this.addState(DemonKingStates.SWIPE, new Swipe(this, this.owner))
         this.addState(DemonKingStates.LIGHTNING_STRIKE, new LightningStrike(this, this.owner))
         
-        this.initialize(DemonKingStates.WALK);
+        this.initialize(DemonKingStates.LIGHTNING_STRIKE);
 
         this.walkTime = new Date()
         this.maxHealth = 2000;

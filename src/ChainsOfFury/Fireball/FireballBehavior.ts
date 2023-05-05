@@ -1,14 +1,8 @@
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import Graphic from "../../Wolfie2D/Nodes/Graphic";
-import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Receiver from "../../Wolfie2D/Events/Receiver";
-import { COFEvents } from "../COFEvents";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import AzazelController from "../Player/AzazelController";
-import Input from "../../Wolfie2D/Input/Input"
 
 export default class FireballBehavior implements AI {
     // The GameNode that owns this behavior

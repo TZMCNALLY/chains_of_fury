@@ -54,6 +54,7 @@ export default class SwordController extends EnemyController {
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
 
+        this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
         this.receiver.subscribe(COFEvents.BOSS_RECEIVE_HEAL);
 
         this.addState(SwordStates.IDLE, new Idle(this, this.owner));
@@ -76,6 +77,20 @@ export default class SwordController extends EnemyController {
         super.handleEvent(event);
 		switch(event.type) {
 			case COFEvents.SWING_HIT: {
+                if(this.health <= 0 && this.currentState != this.stateMap.get(SwordStates.DEAD)) {
+                    this.owner.tweens.stop(SwordTweens.SPIN);
+                    //this.owner.tweens.play(SwordTweens.TWIRL) // readjust to standing upright
+                    this.changeState(SwordStates.DEAD);
+                    this.emitter.fireEvent(SwordEvents.SWORD_DEAD)
+                }
+
+                else if(this.currentState == this.stateMap.get(SwordStates.WALK) || this.currentState == this.stateMap.get(SwordStates.IDLE))
+                    this.changeState(SwordStates.DAMAGED);
+
+                break;
+            }
+
+            case COFEvents.FIREBALL_HIT_ENEMY: {
                 if(this.health <= 0 && this.currentState != this.stateMap.get(SwordStates.DEAD)) {
                     this.owner.tweens.stop(SwordTweens.SPIN);
                     //this.owner.tweens.play(SwordTweens.TWIRL) // readjust to standing upright

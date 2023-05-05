@@ -22,7 +22,7 @@ export default class Heal extends AssistState {
         if(!this.owner.animation.isPlaying(AssistAnimations.DANCE)){
 
             this.owner.animation.play(AssistAnimations.DANCE)
-            this.emitter.fireEvent(COFEvents.BOSS_RECEIVE_HEAL, {heal: 10})
+            this.emitter.fireEvent(COFEvents.BOSS_RECEIVE_HEAL, {heal: 50})
         }
 	}
 

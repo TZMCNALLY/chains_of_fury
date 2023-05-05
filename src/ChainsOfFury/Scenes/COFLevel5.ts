@@ -29,6 +29,7 @@ export default class COFLevel5 extends COFLevel {
     protected swordAssist: AnimatedSprite;
     public assistExists: boolean;
     protected swordBeams: Array<AnimatedSprite>;
+    protected tornado: AnimatedSprite;
     public static readonly BASIC_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_basic_audio.wav";
     public static readonly SPIN_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_spin_audio.wav";
     protected basicAttackAudioKey = "BASIC_ATTACK_AUDIO_KEY";
@@ -52,6 +53,7 @@ export default class COFLevel5 extends COFLevel {
         this.load.spritesheet("flying_sword", "cof_assets/spritesheets/Enemies/flying_sword.json");
         this.load.spritesheet("flying_sword_assist", "cof_assets/spritesheets/Enemies/flying_sword_assist.json");
         this.load.spritesheet("sword_beam", "cof_assets/spritesheets/Projectiles/sword_beam.json")
+        this.load.spritesheet("tornado", "cof_assets/spritesheets/Spells/tornado.json")
     }
 
     public startScene(): void {
@@ -66,9 +68,33 @@ export default class COFLevel5 extends COFLevel {
                     property: "rotation",
                     start: 0,
                     end: Math.PI * 2,
+                    ease: EaseFunctionType.IN_OUT_QUAD,
+                },
+            ],
+        });
+        this.enemyBoss.tweens.add(SwordTweens.FADE_OUT, {
+            startDelay: 0,
+            duration: 200,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 1,
+                    end: 0,
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
-            ]
+            ],
+        });
+        this.enemyBoss.tweens.add(SwordTweens.FADE_IN, {
+            startDelay: 0,
+            duration: 200,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 0,
+                    end: 1,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
         });
         this.enemyBoss.tweens.add(SwordTweens.TWIRL, {
             startDelay: 0,
@@ -121,6 +147,19 @@ export default class COFLevel5 extends COFLevel {
                 this.handleSpinAttack();
                 break;
             }
+            case SwordEvents.SPIN_BEGAN: {
+                this.spawnTornado();
+                break;
+            }
+            case SwordEvents.SPIN_ENDED: {
+                this.despawnTornado();
+                break;
+            }
+            case AssistEvents.FIREBALL_HIT_ASSIST: {
+                this.handleFireballHitAssist()
+                this.despawnFireballs(event.data.get("node"))
+                break;
+            }
             case COFEvents.BOSS_DEFEATED: {
                 this.handleLevelEnd();
                 break;
@@ -131,7 +170,7 @@ export default class COFLevel5 extends COFLevel {
     protected initObjectPools(): void {
         super.initObjectPools();
 
-        this.swordBeams = new Array(50)
+        this.swordBeams = new Array(30)
         for (let i = 0; i < this.swordBeams.length; i++) {
 			this.swordBeams[i] = this.add.animatedSprite("sword_beam", COFLayers.PRIMARY);
 
@@ -142,10 +181,10 @@ export default class COFLevel5 extends COFLevel {
 			this.swordBeams[i].addAI(FireballBehavior);
 
             this.swordBeams[i].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
-			this.swordBeams[i].scale.set(1.5, 1.5);
+			this.swordBeams[i].scale.set(4, 4);
             this.swordBeams[i].tweens.add(AssistTweens.PROJECTILE, {
                 startDelay: 0,
-                duration: 50,
+                duration: 200,
                 effects: [
                     {
                         property: "rotation",
@@ -156,6 +195,10 @@ export default class COFLevel5 extends COFLevel {
                 ]
             });
 	    }
+
+        this.tornado = this.add.animatedSprite("tornado", COFLayers.PRIMARY);
+        this.tornado.scale.set(6, 6)
+        this.tornado.visible = false;
     }
 
     protected initializeAssist(key: string, controller: new (...a: any[]) => EnemyController,
@@ -172,9 +215,24 @@ export default class COFLevel5 extends COFLevel {
         this.swordAssist.addPhysics(new AABB(this.swordAssist.position.clone(), 
         new Vec2(this.swordAssist.boundary.getHalfSize().clone().x+hitBoxModifierX, this.swordAssist.boundary.getHalfSize().clone().y+hitBoxModifierY)));
         this.swordAssist.setGroup(COFPhysicsGroups.ENEMY);
-        this.swordAssist.setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, null);
+        this.swordAssist.setTrigger(COFPhysicsGroups.FIREBALL, AssistEvents.FIREBALL_HIT_ASSIST, null);
 
         this.assistExists = true;
+    }
+    
+    protected spawnTornado() {
+        this.tornado.position.copy(new Vec2(this.enemyBoss.position.x, this.enemyBoss.position.y))
+        this.tornado.visible = true
+        this.tornado.animation.play("SPIN", true, null)
+    }
+
+    protected despawnTornado() {
+        this.tornado.visible = false
+        this.enemyBoss.tweens.play(SwordTweens.FADE_IN)
+    }
+
+    protected handleFireballHitAssist(): void {
+        this.emitter.fireEvent(COFEvents.FIREBALL_HIT_ENEMY, {other: this.enemyBoss.id, entity: COFEntities.BOSS})
     }
 
     protected spawnSwordBeams() {
@@ -187,8 +245,8 @@ export default class COFLevel5 extends COFLevel {
 
                 let dirToPlayer = this.swordAssist.position.dirTo(this.player.position)
 
-                dirToPlayer.x *= 100;
-                dirToPlayer.y *= 100;
+                dirToPlayer.x *= 300;
+                dirToPlayer.y *= 300;
 
                 (this.swordBeams[i]._ai as FireballBehavior).velocity = dirToPlayer
 
@@ -219,14 +277,13 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleBasicAttack(lastFace: number) {
 
-        let basicAttackHitbox = new Vec2(16, 45)
+        let basicAttackHitbox = new Vec2(16, 48)
         let basicAttackPosition = this.enemyBoss.position.clone();
 
         if(lastFace == -1)
-            basicAttackPosition.x -= 32;
+            basicAttackPosition.x -= 25;
         else
-            basicAttackPosition.x += 32;
-            
+            basicAttackPosition.x += 25;
 
         if (this.player.collisionShape.overlaps(new AABB(basicAttackPosition, basicAttackHitbox))) {
             this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
@@ -234,7 +291,7 @@ export default class COFLevel5 extends COFLevel {
     }
 
     protected handleSpinAttack() {
-        let spinAttackHitbox = this.enemyBoss.boundary.getHalfSize().clone();
+        let spinAttackHitbox = new Vec2(55, 48)
         spinAttackHitbox.x -= 16;
         spinAttackHitbox.y -= 16;
         let spinAttackPosition = this.enemyBoss.position.clone();
@@ -265,11 +322,14 @@ export default class COFLevel5 extends COFLevel {
         super.subscribeToEvents();
         this.receiver.subscribe(SwordEvents.BASIC_ATTACK);
         this.receiver.subscribe(SwordEvents.SPIN_ATTACK);
+        this.receiver.subscribe(AssistEvents.FIREBALL_HIT_ASSIST)
         this.receiver.subscribe(SwordEvents.ASSIST_SUMMONED)
         this.receiver.subscribe(AssistEvents.BEAM_THROWN)
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
         this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_WALL);
+        this.receiver.subscribe(SwordEvents.SPIN_BEGAN);
+        this.receiver.subscribe(SwordEvents.SPIN_ENDED);
     }
 
     protected handleLevelEnd(): void {

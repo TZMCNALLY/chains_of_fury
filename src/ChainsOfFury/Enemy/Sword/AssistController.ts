@@ -52,6 +52,8 @@ export default class AssistController extends EnemyController {
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
 
+        this.receiver.subscribe(SwordEvents.SWORD_DEAD)
+
         this.addState(AssistStates.SPAWN, new Spawn(this, this.owner))
         this.addState(AssistStates.WALK, new Walk(this, this.owner));
         this.addState(AssistStates.HEAL, new Heal(this, this.owner));
@@ -61,8 +63,6 @@ export default class AssistController extends EnemyController {
 
         this.walkTime = new Date();
         this.initialize(AssistStates.SPAWN);
-        this.receiver.subscribe(COFEvents.SWING_HIT)
-        this.receiver.subscribe(SwordEvents.SWORD_DEAD)
 
         this.maxHealth = 2000;
         this.health = this.maxHealth;
@@ -82,6 +82,13 @@ export default class AssistController extends EnemyController {
                 
 				break;
 			}
+            case COFEvents.FIREBALL_HIT_ENEMY: {
+                if(this.currentState == this.stateMap.get(AssistStates.WALK) 
+                        || this.currentState == this.stateMap.get(AssistStates.IDLE)
+                        || this.currentState == this.stateMap.get(AssistStates.HEAL))
+                    this.changeState(AssistStates.DAMAGED);
+                break;
+            }
             case SwordEvents.SWORD_DEAD: {
                 this.changeState(AssistStates.DEAD);
                 break;

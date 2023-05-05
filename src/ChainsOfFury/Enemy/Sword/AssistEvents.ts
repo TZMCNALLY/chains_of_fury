@@ -4,5 +4,5 @@ export const AssistEvents = {
 
     BEAM_THROWN: "BEAM_THROWN",
 
-    ASSIST_HIT: "ASSIST_HIT",
+    FIREBALL_HIT_ASSIST: "FIREBALL_HIT_ASSIST"
 }

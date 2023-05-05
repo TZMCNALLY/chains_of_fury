@@ -53,7 +53,7 @@ export default class EnemyController extends StateMachineAI {
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
-        this.damageFromPhysical = 50;
+        this.damageFromPhysical = 500;
         this.damageFromProjectile = 100;
 
         this._player = options.player;
@@ -147,8 +147,6 @@ export default class EnemyController extends StateMachineAI {
                 this.emitter.fireEvent(COFEvents.MINION_DYING, {id: id});
             }
         }
-
-        console.log(this.health)
     }
 
     public handleEnemyFireballHit(id: number, entity: string): void {

@@ -81,6 +81,8 @@ export default class MissleBehavior implements AI {
                 this.owner.move(this.velocity.scaled(deltaT));
             }
         }
+
+        this.owner.rotation = this.velocity.angleToCCW(new Vec2(-1, 0));
     }
 
     public reset(): void {

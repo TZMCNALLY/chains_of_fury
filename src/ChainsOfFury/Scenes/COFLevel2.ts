@@ -32,6 +32,8 @@ export default class COFLevel2 extends COFLevel {
         // Load enemy
         super.loadScene();
         this.load.spritesheet("darkstalker", "cof_assets/spritesheets/Enemies/dark_stalker.json");
+        this.load.spritesheet("missle", "cof_assets/spritesheets/Projectiles/missle.json")
+        this.load.spritesheet("portal", "cof_assets/spritesheets/Spells/portal.json")
     }
 
     public startScene(): void {
@@ -82,8 +84,11 @@ export default class COFLevel2 extends COFLevel {
         for (let i = 0; i < 4; i++) {
             // TODO make a sprite for them!!
 
-            this.missles[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
+            this.missles[i] = this.add.animatedSprite("missle", COFLayers.PRIMARY);
             this.eyeBalls[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
+
+            this.missles[i].scale.set(2,2);
+            this.missles[i].animation.play("MOVING", true);
 
             this.missles[i].visible = false;
             this.eyeBalls[i].visible = false;

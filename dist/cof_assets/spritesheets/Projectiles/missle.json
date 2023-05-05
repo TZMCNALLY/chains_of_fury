@@ -1,0 +1,24 @@
+{
+	"name": "Missle",
+	"spriteSheetImage": "missle.png",
+	"spriteWidth": 11,
+	"spriteHeight": 11,
+	"leftBuffer": 0,
+	"rightBuffer": 0,
+	"topBuffer": 0,
+	"bottomBuffer": 0,
+	"columns": 1,
+	"rows": 1,
+	"animations": [
+        {
+            "name": "MOVING",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 1
+                }
+            ]
+        }
+    ]
+}

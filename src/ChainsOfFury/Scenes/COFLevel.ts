@@ -337,9 +337,9 @@ export default class COFLevel extends Scene {
     */
 
     protected spawnFireball(faceDir: Vec2) {
-        for(let i = 0; i < this.fireballs.length; i++) {
+        for (let i = 0; i < this.fireballs.length; i++) {
 
-            if(!this.fireballs[i].visible) {
+            if (!this.fireballs[i].visible) {
 
                 // Bring this fireball to life
                 this.fireballs[i].visible = true;

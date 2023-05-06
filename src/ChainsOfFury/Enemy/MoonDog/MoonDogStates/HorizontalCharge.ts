@@ -9,8 +9,16 @@ export default class HorizontalCharge extends MoonDogState {
     protected _target: Vec2 = undefined;
     protected _attackChargeUpTime: number;
 
+    private overshootFactor: number;
+
 	public onEnter(options: Record<string, any>): void {
         this._attackChargeUpTime = .5;
+
+        if (this.parent.health > 300) {
+            this.overshootFactor = 1.5;
+        } else {
+            this.overshootFactor = 1.1;
+        }
 	}
 
 	public update(deltaT: number): void {
@@ -30,7 +38,7 @@ export default class HorizontalCharge extends MoonDogState {
                 this._target = new Vec2(
                     // Calculates how far the player is, and over shoot by a bit.
                     // min max xvalues so that boss doesn't get stuck: 300, 1000
-                    MathUtils.clamp(this.owner.position.x - (this.owner.position.x-this.parent.player.position.x)*1.5, 300, 1000),
+                    MathUtils.clamp(this.owner.position.x - (this.owner.position.x-this.parent.player.position.x)*this.overshootFactor, 300, 1000),
                     this.owner.position.y
                 )
             }
@@ -41,7 +49,13 @@ export default class HorizontalCharge extends MoonDogState {
                 // If at target, reset target and finish this state.
                 this._target = undefined;
                 this.owner.setGroup(COFPhysicsGroups.ENEMY); // Disable contact damage.
-                this.finished(MoonDogStates.IDLE);
+                
+                if (this.parent.health > 300) {
+                    this.finished(MoonDogStates.IDLE);
+                } else {
+                    this.finished(MoonDogStates.POUND);
+                }
+                
                 return;
             }
 
@@ -91,7 +105,6 @@ export default class HorizontalCharge extends MoonDogState {
 	public onExit(): Record<string, any> {
 		this.owner.animation.stop();
 
-		this.owner.setGroup(COFPhysicsGroups.ENEMY);
-		return {};
+        return {};
 	}
 }

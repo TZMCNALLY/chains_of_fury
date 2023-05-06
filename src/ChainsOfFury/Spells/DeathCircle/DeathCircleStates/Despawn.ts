@@ -12,7 +12,7 @@ export default class Despawn extends DeathCircleState {
 	public update(deltaT: number): void {
 		super.update(deltaT);
         if (!this.owner.animation.isPlaying(DeathCircleAnimation.DESPAWN)) {
-            this.emitter.fireEvent(DeathCircleEvents.CIRCLE_END, {id: this.owner.id});
+            this.emitter.fireEvent(DeathCircleEvents.DESPAWN_CIRCLE, {id: this.owner.id});
 			this.finished(DeathCircleStates.INACTIVE);
         }
 	}

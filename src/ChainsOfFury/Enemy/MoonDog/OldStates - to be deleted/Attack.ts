@@ -1,5 +1,5 @@
 import { MoonDogAnimation } from "../MoonDogController";
-import MoonDogState from "./MoonDogState";
+import MoonDogState from "../MoonDogStates/MoonDogState";
 import MoonDogController from "../MoonDogController";
 
 export default class Attack extends MoonDogState {

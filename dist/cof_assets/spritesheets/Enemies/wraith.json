@@ -124,7 +124,7 @@
 		},
 		{
 			"name":"ATTACK_LEFT",
-			"repeat":true,
+			"repeat":false,
 			"frames":[
 				{
 					"index":0,
@@ -150,7 +150,7 @@
 		},
 		{
 			"name":"ATTACK_RIGHT",
-			"repeat":true,
+			"repeat":false,
 			"frames":[
 				{
 					"index":13,
@@ -250,7 +250,7 @@
 		},
 		{
 			"name":"DANCING",
-			"repeat":true,
+			"repeat":false,
 			"frames":[
 				{
 					"index":52,
@@ -276,7 +276,7 @@
 		},
 		{
 			"name":"DAMAGED_LEFT",
-			"repeat":true,
+			"repeat":false,
 			"frames":[
 				{
 					"index":26,
@@ -302,7 +302,7 @@
 		},
 		{
 			"name":"DAMAGED_RIGHT",
-			"repeat":true,
+			"repeat":false,
 			"frames":[
 				{
 					"index":39,

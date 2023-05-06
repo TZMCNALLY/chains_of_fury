@@ -127,30 +127,37 @@ export default class COFLevel extends Scene {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
-        let groupNames : string[] = [
-            COFPhysicsGroups.PLAYER, 
-            COFPhysicsGroups.ENEMY,
-            COFPhysicsGroups.ENEMY_CONTACT_DMG,
-            COFPhysicsGroups.WALL,
-            COFPhysicsGroups.PLAYER_WEAPON,
-            COFPhysicsGroups.FIREBALL,
-            COFPhysicsGroups.ENEMY_PROJECTILE
-        ]
+        // Allow overriding collision matrix from child
+        if (options === undefined || !('physics' in options)) {
+            let groupNames : string[] = [
+                COFPhysicsGroups.PLAYER, 
+                COFPhysicsGroups.ENEMY,
+                COFPhysicsGroups.ENEMY_CONTACT_DMG,
+                COFPhysicsGroups.WALL,
+                COFPhysicsGroups.PLAYER_WEAPON,
+                COFPhysicsGroups.FIREBALL,
+                COFPhysicsGroups.ENEMY_PROJECTILE
+            ]
+            
+            let collisions : number[][] = [
+                [0,0,0,1,0,1,1],
+                [0,0,0,1,1,1,0],
+                [0,0,0,1,1,1,0],
+                [1,1,1,0,0,1,1],
+                [0,1,1,0,0,0,0],
+                [1,1,1,1,0,0,0],
+                [1,0,0,1,0,0,0]
+            ];
+    
+    
+            super(viewport, sceneManager, renderingManager, {...options, physics: {
+                groupNames, collisions
+            }});
+        } else {
+            super(viewport, sceneManager, renderingManager, {...options});
+        }
+
         
-        let collisions : number[][] = [
-            [0,0,0,1,0,1,1],
-            [0,0,0,1,1,1,0],
-            [0,0,0,1,1,1,0],
-            [1,1,1,0,0,1,1],
-            [0,1,1,0,0,0,0],
-            [1,1,1,1,0,0,0],
-            [1,0,0,1,0,0,0]
-        ];
-
-
-        super(viewport, sceneManager, renderingManager, {...options, physics: {
-            groupNames, collisions
-        }});
         //this.add = new HW3FactoryManager(this, this.tilemaps);
     }
 
@@ -549,6 +556,59 @@ export default class COFLevel extends Scene {
 
     protected handleDisplayHealMarks(location: Vec2, scale: number) {
     }
+    
+   /**
+	 * This method checks for a collision between an AABB and a circle.
+	 * 
+	 * @param aabb the AABB
+	 * @param circle the Circle
+	 * @return true if the AABB is colliding with the circle; false otherwise. 
+	 * 
+	 * @see AABB for more information about AABBs
+	 * @see Circle for more information about Circles
+	 * @see MathUtils for more information about MathUtil functions
+	 */
+	public checkAABBtoCircleCollision(aabb: AABB, circle: Circle): boolean {
+		// =================================================
+		let radius = circle.radius;
+		let circleX = circle.center.x;
+		let circleY = circle.center.y;
+
+		let aabbWidth = aabb.topRight.x - aabb.topLeft.x;
+		let aabbHeight = aabb.bottomLeft.y - aabb.topLeft.y;
+		let aabbX = aabb.center.x;
+		let aabbY = aabb.center.y;
+
+		// Find the point on AABB to use to calculate distance to the center of the circle.
+		let x = circleX;
+		let y = circleY;
+
+		// top left edge
+		if (circleX < aabbX - aabbWidth/2)
+			x = aabbX - (aabbWidth/2);
+		// top right edge
+		else if (circleX > aabbX + aabbWidth/2)
+			x = aabbX + (aabbWidth/2);
+
+		// bottom left edge
+		if (circleY < aabbY - aabbHeight/2)
+			y = aabbY - (aabbHeight/2);
+		// bottom right edge
+		else if (circleY > aabbY + aabbHeight/2)
+			y = aabbY + (aabbHeight/2);
+
+		let distX = circleX - x;
+		let distY = circleY - y;
+		let distance = Math.sqrt((distX * distX) + (distY * distY));
+
+		if (distance <= radius) {
+			return true;
+		}
+		
+		return false;
+
+		// =================================================
+	}
 
     /* Initialization methods for everything in the scene */
 

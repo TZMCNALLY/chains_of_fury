@@ -1,8 +1,10 @@
 import AI from "../../../../Wolfie2D/DataTypes/Interfaces/AI";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import Emitter from "../../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import Receiver from "../../../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import { DarkStalkerEvents } from "../DarkStalkerEvents";
 
 export default class MineBehavior implements AI {
     // The GameNode that owns this behavior
@@ -11,11 +13,14 @@ export default class MineBehavior implements AI {
     private receiver: Receiver;
 
     private explodeCountdown: number;
+    private currCountdown: number;
+    private emitter: Emitter;
 
     public initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.velocity = new Vec2(0,0);
         this.receiver = new Receiver();
+        this.emitter = new Emitter();
         this.activate(options);
     }
 
@@ -24,6 +29,7 @@ export default class MineBehavior implements AI {
     public activate(options: Record<string, any>): void {
         // IDK why this function is here, but I'll just use this to load custom options.
         this.explodeCountdown = options.countdown;
+        this.currCountdown = this.explodeCountdown;
     }
 
     public handleEvent(event: GameEvent): void {
@@ -39,17 +45,27 @@ export default class MineBehavior implements AI {
             this.handleEvent(this.receiver.getNextEvent());
         }
 
-        if (this.explodeCountdown > 0) {
-            // Play animation depending of if it will explode soon
-            if (this.explodeCountdown < 1) {
-                // Fast flashing
+        if (this._owner.visible) {
+            if (this.currCountdown > 0) {
+                // Play animation depending of if it will explode soon
+                if (this.currCountdown < 1) {
+                    this.owner.animation.playIfNotAlready("FLASH", true);
+                    // Fast flashing
+                } else if (this.currCountdown < 3) {
+                    // Slow flashing
+                    this.owner.animation.playIfNotAlready("SLOW_FLASH", true);
+                } else {
+                    this.owner.animation.playIfNotAlready("IDLE", true);
+                }
+                this.currCountdown -= deltaT;
             } else {
-                // Slow flashing
+                // Play explode animation
+                this.emitter.fireEvent(DarkStalkerEvents.MINE_EXPLODED, {"node": this._owner.id});
+                this.currCountdown = this.explodeCountdown;
             }
-            this.explodeCountdown -= deltaT;
-        } else {
-            // Play explode animation
-            // Emit event that should check this node and overlap.
+
+            this.owner.move(this.velocity.scaled(deltaT));
+            this.velocity = this.velocity.scaled(.99); // Slow down the mine.
         }
     }
 

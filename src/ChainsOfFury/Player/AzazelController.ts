@@ -23,7 +23,10 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import { COFCheats } from "../COFCheats";
 import { SpellEffects } from "../Spells/SpellEffects";
+import { DemonKingEvents } from '../Enemy/DemonKing/DemonKingEvents';
 import Game from "../../Wolfie2D/Loop/Game";
+import Timer from "../../Wolfie2D/Timing/Timer";
+
 /**
  * Animation keys for the Azazel spritesheet
  */
@@ -93,6 +96,8 @@ export default class AzazelController extends StateMachineAI {
 
     protected isDead = false;
 
+    protected _slowedTimer: Timer;
+
     protected _iframe = 0;
 
     protected _dashCooldown = 0;
@@ -116,6 +121,7 @@ export default class AzazelController extends StateMachineAI {
         this.maxMana = 100;
         this.mana = this.maxMana;
         this.lastFace = 1;
+        this.slowedTimer = new Timer(1000)
 
         this._iframe = 0;
 
@@ -142,6 +148,7 @@ export default class AzazelController extends StateMachineAI {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.PLAYER_TELEPORT);
         this.receiver.subscribe(COFEvents.REGENERATE_STAMINA);
+        this.receiver.subscribe(DemonKingEvents.SWIPE_HIT_PLAYER)
     }
 
     /** 
@@ -215,6 +222,10 @@ export default class AzazelController extends StateMachineAI {
 				this.handlePlayerRegenerateStamina(event);
 				break;
 			}
+            case DemonKingEvents.SWIPE_HIT_PLAYER: {
+                this.handleSwipe(event);
+                break;
+            }
 			default: {
 				throw new Error(`Unhandled event of type: ${event.type} caught in PlayerController`);
 			}
@@ -282,6 +293,11 @@ export default class AzazelController extends StateMachineAI {
     public get iFrames(): number { return this._iframe; }
     public set iFrames(iFrame: number) {
         this._iframe = iFrame;
+    }
+
+    public get slowedTimer(): Timer { return this._slowedTimer; }
+    public set slowedTimer(slowedTimer: Timer) {
+        this._slowedTimer = slowedTimer;
     }
 
     // Setters and getters
@@ -367,6 +383,9 @@ export default class AzazelController extends StateMachineAI {
         this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
     }
 
+    public handleSwipe(event : GameEvent) : void {
+        this.slowedTimer.start();
+    }
     // Event handlers
     // ======================================================================
 }

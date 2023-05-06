@@ -29,6 +29,7 @@ export default class CastFireballs extends MindFlayerState {
 			this.fireballsToFire--;
 		}
 		else if (!this.owner.animation.isPlaying(MindFlayerAnimation.CAST_FIREBALLS) && this.fireballsToFire === 0) {
+			this.parent.lastActionTime = new Date();
 			this.finished(MindFlayerStates.IDLE);
 		}
 	}

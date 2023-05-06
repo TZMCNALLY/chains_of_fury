@@ -13,6 +13,7 @@ export default class Teleport extends MindFlayerState {
         let locationToTeleportTo = locations[Math.trunc(Math.random()*locations.length)];
         this.emitter.fireEvent(MindFlayerEvents.MIND_FLAYER_TELEPORT, {location: locationToTeleportTo});
 
+		this.parent.lastActionTime = new Date();
         this.finished(MindFlayerStates.IDLE);
 	}
 

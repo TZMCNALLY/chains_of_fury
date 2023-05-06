@@ -74,7 +74,7 @@ export default class COFLevel3 extends COFLevel {
             case MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON: {
                 this.spawnShadowDemon(event.data.get("location"));
                 break;
-            }
+            }   
             case ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL: {
                 this.spawnShadowDemonFireball(event.data.get("faceDir"), event.data.get("id"));
                 break;

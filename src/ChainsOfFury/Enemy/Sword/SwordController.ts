@@ -55,7 +55,6 @@ export default class SwordController extends EnemyController {
         super.initializeAI(owner, options);
 
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
-        this.receiver.subscribe(COFEvents.BOSS_RECEIVE_HEAL);
 
         this.addState(SwordStates.IDLE, new Idle(this, this.owner));
         this.addState(SwordStates.BASIC_ATTACK, new BasicAttack(this, this.owner));
@@ -103,18 +102,8 @@ export default class SwordController extends EnemyController {
 
                 break;
             }
-
-            case COFEvents.BOSS_RECEIVE_HEAL: {
-                this.handleEnemyHeal(event.data.get("heal"));
-                break;
-            }
 		}
 	}
-
-    public handleEnemyHeal(heal: number): void {
-        this.health += heal;
-        this.emitter.fireEvent(COFEvents.BOSS_HEALED, {currHealth: this.health, maxHealth: this.maxHealth});
-    }
 
     public update(deltaT: number): void {
 		super.update(deltaT);

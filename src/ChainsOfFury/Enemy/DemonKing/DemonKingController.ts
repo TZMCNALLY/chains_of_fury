@@ -7,12 +7,18 @@ import Timer from "../../../Wolfie2D/Timing/Timer";
 import Walk from "./DemonKingStates/Walk";
 import Swipe from "./DemonKingStates/Swipe";
 import LightningStrike from "./DemonKingStates/LightningStrike";
+import CreateDeathCircles from "./DemonKingStates/CreateDeathCircles";
+import ThrowSkulls from './DemonKingStates/SpawnSkulls';
+import ExpandSkullShield from "./DemonKingStates/ExpandSkullShield";
 
 export const DemonKingStates = {
     IDLE: "IDLE",
     SWIPE: "SWIPE",
     WALK: "WALK",
-    LIGHTNING_STRIKE: "LIGHTNING_STRIKE"
+    LIGHTNING_STRIKE: "LIGHTNING_STRIKE",
+    SPAWN_DEATH_CIRCLES: "SPAWN_DEATH_CIRCLES",
+    SPAWN_SKULLS: "SPAWN_SKULLS",
+    EXPAND_SKULL_SHIELD: "EXPAND_SKULL_SHIELD"
 } as const
 
 export const DemonKingAnimations = {
@@ -33,7 +39,7 @@ export const DemonKingAnimations = {
 
 export default class DemonKingController extends EnemyController {
 
-    protected walkTime: Date;
+    public walkTime: Date;
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
@@ -42,8 +48,11 @@ export default class DemonKingController extends EnemyController {
         this.addState(DemonKingStates.WALK, new Walk(this, this.owner))
         this.addState(DemonKingStates.SWIPE, new Swipe(this, this.owner))
         this.addState(DemonKingStates.LIGHTNING_STRIKE, new LightningStrike(this, this.owner))
+        this.addState(DemonKingStates.SPAWN_DEATH_CIRCLES, new CreateDeathCircles(this, this.owner))
+        this.addState(DemonKingStates.SPAWN_SKULLS, new ThrowSkulls(this, this.owner))
+        this.addState(DemonKingStates.EXPAND_SKULL_SHIELD, new ExpandSkullShield(this, this.owner))
         
-        this.initialize(DemonKingStates.LIGHTNING_STRIKE);
+        this.initialize(DemonKingStates.SPAWN_SKULLS);
 
         this.walkTime = new Date()
         this.maxHealth = 2000;

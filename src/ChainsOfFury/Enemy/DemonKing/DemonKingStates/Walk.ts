@@ -19,6 +19,8 @@ export default class Walk extends DemonKingState {
 
 	public update(deltaT: number): void {
 
+        // this.checkToFinish();
+
 		// Walk to where the player is
         this.parent.velocity = this.owner.position.dirTo(this.parent.player.position)
         this.parent.velocity.x *= 20;
@@ -43,4 +45,27 @@ export default class Walk extends DemonKingState {
 		this.owner.animation.stop();
 		return {};
 	}
+
+    // Checks if the sword is done walking and should do different action
+    // private checkToFinish() {
+    //     const currentTime = new Date();
+    //     if(currentTime.getTime() - this.parent.walkTime.getTime() > 2000){
+
+    //         let distance = this.parent.getDistanceFromPlayer()
+
+    //         if(this.parent.health <= this.parent.maxHealth/2 && (this.owner.getScene() as COFLevel5).assistExists == false)
+    //             this.finished(SwordStates.SUMMON)
+
+	// 		else if(distance < 120)
+	// 			this.finished(SwordStates.TORNADO);
+
+	// 		else {
+    //             if(RandUtils.randInt(1,4) == 1)
+    //                 this.finished(SwordStates.FRENZY);
+
+    //             else
+    //                 this.finished(SwordStates.BASIC_ATTACK);
+    //         }
+    //     }
+    // }
 }

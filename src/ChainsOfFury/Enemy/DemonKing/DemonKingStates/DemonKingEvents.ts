@@ -1,6 +1,0 @@
-export const DemonKingEvents = {
-    
-    STRUCK_LIGHTNING: "STRUCK_LIGHTNING",
-
-    LIGHTNING_STRIKE_ENDED: "LIGHTNING_STRIKE_ENDED"
-}

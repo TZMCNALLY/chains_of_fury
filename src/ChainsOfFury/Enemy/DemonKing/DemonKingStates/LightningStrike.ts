@@ -4,7 +4,7 @@ import DemonKingState from "./DemonKingState";
 import DemonKingController from "../DemonKingController";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
-import { DemonKingEvents } from "./DemonKingEvents";
+import { DemonKingEvents } from "../DemonKingEvents";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 export default class LightningStrike extends DemonKingState {

@@ -17,6 +17,9 @@ import { SpellEffects } from "../Spells/SpellEffects";
 import { DeathCircleEvents } from "../Spells/DeathCircle/DeathCircleEvents";
 import SkullBehavior from "../Enemy/DemonKing/SkullBehavior";
 import { COFPhysicsGroups } from "../COFPhysicsGroups";
+import Viewport from '../../Wolfie2D/SceneGraph/Viewport';
+import SceneManager from "../../Wolfie2D/Scene/SceneManager";
+import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 
 export default class COFLevel6 extends COFLevel {
 
@@ -41,6 +44,35 @@ export default class COFLevel6 extends COFLevel {
         super.startScene();
         super.initializeBossUI("Demon King");
         this.initializeEnemyBoss("wraith", DemonKingController, 1, [400, 400], -15, -15);
+    }
+
+    public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
+
+        let groupNames : string[] = [
+            COFPhysicsGroups.PLAYER, 
+            COFPhysicsGroups.ENEMY,
+            COFPhysicsGroups.ENEMY_CONTACT_DMG,
+            COFPhysicsGroups.WALL,
+            COFPhysicsGroups.PLAYER_WEAPON,
+            COFPhysicsGroups.FIREBALL,
+            COFPhysicsGroups.ENEMY_PROJECTILE
+        ]
+        
+        let collisions : number[][] = [
+            [0,0,0,1,0,1,1],
+            [0,0,0,1,1,1,0],
+            [0,0,0,1,1,1,0],
+            [1,1,1,0,0,1,1],
+            [0,1,1,0,0,0,0],
+            [1,1,1,1,0,0,1],
+            [1,0,0,1,0,1,0]
+        ];
+
+
+        super(viewport, sceneManager, renderingManager, {...options, physics: {
+            groupNames, collisions
+        }});
+        //this.add = new HW3FactoryManager(this, this.tilemaps);
     }
 
     /**

@@ -3,6 +3,7 @@ import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import COFAnimatedSprite from "../../../Nodes/COFAnimatedSprite";
 import DarkStalkerController from "../DarkStalkerController";
 import { COFEvents } from "../../../COFEvents";
+import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 
 /**
  * An abstract state for the Dark Stalker 
@@ -36,6 +37,8 @@ export default abstract class DarkStalkerState extends State {
         if (this.parent.health === 0) {
 			this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
 		}
+
+        this.owner.invertX = MathUtils.sign(this.owner.position.x - this.parent.player.position.x) < 0;
     }
 
     public abstract onExit(): Record<string, any>;

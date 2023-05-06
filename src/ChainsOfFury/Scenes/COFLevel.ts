@@ -123,30 +123,37 @@ export default class COFLevel extends Scene {
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
-        let groupNames : string[] = [
-            COFPhysicsGroups.PLAYER, 
-            COFPhysicsGroups.ENEMY,
-            COFPhysicsGroups.ENEMY_CONTACT_DMG,
-            COFPhysicsGroups.WALL,
-            COFPhysicsGroups.PLAYER_WEAPON,
-            COFPhysicsGroups.FIREBALL,
-            COFPhysicsGroups.ENEMY_PROJECTILE
-        ]
+        // Allow overriding collision matrix from child
+        if (options === undefined || !('physics' in options)) {
+            let groupNames : string[] = [
+                COFPhysicsGroups.PLAYER, 
+                COFPhysicsGroups.ENEMY,
+                COFPhysicsGroups.ENEMY_CONTACT_DMG,
+                COFPhysicsGroups.WALL,
+                COFPhysicsGroups.PLAYER_WEAPON,
+                COFPhysicsGroups.FIREBALL,
+                COFPhysicsGroups.ENEMY_PROJECTILE
+            ]
+            
+            let collisions : number[][] = [
+                [0,0,0,1,0,1,1],
+                [0,0,0,1,1,1,0],
+                [0,0,0,1,1,1,0],
+                [1,1,1,0,0,1,1],
+                [0,1,1,0,0,0,0],
+                [1,1,1,1,0,0,0],
+                [1,0,0,1,0,0,0]
+            ];
+    
+    
+            super(viewport, sceneManager, renderingManager, {...options, physics: {
+                groupNames, collisions
+            }});
+        } else {
+            super(viewport, sceneManager, renderingManager, {...options});
+        }
+
         
-        let collisions : number[][] = [
-            [0,0,0,1,0,1,1],
-            [0,0,0,1,1,1,0],
-            [0,0,0,1,1,1,0],
-            [1,1,1,0,0,1,1],
-            [0,1,1,0,0,0,0],
-            [1,1,1,1,0,0,0],
-            [1,0,0,1,0,0,0]
-        ];
-
-
-        super(viewport, sceneManager, renderingManager, {...options, physics: {
-            groupNames, collisions
-        }});
         //this.add = new HW3FactoryManager(this, this.tilemaps);
     }
 

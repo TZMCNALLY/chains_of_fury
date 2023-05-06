@@ -99,7 +99,7 @@ export default class COFLevel6 extends COFLevel {
                 this.checkIfPlayerCircleOverlap(event.data.get("shape"));
                 break;
             }
-            case DeathCircleEvents.CIRCLE_END: {
+            case DeathCircleEvents.DESPAWN_CIRCLE: {
                 this.handleDespawnDeathCircle(event.data.get("id"));
                 break;
             }
@@ -114,6 +114,10 @@ export default class COFLevel6 extends COFLevel {
             case COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE: {
                 this.despawnSkulls(event.data.get("other"))
                 this.despawnFireballs(event.data.get("node"))
+                break;
+            }
+            case DemonKingEvents.SWIPED: {
+                this.handleSwipe(event.data.get("lastFace"))
                 break;
             }
         }
@@ -179,12 +183,6 @@ export default class COFLevel6 extends COFLevel {
         }
     }
 
-    public handleSkullExpansion() {
-
-
-
-    }
-
     public spawnSkulls(location: Vec2) {
 
         let theta = 0;
@@ -192,7 +190,7 @@ export default class COFLevel6 extends COFLevel {
         let currSkullInd = 0
         let playerPosition = this.player.position
 
-        while(numSkullsSpawned != 10) {
+        while(numSkullsSpawned != 6) {
 
             if(!this.skulls[currSkullInd].visible) {
 
@@ -245,6 +243,24 @@ export default class COFLevel6 extends COFLevel {
         }
     }
 
+    public handleSwipe(lastFace: number) {
+
+        let swipeAttackHitbox = this.enemyBoss.collisionShape.halfSize;
+        let swipeAttackPosition = new Vec2();
+        swipeAttackPosition.copy(this.enemyBoss.position)
+
+        if(lastFace == -1)
+            swipeAttackPosition.x -= 16;
+
+        else
+            swipeAttackPosition.y -= 16;
+
+        if (this.player.collisionShape.overlaps(new AABB(swipeAttackPosition, swipeAttackHitbox))) {
+            this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER) //for damage calculation, animation
+            this.emitter.fireEvent(DemonKingEvents.SWIPE_HIT_PLAYER); // for slowing effect
+        }
+    }
+
     /**
      * Handles all subscriptions to events
      */
@@ -255,9 +271,10 @@ export default class COFLevel6 extends COFLevel {
         this.receiver.subscribe(DemonKingEvents.LIGHTNING_STRIKE_ENDED);
         this.receiver.subscribe(DemonKingEvents.SPAWN_DEATH_CIRCLE);
         this.receiver.subscribe(DeathCircleEvents.CIRCLE_ACTIVE);
-        this.receiver.subscribe(DeathCircleEvents.CIRCLE_END);
+        this.receiver.subscribe(DeathCircleEvents.DESPAWN_CIRCLE);
         this.receiver.subscribe(DemonKingEvents.SKULLS_SPAWN);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE);
+        this.receiver.subscribe(DemonKingEvents.SWIPED);
     }
 
     protected handleLevelEnd(): void {

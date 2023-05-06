@@ -53,7 +53,7 @@ export default class EnemyController extends StateMachineAI {
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>){
         this.owner = owner;
 
-        this.damageFromPhysical = 500;
+        this.damageFromPhysical = 50;
         this.damageFromProjectile = 100;
 
         this._player = options.player;

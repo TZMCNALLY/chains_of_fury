@@ -30,8 +30,10 @@ export default class LightningStrike extends DemonKingState {
 
         else if(this.strikeTimer.isStopped()){
 
-            if(this.numStrikes == 5)
+            if(this.numStrikes == 5) {
+                this.parent.walkTime = new Date();
                 this.finished(DemonKingStates.WALK)
+            }
 
             else {
                 

@@ -72,8 +72,8 @@ export default class Run extends PlayerState {
             this.emitter.fireEvent(COFEvents.PLAYER_DASH);
 
             // Doesn't seem enough to time to notice.
-            // this.parent.iFrames = .1;
-            // this.owner.tweens.play(AzazelTweens.IFRAME, true);
+            this.parent.iFrames = .1;
+            this.owner.tweens.play(AzazelTweens.IFRAME, true);
         }
 
         if (this.dashDuration == 0) {
@@ -84,8 +84,8 @@ export default class Run extends PlayerState {
         } else {
             // Move player
             this.owner.move(
-                // this.parent.inputDir.scale(this.parent.speed*6).scale(deltaT)
-                this.parent.faceDir.scale(this.parent.speed*(5+(3*(this.dashDuration/2)))).scale(deltaT)
+                this.parent.inputDir.scale(this.parent.speed*(5+(3*(this.dashDuration/2)))).scale(deltaT)
+                // this.parent.faceDir.scale(this.parent.speed*(5+(3*(this.dashDuration/2)))).scale(deltaT)
             );
         }
 	}

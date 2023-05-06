@@ -81,7 +81,7 @@ export default class MoonDogController extends EnemyController {
         // Boss stop magic attack, and gains a gound pound attack.
         // -> Ground pound attack triggers a ranged attack?
         // Charges as much as possible
-        // Summons minions infinitely?
+        // Summons minions to 5 max
 
         this.addState(MoonDogStates.HORIZONTAL_CHARGE, new HorizontalCharge(this, this.owner));
         this.addState(MoonDogStates.MAGIC, new Magic(this, this.owner));

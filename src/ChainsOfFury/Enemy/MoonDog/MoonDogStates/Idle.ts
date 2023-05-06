@@ -58,23 +58,7 @@ export default class Idle extends MoonDogState {
 				}
 
 				// Max minion counts are raised to 5 here, so chances change as well.
-
-				let summonChance = 10; // 10% chance to re-summon even if all are still alive.
-
-				if (this.parent.minionCount < 4) {
-					summonChance += 10; // 20% chance to re-summon if have 3 left.
-				}
-				if (this.parent.minionCount < 3) {
-					summonChance += 10; // 30% chance to re-summon if have 2 left.
-				}
-				if (this.parent.minionCount < 2) {
-					summonChance += 10; // 40% chance to re-summon if 1 minions left. 
-				}
-				if (this.parent.minionCount < 1) {
-					summonChance += 10; // 50% chance to re-summon if no minions are left.
-				}
-
-				// What am i writing up there.. I'll change above to equation later TODO
+				let summonChance = 10 + 10*(5-this.parent.minionCount-1);
 
 				if (rnd < 50 + this.parent.minionCount) {
 					this.finished(MoonDogStates.SUMMON);

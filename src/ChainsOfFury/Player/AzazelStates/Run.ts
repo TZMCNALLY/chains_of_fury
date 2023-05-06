@@ -77,10 +77,19 @@ export default class Run extends PlayerState {
         }
 
         if (this.dashDuration == 0) {
-             // Move player
-            this.owner.move(
-                this.parent.inputDir.scale(this.parent.speed).scale(deltaT)
-            );
+            if(!this.parent.slowedTimer.isStopped()) {
+                 // Move player
+                this.owner.move(
+                    this.parent.inputDir.scale(this.parent.speed/2).scale(deltaT)
+                );
+            }
+            else {
+                
+                // Move player
+                this.owner.move(
+                    this.parent.inputDir.scale(this.parent.speed).scale(deltaT)
+                );
+            }
         } else {
             // Move player
             this.owner.move(

@@ -15,7 +15,7 @@ export default class CreateDeathCircles extends DemonKingState {
 
 	public onEnter(options: Record<string, any>): void {
         this.deathCirclesToSpawn = 5;
-        this.timeBetweenSpawns = new Timer(1500);
+        this.timeBetweenSpawns = new Timer(500);
 	}
 
 	public update(deltaT: number): void {
@@ -39,9 +39,7 @@ export default class CreateDeathCircles extends DemonKingState {
             }
             else {
 
-                
-
-                this.finished(DemonKingStates.IDLE);
+                this.finished(DemonKingStates.SWIPE);
             }
         }
 	}

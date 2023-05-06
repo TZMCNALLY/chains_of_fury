@@ -18,8 +18,8 @@ export default class ThrowSkulls extends DemonKingState {
 
 	public update(deltaT: number): void {
 
-        if(this.owner.animation.isPlaying(DemonKingAnimations.DANCING))
-            this.finished(DemonKingStates.EXPAND_SKULL_SHIELD)
+        if(!this.owner.animation.isPlaying(DemonKingAnimations.DANCING))
+            this.finished(DemonKingStates.WALK)
 	}
 
 	public onExit(): Record<string, any> {

@@ -99,6 +99,40 @@
             ]
         },
         {
+            "name": "HEALING",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 12,
+                    "duration": 10
+                },
+                {
+                    "index": 13,
+                    "duration": 10
+                },
+                {
+                    "index": 14,
+                    "duration": 10
+                },
+                {
+                    "index": 15,
+                    "duration": 10
+                },
+                {
+                    "index": 16,
+                    "duration": 10
+                },
+                {
+                    "index": 17,
+                    "duration": 10
+                },
+                {
+                    "index": 18,
+                    "duration": 10
+                }
+            ]
+        },
+        {
             "name": "TAKING_DAMAGE",
             "repeat": false,
             "frames": [

@@ -11,6 +11,7 @@ import Damaged from "./MindFlayerStates/Damaged";
 import Dead from "./MindFlayerStates/Dead";
 import CastFireballs from "./MindFlayerStates/CastFireballs";
 import SpawnShadowDemons from "./MindFlayerStates/SpawnShadowDemons";
+import Healing from "./MindFlayerStates/Healing";
 import { MindFlayerEvents } from "./MindFlayerEvents";
 
 export const MindFlayerStates = {
@@ -20,6 +21,7 @@ export const MindFlayerStates = {
     CAST_FIREBALLS: "CAST_FIREBALLS",
     SPAWN_SHADOW_DEMONS: "SPAWN_SHADOW_DEMONS",
     TELEPORT: "TELEPORT",
+    HEALING: "HEALING",
     DEAD: "DEAD"
 } as const
 
@@ -30,6 +32,7 @@ export const MindFlayerAnimation = {
     WALK_RIGHT: "WALKING_RIGHT",
     WALK_LEFT: "WALKING_LEFT",
     SPAWN_SHADOW_DEMONS: "DANCING",
+    HEALING: "HEALING",
     DYING: "DYING",
     DEAD: "DEAD"
 } as const
@@ -38,6 +41,22 @@ export default class MindFlayerController extends EnemyController {
 
     protected _shadowDemonCount : number = 0;
     protected _maxShadowDemonCount : number = 5;
+    protected _lastActionTime : Date;
+    protected _actionDelay: number;
+
+    public get lastActionTime() : Date {
+        return this._lastActionTime;
+    }
+    public set lastActionTime(time: Date) {
+        this._lastActionTime = time;
+    }
+
+    public get actionDelay() : number {
+        return this._actionDelay;
+    }
+    public set actionDelay(delay: number) {
+        this._actionDelay = delay;
+    }
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
@@ -49,10 +68,13 @@ export default class MindFlayerController extends EnemyController {
         this.addState(MindFlayerStates.CAST_FIREBALLS, new CastFireballs(this, this.owner));
         this.addState(MindFlayerStates.SPAWN_SHADOW_DEMONS, new SpawnShadowDemons(this, this.owner));
         this.addState(MindFlayerStates.TELEPORT, new Teleport(this, this.owner));
+        this.addState(MindFlayerStates.HEALING, new Healing(this, this.owner));
         this.addState(MindFlayerStates.DAMAGED, new Damaged(this, this.owner));
         this.addState(MindFlayerStates.DEAD, new Dead(this, this.owner));
 
         this.initialize(MindFlayerStates.IDLE);
+        this.lastActionTime = new Date();
+        this.actionDelay = 3000;
 
         this.maxHealth = 2000;
         this.health = this.maxHealth;

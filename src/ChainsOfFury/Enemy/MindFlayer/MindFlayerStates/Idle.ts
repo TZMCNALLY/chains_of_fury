@@ -7,34 +7,29 @@ import { MoonDogStates } from "../../MoonDog/MoonDogController";
 
 export default class Idle extends MindFlayerState {
 
-	protected lastActionTime : Date;
-
 	public onEnter(options: Record<string, any>): void {
         this.owner.animation.play(MindFlayerAnimation.IDLE);
-		this.lastActionTime = new Date();
 	}
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
 		const currentTime = new Date();
-		let timeSinceLastAction = currentTime.getTime() - this.lastActionTime.getTime();
+		let timeSinceLastAction = currentTime.getTime() - this.parent.lastActionTime.getTime();
 
 		// Walk closer to target, if too far
 		if (this.parent.getDistanceFromPlayer() > 500) {
-			this.lastActionTime = new Date();
 			this.finished(MindFlayerStates.WALK);
 		}
-
 		// If target is too close, teleport away to a safe distance
-		if ((this.parent.getDistanceFromPlayer() < 200 && timeSinceLastAction > 3000 &&
-		!this.owner.animation.isPlaying(MindFlayerStates.SPAWN_SHADOW_DEMONS))) {
-			this.lastActionTime = new Date();
+		else if (this.parent.getDistanceFromPlayer() < 200 && timeSinceLastAction > 3000) {
 			this.finished(MindFlayerStates.TELEPORT);
 		}
-
-		if (timeSinceLastAction > 3000) {
-			this.lastActionTime = new Date();
-			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount) {
+		else if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
+			this.finished(MindFlayerStates.HEALING);
+		}
+		// otherwise, spawn shadow demons or shoot fireballs
+		else if (timeSinceLastAction > 3000) {
+			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-1) {
 				this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
 			}
 			else {

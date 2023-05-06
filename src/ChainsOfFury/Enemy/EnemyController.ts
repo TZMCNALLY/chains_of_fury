@@ -64,6 +64,7 @@ export default class EnemyController extends StateMachineAI {
         // Subscribe to Events.
         this.receiver.subscribe(COFEvents.SWING_HIT);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY);
+        this.receiver.subscribe(COFEvents.BOSS_RECEIVE_HEAL);
         this.receiver.subscribe(COFEvents.ENEMY_STUNNED);
 
         this._stunned = false;
@@ -90,6 +91,10 @@ export default class EnemyController extends StateMachineAI {
             }
             case COFEvents.ENEMY_STUNNED: {
                 this.handleEnemyStunned(event);
+                break;
+            }
+            case COFEvents.BOSS_RECEIVE_HEAL: {
+                this.handleEnemyHeal(event.data.get("id"), event.data.get("heal"));
                 break;
             }
 		}
@@ -169,7 +174,15 @@ export default class EnemyController extends StateMachineAI {
         // this.owner.move(this.velocity.scaleTo(-1));
         this.stunned = true;
     }
+    
+    public handleEnemyHeal(id: number, heal: number): void {
+        if (this.owner.id !== id) {
+            return;
+        }
 
+        this.health += heal;
+        this.emitter.fireEvent(COFEvents.BOSS_HEALED, {currHealth: this.health, maxHealth: this.maxHealth});
+    }
     // Event handlers
     // ======================================================================
 

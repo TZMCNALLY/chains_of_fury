@@ -74,6 +74,7 @@ export default class COFLevel4 extends COFLevel {
         this.receiver.subscribe(DeathCircleEvents.CIRCLE_ACTIVE);
         this.receiver.subscribe(DeathCircleEvents.DESPAWN_CIRCLE);
         this.receiver.subscribe(ReaperEvents.THROW_SLASH);
+        this.receiver.subscribe(SlashEvents.SLASH_HIT_PLAYER);
         this.receiver.subscribe(SlashEvents.DESPAWN_SLASH);
     }
 
@@ -100,6 +101,10 @@ export default class COFLevel4 extends COFLevel {
                 this.handleThrowSlash(event.data.get("spawn"), event.data.get("direction"), event.data.get("speed"));
                 break;
             }
+            case SlashEvents.SLASH_HIT_PLAYER: {
+                this.handleSlashHitPlayer();
+                break;
+            }
             case SlashEvents.DESPAWN_SLASH: {
                 this.handleDespawnSlash(event.data.get("id"));
                 break;
@@ -107,7 +112,7 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleSpawnDeathCircle(location: Vec2) {
+    protected handleSpawnDeathCircle(location: Vec2) {
         for (let i = 0; i < this.deathCircles.length; i++) {
             if (!this.deathCircles[i].visible) {
                 this.deathCircles[i].visible = true;
@@ -128,7 +133,7 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleDespawnDeathCircle(id: number) {
+    protected handleDespawnDeathCircle(id: number) {
         for (let i = 0; i < this.deathCircles.length; i++) {
             if (this.deathCircles[i].id === id) {
                 this.deathCircles[i].position.copy(Vec2.ZERO);
@@ -138,7 +143,7 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleThrowSlash(spawn: Vec2, direction: number, speed: number) {
+    protected handleThrowSlash(spawn: Vec2, direction: number, speed: number) {
         for (let i = 0; i < this.slashes.length; i++) {
             if (!this.slashes[i].visible) {
                 this.slashes[i].visible = true;
@@ -161,7 +166,11 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleDespawnSlash(id: number) {
+    protected handleSlashHitPlayer() {
+        this.emitter.fireEvent(COFEvents.ENEMY_SPELL_HIT_PLAYER, {effect: SpellEffects.DAMAGE, damage: 10});
+    }
+
+    protected handleDespawnSlash(id: number) {
         for (let i = 0; i < this.slashes.length; i++) {
             if (this.slashes[i].id === id) {
                 this.slashes[i].position.copy(Vec2.ZERO);

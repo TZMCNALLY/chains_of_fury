@@ -70,6 +70,7 @@ export default class COFLevel4 extends COFLevel {
      */
     protected subscribeToEvents(): void {
         super.subscribeToEvents();
+        this.receiver.subscribe(ReaperEvents.REAPER_SWIPE);
         this.receiver.subscribe(ReaperEvents.SPAWN_DEATH_CIRCLE);
         this.receiver.subscribe(DeathCircleEvents.CIRCLE_ACTIVE);
         this.receiver.subscribe(DeathCircleEvents.DESPAWN_CIRCLE);
@@ -85,8 +86,12 @@ export default class COFLevel4 extends COFLevel {
      protected handleEvent(event: GameEvent): void {
         super.handleEvent(event);
         switch (event.type) {
+            case ReaperEvents.REAPER_SWIPE: {
+                this.handleReaperSwipe(event.data.get("direction"));
+                break;
+            }
             case ReaperEvents.SPAWN_DEATH_CIRCLE: {
-                this.handleSpawnDeathCircle(event.data.get("location"));
+                this.handleSpawnDeathCircle(event.data.get("location"), event.data.get("radius"));
                 break;
             }
             case DeathCircleEvents.CIRCLE_ACTIVE: {
@@ -112,7 +117,19 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    protected handleSpawnDeathCircle(location: Vec2) {
+    protected handleReaperSwipe(direction: number) {
+        let reaperSwipeHitbox = this.enemyBoss.boundary.getHalfSize().clone();
+        reaperSwipeHitbox.x = reaperSwipeHitbox.x-16;
+
+        let swingPosition = this.enemyBoss.position.clone();
+        swingPosition.x += direction*40;
+
+        if (this.player.collisionShape.overlaps(new AABB(swingPosition,reaperSwipeHitbox))) {
+            this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
+        }
+    }
+
+    protected handleSpawnDeathCircle(location: Vec2, radius?: number) {
         for (let i = 0; i < this.deathCircles.length; i++) {
             if (!this.deathCircles[i].visible) {
                 this.deathCircles[i].visible = true;
@@ -120,7 +137,16 @@ export default class COFLevel4 extends COFLevel {
                 this.deathCircles[i].position.copy(location);
                 this.deathCircles[i].addAI(DeathCircleBehavior);
 
-                let deathCircleHitbox = new Circle(location, 155)
+                let deathCircleHitbox;
+                if (radius) {
+                    deathCircleHitbox = new Circle(location, radius);
+                    this.deathCircles[i].scale.set(12, 12);
+                }
+                else {
+                    deathCircleHitbox = new Circle(location, 155);
+                    this.deathCircles[i].scale.set(6, 6);
+                }
+
                 this.deathCircles[i].addPhysics(deathCircleHitbox, Vec2.ZERO, false, true);
                 break;
             }

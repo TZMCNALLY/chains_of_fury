@@ -307,28 +307,6 @@ export default class COFLevel extends Scene {
                 this.handlePauseGame();
                 break;
             }
-            // // When the level starts, reenable user input
-            // case HW3Events.LEVEL_START: {
-            //     Input.enableInput();
-            //     break;
-            // }
-            // // When the level ends, change the scene to the next level
-            // case HW3Events.LEVEL_END: {
-            //     this.sceneManager.changeToScene(this.nextLevel);
-            //     break;
-            // }
-            // case HW3Events.HEALTH_CHANGE: {
-            //     this.handleHealthChange(event.data.get("curhp"), event.data.get("maxhp"));
-            //     break;
-            // }
-            // case HW3Events.PLAYER_DEAD: {
-            //     this.sceneManager.changeToScene(MainMenu);
-            //     break;
-            // }
-            // case HW3Events.HIT_TILE: {
-            //     this.handleParticleHit(event.data.get("node"));
-            //     break;
-            // }
         }
     }
 

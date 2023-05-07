@@ -179,16 +179,16 @@ export default class EyeballBehavior implements AI {
 
     private lineIntersect(): boolean {
         // Checks line against all lines of player boundary box;
-        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.boundary.topLeft, this.player.boundary.topRight)) {
+        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.collisionShape.getBoundingRect().topLeft, this.player.collisionShape.getBoundingRect().topRight)) {
             return true;
         }
-        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.boundary.topLeft, this.player.boundary.bottomLeft)) {
+        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.collisionShape.getBoundingRect().topLeft, this.player.collisionShape.getBoundingRect().bottomLeft)) {
             return true;
         }
-        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.boundary.topRight, this.player.boundary.bottomRight)) {
+        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.collisionShape.getBoundingRect().topRight, this.player.collisionShape.getBoundingRect().bottomRight)) {
             return true;
         }
-        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.boundary.bottomLeft, this.player.boundary.bottomRight)) {
+        if (this.intersects(this.aimingLine.start, this.aimingLine.end, this.player.collisionShape.getBoundingRect().bottomLeft, this.player.collisionShape.getBoundingRect().bottomRight)) {
             return true;
         }
         return false;

@@ -14,5 +14,8 @@ export const MoonDogEvents = {
     MAGIC: "MAGIC",
 
     /** When minion die */
-    MINION_DEATH: "MINION_DEATH"
+    MINION_DEATH: "MINION_DEATH",
+
+    /** with data: index */
+    MOON_LANDED: "MOON_LANDEd",
 }

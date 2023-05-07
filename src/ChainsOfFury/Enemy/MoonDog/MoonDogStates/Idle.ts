@@ -12,7 +12,7 @@ export default class Idle extends MoonDogState {
 	public onEnter(options: Record<string, any>): void {
         this.owner.animation.play(MoonDogAnimation.IDLE);
 
-		this.lastActionTime = 2; // How many seconds it takes until it goes into new state.
+		this.lastActionTime = 5; // How many seconds it takes until it goes into new state.
 	}
 
 	public update(deltaT: number): void {
@@ -60,7 +60,7 @@ export default class Idle extends MoonDogState {
 				// Max minion counts are raised to 5 here, so chances change as well.
 				let summonChance = 10 + 10*(5-this.parent.minionCount-1);
 
-				if (rnd < 50 + this.parent.minionCount) {
+				if (rnd < 50 + summonChance) {
 					this.finished(MoonDogStates.SUMMON);
 				} else {
 					// Perform magic here!
@@ -70,6 +70,8 @@ export default class Idle extends MoonDogState {
 		} else {
 			// Reduce time until next action.
 			this.lastActionTime -= deltaT;
+
+			// TODO: Add an circling algorithm so that this boss tries to keep a distance from the player.
 		}
 	}
 

@@ -1,13 +1,13 @@
 import { MindFlayerAnimation } from "../MindFlayerController";
 import { MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
-import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
-import { MoonDogStates } from "../../MoonDog/MoonDogController";
 
 export default class Idle extends MindFlayerState {
 
 	public onEnter(options: Record<string, any>): void {
+		if (this.parent.health < 500 && !this.parent.berserk) {
+			this.parent.berserk = true;
+		}
         this.owner.animation.play(MindFlayerAnimation.IDLE);
 	}
 

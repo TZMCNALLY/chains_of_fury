@@ -1,6 +1,5 @@
 import State from "../../../../Wolfie2D/DataTypes/State/State";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import COFAnimatedSprite from "../../../Nodes/COFAnimatedSprite";
 import MindFlayerController from "../MindFlayerController";
 

@@ -2,7 +2,6 @@ import { MindFlayerAnimation } from "../MindFlayerController";
 import { MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
-import Idle from "./Idle";
 
 export default class Walk extends MindFlayerState {
 

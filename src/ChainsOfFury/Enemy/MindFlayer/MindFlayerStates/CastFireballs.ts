@@ -1,9 +1,6 @@
 import { MindFlayerAnimation, MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
 import { MindFlayerEvents } from "../MindFlayerEvents";
-import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
-import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 
 export default class CastFireballs extends MindFlayerState {
 

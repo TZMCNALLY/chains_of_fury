@@ -18,11 +18,6 @@ export const MenuLayers = {
 
 export default class Controls extends Scene {
 
-    // TODO:
-    // - Music (maybe start playing from splash screen)
-    // - Background
-    // - Sprite/logo on top.
-
     // public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
     // public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
 
@@ -30,7 +25,7 @@ export default class Controls extends Scene {
         // Load the menu song
         // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
 
-        this.load.spritesheet("player", "cof_assets/spritesheets/chain_devil.json");  
+        this.load.spritesheet("player", "cof_assets/spritesheets/Player/chain_devil.json");  
     }
 
     public startScene(): void {
@@ -63,26 +58,22 @@ export default class Controls extends Scene {
         this.createText(size.x-420, size.y-185, "S - Move Down");
         this.createText(size.x-420, size.y-155, "D - Move Right");
 
-        this.createSprite(size.x-120, size.y-200, 1, 1, "player", "RUN_RIGHT");
+        this.createSprite(size.x-140, size.y-200, 1, 1, "player", "RUN_RIGHT");
 
         // Movement Section
         // ================================================================================
 
         // ================================================================================
-        // Projectile Section
+        // Dash Section
 
         this.createBackground(size.x+270, size.y-200, 500, 150);
 
-        this.createText(size.x+135, size.y-245, "E -");
-        this.createText(size.x+135, size.y-215, "Charges up and fires");
-        this.createText(size.x+135, size.y-185, "a fireball in the");
-        this.createText(size.x+135, size.y-155, "direction of the mouse");
+        this.createText(size.x+140, size.y-215, "Shift (while moving) -");
+        this.createText(size.x+140, size.y-185, "Dash");
 
-        // TODO: Charge and shoot animation
-        this.createSprite(size.x*2-160, size.y-200, 1, 1, "player", "CHARGE_RIGHT");
+        this.createSprite(size.x*2-180, size.y-200, 1, 1, "player", "RUN_RIGHT");
 
-
-        // Projectile Section
+        // Dash Section
         // ================================================================================
 
         // ================================================================================
@@ -90,52 +81,44 @@ export default class Controls extends Scene {
 
         this.createBackground(size.x-270, size.y, 500, 150);
 
-        this.createText(size.x-420, size.y-10, "Left-Click -");
-        this.createText(size.x-420, size.y+10, "Basic Swing");
+        this.createText(size.x-420, size.y-15, "Left-Click -");
+        this.createText(size.x-420, size.y+15, "Basic Swing");
 
-        this.createSprite(size.x-120, size.y, 1, 1, "player", "ATTACK_RIGHT");
+        this.createSprite(size.x-140, size.y, 1, 1, "player", "ATTACK_RIGHT");
 
         // Basic Attack Section
         // ================================================================================
 
         // ================================================================================
-        // Guard Section
+        // Projectile Section
 
-        this.createBackground(size.x+270, size.y, 500, 150);
+        this.createBackground(size.x+270, size.y+100, 500, 350);
 
-        this.createText(size.x+130, size.y-10, "Shift (while running) -");
-        this.createText(size.x+130, size.y+10, "Dashes foward");
+        this.createText(size.x+125, size.y-35, "E -");
+        this.createText(size.x+125, size.y-5, "Throws a fireball");
+        this.createText(size.x+125, size.y+25, "in the direction");
+        this.createText(size.x+125, size.y+55, "of the mouse.");
+        this.createText(size.x+125, size.y+85, "If the player");
+        this.createText(size.x+125, size.y+115, "right-clicks while");
+        this.createText(size.x+125, size.y+145, "a fireball is active,");
+        this.createText(size.x+125, size.y+175, "the player is");
+        this.createText(size.x+125, size.y+205, "teleported to the");
+        this.createText(size.x+125, size.y+235, "location of the fireball");
 
-        // TODO: Guard animation
-        this.createSprite(size.x*2-160, size.y, 1, 1, "player", "RUN_RIGHT");
+        this.createSprite(size.x*2-180, size.y+100, 1, 1, "player", "CHARGE_RIGHT");
 
-        // Guard Section
+        // Projectile Section
         // ================================================================================
 
         // ================================================================================
-        // Combo Attack Section
+        // Extras Section
 
-        // this.createBackground(size.x-270, size.y+200, 500, 150);
+        this.createBackground(size.x-270, size.y+200, 500, 150);
 
-        // this.createText(size.x-420, size.y+190, "Hold Left-Click -")
-        // this.createText(size.x-420, size.y+210, "Combo Swing")
+        this.createText(size.x-270, size.y+185, "Esc -");
+        this.createText(size.x-270, size.y+215, "Pauses the game");
 
-        // this.createSprite(size.x-120, size.y+200, 1, 1, "player", "CHARGE_RIGHT");
-
-        // Combo Attack Section
-        // ================================================================================
-
-        // ================================================================================
-        // Escape Section
-
-        this.createBackground(size.x, size.y+200, 1050, 150);
-
-        this.createText(size.x, size.y+190, "Esc -");
-        this.createText(size.x, size.y+210, "Pauses the game");
-
-        //this.createSprite(size.x*2-160, size.y+200, 1, 1, "player", "IDLE_RIGHT");
-
-        // Escape Section
+        // Extras Section
         // ================================================================================
 
         // Buttons:

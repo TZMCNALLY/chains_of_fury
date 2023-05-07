@@ -30,7 +30,7 @@ export default class CreateDeathCircles extends ReaperState {
 
                 this.deathCirclesToSpawn--;
                 this.owner.animation.play(ReaperAnimation.SPAWN_DEATH_CIRCLES);
-                this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: spawn});
+                this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: spawn, radius: 200});
             }
             else {
                 this.parent.lastActionTime = new Date();

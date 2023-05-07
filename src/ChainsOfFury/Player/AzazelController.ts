@@ -340,6 +340,8 @@ export default class AzazelController extends StateMachineAI {
     public handleSpellPlayerHit(event: GameEvent) {
         let effect = event.data.get("effect");
         if (effect === SpellEffects.DAMAGE) {
+            if (this.health > 0)
+                this.changeState(AzazelStates.DAMAGED);
             this.health -= event.data.get("damage");
             this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
         }

@@ -34,6 +34,8 @@ import PlayerController from '../../demos/PlatformerPlayerController';
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { COFCheats } from "../COFCheats";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import { HealMarkEvents } from "../Spells/HealMarks/HealMarkEvents";
+import HealMarkBehavior from "../Spells/HealMarks/HealMarkBehavior";
 
 /**
  * A const object for the layer names
@@ -82,6 +84,9 @@ export default class COFLevel extends Scene {
     
     /** Object pool for fire projectiles */
     private fireballs: Array<AnimatedSprite>;
+
+    /** Object pool for heal marks */
+    private healMarks: Array<AnimatedSprite>;
 
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
@@ -171,7 +176,9 @@ export default class COFLevel extends Scene {
         // Load the tilemap
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
         
-        this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/fireball.json")
+        this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/fireball.json");
+
+        this.load.spritesheet("heal_marks", "cof_assets/spritesheets/Spells/healing.json");
     }
 
     public update(deltaT: number): void {
@@ -243,8 +250,13 @@ export default class COFLevel extends Scene {
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
-            case COFEvents.DISPLAY_HEAL_MARKS: {
+            case HealMarkEvents.DISPLAY_HEAL_MARKS: {
                 this.handleDisplayHealMarks(event.data.get("location"), event.data.get("scale"));
+                break;
+            }
+            case HealMarkEvents.REMOVE_HEAL_MARKS: {
+                this.handleRemoveHealMarks(event.data.get("id"));
+                break;
             }
             case COFEvents.CHANGE_MANA: {
                 this.handlePlayerManaChange(event.data.get("currMana"), event.data.get("maxMana"));
@@ -353,6 +365,16 @@ export default class COFLevel extends Scene {
             this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
 			this.fireballs[i].scale.set(1.5, 1.5);
 	    }
+
+        this.healMarks = new Array(2);
+        for (let i = 0; i < this.healMarks.length; i++) {
+            this.healMarks[i] = this.add.animatedSprite("heal_marks", COFLayers.PRIMARY);
+
+            this.healMarks[i].visible = false;
+
+            this.healMarks[i].position = Vec2.ZERO;
+            this.healMarks[i].addAI(HealMarkBehavior);
+        }
     }
    
     /**
@@ -555,6 +577,25 @@ export default class COFLevel extends Scene {
     }
 
     protected handleDisplayHealMarks(location: Vec2, scale: number) {
+        for (let i = 0; i < this.healMarks.length; i++) {
+            if (!this.healMarks[i].visible) {
+                this.healMarks[i].scale.set(scale, scale);
+                this.healMarks[i].position = location;
+                this.healMarks[i].visible = true;
+                this.healMarks[i].animation.play("HEALING");
+                break;
+            }
+        }
+    }
+
+    protected handleRemoveHealMarks(id: number) {
+        for (let i = 0; i < this.healMarks.length; i++) {
+            if (this.healMarks[i].id === id) {
+                this.healMarks[i].visible = false;
+                this.healMarks[i].position.copy(Vec2.ZERO);
+                break;
+            }
+        }
     }
     
    /**
@@ -653,7 +694,8 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.BOSS_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.BOSS_HEALED);
-        this.receiver.subscribe(COFEvents.DISPLAY_HEAL_MARKS);
+        this.receiver.subscribe(HealMarkEvents.DISPLAY_HEAL_MARKS);
+        this.receiver.subscribe(HealMarkEvents.REMOVE_HEAL_MARKS);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);

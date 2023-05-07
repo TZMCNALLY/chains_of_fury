@@ -71,13 +71,6 @@ export const COFEvents = {
     HEAL_BOSS: "HEAL_BOSS",
 
     /**
-     * Event trigger when the boss entity heals. Displays healing animation.
-     * 
-     * Has data: { location : Vec2, scale: number }
-     */
-    DISPLAY_HEAL_MARKS: "DISPLAY_HEAL_MARKS",
-
-    /**
      * Event trigger when player swing.
      * 
      * Has data: { faceDir: numeber (-1 or 1) }

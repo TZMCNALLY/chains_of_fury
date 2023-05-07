@@ -21,16 +21,16 @@ export default class Idle extends MindFlayerState {
 			this.finished(MindFlayerStates.WALK);
 		}
 		// If target is too close, teleport away to a safe distance
-		else if (this.parent.getDistanceFromPlayer() < 200 && timeSinceLastAction > 3000) {
+		else if (this.parent.getDistanceFromPlayer() < 200 && timeSinceLastAction > this.parent.actionDelay) {
 			this.finished(MindFlayerStates.TELEPORT);
 		}
-		else if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
-			this.finished(MindFlayerStates.HEALING);
-		}
 		// otherwise, spawn shadow demons or shoot fireballs
-		else if (timeSinceLastAction > 3000) {
-			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-1) {
+		else if (timeSinceLastAction > this.parent.actionDelay) {
+			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-2) {
 				this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
+			}
+			else if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
+				this.finished(MindFlayerStates.HEALING);
 			}
 			else {
 				this.finished(MindFlayerStates.CAST_FIREBALLS);

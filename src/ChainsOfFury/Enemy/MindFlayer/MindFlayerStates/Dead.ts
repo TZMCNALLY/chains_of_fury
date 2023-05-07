@@ -1,6 +1,5 @@
 import { MindFlayerAnimation } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
 import { COFEvents } from "../../../COFEvents";
 
 export default class Dead extends MindFlayerState {

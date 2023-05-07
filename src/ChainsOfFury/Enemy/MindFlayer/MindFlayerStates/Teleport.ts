@@ -1,6 +1,5 @@
-import { MindFlayerAnimation, MindFlayerStates } from "../MindFlayerController";
+import { MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import { MindFlayerEvents } from "../MindFlayerEvents";
 

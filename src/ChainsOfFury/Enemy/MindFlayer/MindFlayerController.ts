@@ -2,7 +2,6 @@ import COFAnimatedSprite from "../../Nodes/COFAnimatedSprite";
 import EnemyController from "../EnemyController";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import { COFEvents } from "../../COFEvents";
-import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
 import Idle from "./MindFlayerStates/Idle";
 import Walk from "./MindFlayerStates/Walk";
@@ -43,6 +42,7 @@ export default class MindFlayerController extends EnemyController {
     protected _maxShadowDemonCount : number = 5;
     protected _lastActionTime : Date;
     protected _actionDelay: number;
+    protected _berserk: boolean;
 
     public get lastActionTime() : Date {
         return this._lastActionTime;
@@ -56,6 +56,13 @@ export default class MindFlayerController extends EnemyController {
     }
     public set actionDelay(delay: number) {
         this._actionDelay = delay;
+    }
+
+    public get berserk() : boolean {
+        return this._berserk;
+    }
+    public set berserk(isBerserk: boolean) {
+        this._berserk = isBerserk;
     }
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
@@ -74,7 +81,7 @@ export default class MindFlayerController extends EnemyController {
 
         this.initialize(MindFlayerStates.IDLE);
         this.lastActionTime = new Date();
-        this.actionDelay = 3000;
+        this.actionDelay = 5000;
 
         this.maxHealth = 2000;
         this.health = this.maxHealth;
@@ -85,6 +92,9 @@ export default class MindFlayerController extends EnemyController {
         if (this.health <= 0 && !this.isDead) {
             this.emitter.fireEvent(MindFlayerEvents.MIND_FLAYER_DEAD);
             this.isDead = true;
+        }
+        if (this.berserk) {
+            this.actionDelay = 2000;
         }
 	}
 

@@ -122,7 +122,25 @@ export default class MoonDogController extends EnemyController {
             return;
         }
 
+        if (this.currentState == this.stateMap.get(MoonDogStates.MAGIC)) {
+            return; // Invul when casting magic.
+        }
+
         this.health -= this.damageFromPhysical;
+        this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+    }
+
+    public handleEnemyFireballHit(id: number, entity: string): void {
+        if (id !== this.owner.id) {
+            this.emitter.fireEvent(MoonDogEvents.MINION_HIT, {node: id});
+            return;
+        }
+
+        if (this.currentState == this.stateMap.get(MoonDogStates.MAGIC)) {
+            return; // Invul when casting magic.
+        }
+
+        this.health -= this.damageFromProjectile;
         this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
     }
 }

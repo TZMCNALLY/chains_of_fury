@@ -51,7 +51,7 @@ export default class SmallDogBehavior implements AI {
         this.circleVec = new Vec2(0, 150);
         this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);
 
-        this.health = 3;
+        this.health = 2;
 
         this.circlingDir = 1;
 
@@ -210,7 +210,7 @@ export default class SmallDogBehavior implements AI {
 
                 return;
             }
-            
+
             // Update position
             this.owner.move(this.velocity.scaled(deltaT));
         }

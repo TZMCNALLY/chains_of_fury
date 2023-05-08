@@ -139,6 +139,8 @@ export default class COFLevel1 extends COFLevel {
             this.minions[i].scale = new Vec2(.5,.5); // Lower values cause wall collisions to break.
             this.minions[i].addPhysics(this.minions[i].boundary);
             this.minions[i].setGroup(COFPhysicsGroups.ENEMY);
+            this.minions[i].setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, "");
+
 
             // Tweens for coming into and leaving life.
             this.minions[i].tweens.add("death", {

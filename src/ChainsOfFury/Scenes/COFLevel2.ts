@@ -72,6 +72,7 @@ export default class COFLevel2 extends COFLevel {
         this.load.spritesheet("darkstalker", "cof_assets/spritesheets/Enemies/dark_stalker.json");
         this.load.spritesheet("missle", "cof_assets/spritesheets/Projectiles/missle.json");
         this.load.spritesheet("portal", "cof_assets/spritesheets/Spells/portal.json");
+        this.load.spritesheet("mine", "cof_assets/spritesheets/Spells/mines.json");
         this.load.spritesheet("eyeball", "cof_assets/spritesheets/Enemies/eyeball.json");
     }
 
@@ -138,7 +139,7 @@ export default class COFLevel2 extends COFLevel {
         /** mineBalls and missles initialization */
         for (let i = 0; i < 12; i++) {
             // TODO make a sprite for this!!!
-            this.mineBalls[i] = this.add.animatedSprite("portal", COFLayers.PRIMARY);
+            this.mineBalls[i] = this.add.animatedSprite("mine", COFLayers.PRIMARY);
             this.missles[i] = this.add.animatedSprite("missle", COFLayers.PRIMARY);
 
             this.mineBalls[i].visible = false; // Turns them off.
@@ -311,6 +312,7 @@ export default class COFLevel2 extends COFLevel {
             }
 
             this.mineBalls[i].position.copy(this.enemyBoss.position);
+            this.mineBalls[i].scale = new Vec2(1,1);
             
             let hitbox = new AABB(
                 this.mineBalls[i].position.clone(),
@@ -387,16 +389,20 @@ export default class COFLevel2 extends COFLevel {
     private explodeMine(node: number): void {
         for (let i = 0; i < 12; i++) {
             if (this.mineBalls[i].id == node) {
-                if (this.mineBalls[i].boundary.overlaps(this.player.boundary)) {
-                    // Emit damage event.
-                    console.log("Mine hit")
+                this.mineBalls[i].scale = new Vec2(2,2);
+
+                if (this.mineBalls[i].boundary.overlaps(this.player.collisionShape)) {
+                    this.emitter.fireEvent(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
                 }
 
-                this.mineBalls[i].position.copy(Vec2.ZERO);
-                this.mineBalls[i].visible = false;
-                this.mineBalls[i].animation.stop();
+                let mineDissappearTimer = new Timer(51, () => {
+                    this.mineBalls[i].position.copy(Vec2.ZERO);
+                    this.mineBalls[i].visible = false;
+                    this.mineBalls[i].animation.stop();
 
-                (this.enemyBoss._ai as DarkStalkerController).activeMines -= 1;
+                    (this.enemyBoss._ai as DarkStalkerController).activeMines -= 1;
+                });
+                mineDissappearTimer.start();
 
                 return;
             }

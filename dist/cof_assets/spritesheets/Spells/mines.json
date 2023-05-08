@@ -16,19 +16,19 @@
             "frames": [
                 {
                     "index": 0,
-                    "duration": 30
+                    "duration": 20
                 },
                 {
                     "index": 1,
-                    "duration": 10
+                    "duration": 7
                 },
                 {
                     "index": 2,
-                    "duration": 10
+                    "duration": 7
                 },
                 {
                     "index": 3,
-                    "duration": 10
+                    "duration": 7
                 }
             ]
         },
@@ -38,19 +38,19 @@
             "frames": [
                 {
                     "index": 0,
-                    "duration": 50
+                    "duration": 10
                 },
                 {
                     "index": 1,
-                    "duration": 20
+                    "duration": 4
                 },
                 {
                     "index": 2,
-                    "duration": 20
+                    "duration": 4
                 },
                 {
                     "index": 3,
-                    "duration": 20
+                    "duration": 22
                 }
             ]
         },
@@ -66,31 +66,31 @@
         },
         {
             "name": "EXPLODE",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 4,
-                    "duration": 20
+                    "duration": 5
                 },
                 {
                     "index": 5,
-                    "duration": 20
+                    "duration": 5
                 },
                 {
                     "index": 6,
-                    "duration": 20
+                    "duration": 7
                 },
                 {
                     "index": 7,
-                    "duration": 20
+                    "duration": 12
                 },
                 {
                     "index": 8,
-                    "duration": 20
+                    "duration": 12
                 },
                 {
                     "index": 9,
-                    "duration": 20
+                    "duration": 10
                 }
             ]
         }

@@ -14,8 +14,6 @@ export default class Summon extends MoonDogState {
         this.owner.animation.play(MoonDogAnimation.SUMMON, false, MoonDogEvents.SUMMON);
         this.owner.animation.queue(MoonDogAnimation.IDLE);
 
-        this.parent.minionCount = 3;
-
         this.stateTime = 4;
 	}
 

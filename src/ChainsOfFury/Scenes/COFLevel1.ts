@@ -233,8 +233,7 @@ export default class COFLevel1 extends COFLevel {
 
 
             if (this.minions[i].visible) {
-                // Instead of resummong, just gonna do a power up instead.
-
+                // nvm just do nothing.
                 continue;
             } else {
                 // Sets the minion to a position on a random point on a circle around the boss.

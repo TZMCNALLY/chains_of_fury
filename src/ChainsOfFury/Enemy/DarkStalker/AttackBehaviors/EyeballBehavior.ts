@@ -35,6 +35,9 @@ export default class EyeballBehavior implements AI {
 
     private keepAiming: boolean;
 
+    private circleVec: Vec2;
+    private circleDir: number;
+
     public initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
         this.velocity = new Vec2(0,0);
@@ -142,16 +145,28 @@ export default class EyeballBehavior implements AI {
                     return;
             }
 
-            // Slowly move towards to player if not exploding and not aiming.
+            // Circle around player (ehh)
             if (!this.exploding && !this.aimingLine.visible) {
                 if (!this.owner.animation.isPlaying("HURT")) {
                     this.owner.animation.playIfNotAlready("IDLE");
                 }
 
-                let movementVector = new Vec2(
-                    (this.player.position.x - this.owner.position.x),
-                    (this.player.position.y - this.owner.position.y)
-                );
+                let target = this.player.position.clone().add(this.circleVec);
+                this.circleVec.rotateCCW(this.circleDir * Math.PI / 600);
+
+                // check bound. (flip direction of the rotation if out of bounce.)
+                if (target.y > 740 || 
+                    target.y < 230) {
+                        this.circleVec.y *= -1;
+                        this.circleDir *= -1;
+                }
+                if (target.x > 990 || 
+                    target.x < 270) {
+                        this.circleDir *= -1;
+                        this.circleVec.x *= -1;
+                }
+
+                let movementVector = target.sub(this.owner.position);
         
                 movementVector = movementVector.normalized().mult(this.speed);
         
@@ -163,6 +178,11 @@ export default class EyeballBehavior implements AI {
     public reset(): void {
         this.exploding = false;
         this.health = 3;
+
+        this.circleVec = new Vec2(0, 150);
+        this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);
+
+        this.circleDir = 1;
     }
 
     public get owner() { return this._owner }

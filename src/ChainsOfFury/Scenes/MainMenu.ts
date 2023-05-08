@@ -11,6 +11,8 @@ import Controls from "./Controls";
 import COFLevel1 from "./COFLevel1";
 import COFLevel3 from "./COFLevel3";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import { AzazelAnimations } from "../Player/AzazelController";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -23,12 +25,18 @@ export default class MainMenu extends Scene {
 
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
     public static readonly MUSIC_PATH = "cof_assets/music/cofmusic2.mp3";
+    protected clicked: boolean; // whether the user has clicked a button or not
+    protected player: AnimatedSprite // the player sprite
+    protected runSpeed: number // the speed the player sprite runs off the screen
+    protected nextScene: number // number denoting which scene to transition to. 0 for start game, 1 for level select,
+                                // 2 for controls, 3 for help
 
     // TODO:
     // - Background
     // - Sprite/logo on top.
 
     public loadScene(): void {
+        this.load.spritesheet("azazel", "cof_assets/spritesheets/Player/chain_devil.json");
     }
 
     public startScene(): void {
@@ -39,18 +47,23 @@ export default class MainMenu extends Scene {
         this.viewport.setFocus(size);
         this.viewport.setZoomLevel(1);
 
-        let title = <Label>this.add.uiElement(
-            UIElementType.LABEL,
-            MenuLayers.MAIN,
-            {
-                position: new Vec2(size.x, size.y-120),
-                text: "CHAINS OF FURY"
-            }
-        );
-        title.fontSize = 35;
-        title.textColor = Color.RED;
+        // let title = <Label>this.add.uiElement(
+        //     UIElementType.LABEL,
+        //     MenuLayers.MAIN,
+        //     {
+        //         position: new Vec2(size.x, size.y-120),
+        //         text: "CHAINS OF FURY"
+        //     }
+        // );
+        // title.fontSize = 35;
+        // title.textColor = Color.RED;
 
-
+        // Displays the player sprite on the top of the screen
+        this.player = this.add.animatedSprite("azazel", MenuLayers.MAIN)
+        this.player.position = new Vec2(0, size.y-120)
+        this.player.animation.play(AzazelAnimations.IDLE_RIGHT, true, null)
+        this.runSpeed = 8
+        
         // Buttons:
 
         let startGame = this.createButton(size.x, size.y+20, "Start Game");
@@ -61,26 +74,35 @@ export default class MainMenu extends Scene {
         // Scene transitions:
 
         startGame.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel1);
+            if(!this.clicked) {
+                this.clicked = true
+                this.nextScene = 0
+            }
         };
 
         levelSelect.onClick = () => {
-            this.sceneManager.changeToScene(LevelSelect);
+            if(!this.clicked) {
+                this.clicked = true
+                this.nextScene = 1
+            }
         };
 
         controls.onClick = () => {
-            this.sceneManager.changeToScene(Controls);
+            if(!this.clicked) {
+                this.clicked = true
+                this.nextScene = 2
+            }
         };
 
         help.onClick = () => {
-            this.sceneManager.changeToScene(Help);
+            if(!this.clicked) {
+                this.clicked = true
+                this.nextScene = 3
+            }
         };
 
         // Scene has started, so start playing music
         //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
-    }
-
-    public unloadScene(): void {
     }
 
     // Creates a button and appends it onto main layer.
@@ -103,5 +125,69 @@ export default class MainMenu extends Scene {
         button.size.set(355, 35);
 
         return button;
+    }
+
+    // Handles the viewport panning around the arena
+    public updateScene(deltaT: number) {
+
+        super.updateScene(deltaT)
+
+        let size = this.viewport.getHalfSize();
+
+        if(!this.clicked) {
+            
+            if(this.player.position.x < size.x) {
+
+                this.player.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
+
+                if(this.viewport.getCenter().x - this.player.position.x < size.x/2)
+                    this.runSpeed -= .1
+                    
+                this.player.position.x += this.runSpeed
+            }
+
+            else {
+
+                this.runSpeed = .2
+                this.player.animation.playIfNotAlready(AzazelAnimations.IDLE_RIGHT)
+            }
+
+        }
+
+        else {
+            
+            if(this.player.position.x < this.viewport.getHalfSize().x * 2) {
+
+                this.player.animation.playIfNotAlready(AzazelAnimations.RUN_RIGHT)
+                
+                if(this.runSpeed < 8)
+                    this.runSpeed += .1
+                
+                this.player.position.x += this.runSpeed
+            }
+
+            else {
+
+                switch(this.nextScene) {
+                    
+                    case 0: {
+                        this.sceneManager.changeToScene(COFLevel1);
+                        break;
+                    }
+                    case 1: {
+                        this.sceneManager.changeToScene(LevelSelect);
+                        break;
+                    }
+                    case 2: {
+                        this.sceneManager.changeToScene(Controls);
+                        break;
+                    }
+                    case 3: {
+                        this.sceneManager.changeToScene(Help);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

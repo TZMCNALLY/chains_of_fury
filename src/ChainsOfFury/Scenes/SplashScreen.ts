@@ -2,11 +2,13 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
+import { COFLayers } from "./COFLevel";
 import MainMenu from "./MainMenu";
 
 // Layers for the main menu scene
@@ -27,7 +29,7 @@ export default class SplashScreen extends Scene {
     public loadScene(): void {
         this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
-
+        this.load.spritesheet("logo", "cof_assets/logo/logo.json");
     }
 
     public startScene(): void {
@@ -42,13 +44,16 @@ export default class SplashScreen extends Scene {
         this.viewport.setCenter(480, 320)
 
         // Create a play button
-        this.playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(400, 500), text: "Click anywhere to start"});
+        this.playBtn = <Button>this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN, {position: new Vec2(size.x, size.y+200), text: "Click anywhere to start"});
         this.playBtn.backgroundColor = Color.TRANSPARENT;
         this.playBtn.borderColor = Color.RED;
         this.playBtn.borderRadius = 0;
         this.playBtn.textColor = Color.RED;
 
-        // TODO: Add logo and maybe background image.
+        // Display the game logo
+        let logo = this.add.sprite("logo", MenuLayers.MAIN)
+        logo.scale.set(.4, .4)
+        logo.position = new Vec2(size.x, size.y-120)
 
         // Incredibly high padding so that button covers whole screen.
         this.playBtn.setPadding(new Vec2(size.x*2, size.y*4));
@@ -56,7 +61,7 @@ export default class SplashScreen extends Scene {
 
         // When the play button is clicked, go to the main menu
         this.playBtn.onClick = () => {
-            this.sceneManager.changeToScene(MainMenu);
+            this.sceneManager.changeToScene(MainMenu, null, {viewportPosition: this.viewport.getCenter(), viewportObjective: this.viewportObjective});
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
         };
 
@@ -71,15 +76,14 @@ export default class SplashScreen extends Scene {
 
     public unloadScene(): void {
         this.resourceManager.keepAudio(MainMenu.MUSIC_KEY);
+        this.resourceManager.keepTilemap("level")
     }
 
+    // Handles the viewport panning around the arena
     public updateScene(deltaT: number) {
 
         let x = this.viewport.getCenter().x
         let y = this.viewport.getCenter().y
-
-        console.log(x)
-        console.log(y)
 
         if(this.viewportObjective == this.upperLeft) {
 
@@ -108,9 +112,7 @@ export default class SplashScreen extends Scene {
                 
                 let dir = (this.upperRight.dirTo(this.bottomLeft)).scale(deltaT)
                 this.viewport.setFocus(new Vec2(x - 1, y + 1))
-                console.log(dir)
             }
-
         }
 
         else if(this.viewportObjective == this.bottomRight) {

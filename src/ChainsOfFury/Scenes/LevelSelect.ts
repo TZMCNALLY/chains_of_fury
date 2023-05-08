@@ -75,8 +75,6 @@ export default class LevelSelect extends Scene {
         let level5 = this.makeLevelBox(size.x, size.y+200, "Level 5");
         let level6 = this.makeLevelBox(size.x+350, size.y+200, "Level 6");
 
-        console.log(LevelSelect.levelCheatOn)
-
         // Scene transitions:
         level1.onClick = () => {
             if(MainMenu.boss1Defeated || LevelSelect.levelCheatOn)

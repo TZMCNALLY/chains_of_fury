@@ -84,8 +84,6 @@ export default class SmallDogBehavior implements AI {
         this.activate(options);
 
         this.receiver.subscribe(MoonDogEvents.MINION_HIT);
-
-        this.reset();
     }
 
     public destroy(): void {}

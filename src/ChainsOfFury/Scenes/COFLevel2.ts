@@ -1,17 +1,11 @@
 import COFLevel, { COFEntities } from "./COFLevel";
 import { COFLayers } from "./COFLevel";
-import COFLevel5 from "./COFLevel5"
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Input from "../../Wolfie2D/Input/Input";
-import MoonDogController from "../Enemy/MoonDog/MoonDogController";
-import EnemyController from "../Enemy/EnemyController";
-import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import DarkStalkerController from "../Enemy/DarkStalker/DarkStalkerController";
 import COFLevel3 from "./COFLevel3";
 import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import { DarkStalkerEvents } from "../Enemy/DarkStalker/DarkStalkerEvents";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import FireballBehavior from "../Fireball/FireballBehavior";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import MissleBehavior from "../Enemy/DarkStalker/AttackBehaviors/MissleBehavior";

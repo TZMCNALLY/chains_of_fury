@@ -56,7 +56,7 @@ export default class LevelSelect extends Scene {
             MenuLayers.MAIN,
             {
                 position: new Vec2(size.x, size.y-250),
-                text: "Choose one of the following levels to start from."
+                text: "Choose one of the following levels to play."
             }
         );
         subTitle.fontSize = 25;

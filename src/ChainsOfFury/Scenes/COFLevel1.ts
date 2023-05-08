@@ -1,10 +1,7 @@
 import COFLevel, { COFEntities, COFLayers } from "./COFLevel";
 import COFLevel2 from "./COFLevel2"
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Input from "../../Wolfie2D/Input/Input";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
-import EnemyController from "../Enemy/EnemyController";
-import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import { MoonDogEvents } from "../Enemy/MoonDog/MoonDogEvents";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import FireballBehavior from "../Fireball/FireballBehavior";

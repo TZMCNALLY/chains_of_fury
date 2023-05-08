@@ -14,7 +14,6 @@ import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
 import { COFEvents } from "../COFEvents";
 import { SpellEffects } from "../Spells/SpellEffects";
 import SlashBehavior from "../Spells/Slash/SlashBehavior";
-import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import { SlashEvents } from "../Spells/Slash/SlashEvents";
 import MainMenu from "./MainMenu";
 

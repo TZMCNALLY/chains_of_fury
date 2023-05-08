@@ -1,5 +1,4 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
@@ -10,6 +9,7 @@ import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Help from "./Help";
 
 // Constant for each enemy menu
 export const EnemyMenus = {
@@ -67,7 +67,7 @@ export default class EnemyScreen extends Scene {
                 break;
             }
             case EnemyMenus.LORD_REYALF: {
-                this.createSprite(size.x, size.y-200, 1, 1, "mind_flayer", "IDLE").scale.set(1.5, 1.5);
+                this.createSprite(size.x, size.y-200, 1, 1, "mind_flayer", "IDLE").scale.set(0.7, 0.7);
                 this.createText(size.x, size.y-50, "Lord Reyalf", 25)
                 this.createText(size.x, size.y+50, "A duke under the current demon king.", 20);
                 this.createText(size.x, size.y+80, "Centuries of loyalty have paid off,", 20);
@@ -78,6 +78,56 @@ export default class EnemyScreen extends Scene {
                 this.createText(size.x, size.y+230, "his loyalty appears to not amount to much.", 20);
                 break;
             }
+            case EnemyMenus.REAPER: {
+                this.createSprite(size.x, size.y-200, 1, 1, "reaper", "IDLE").scale.set(1.5, 1.5);
+                this.createText(size.x, size.y-50, "Reaper", 25)
+                this.createText(size.x, size.y+50, "Given the crown's imposing power,", 20);
+                this.createText(size.x, size.y+80, "I suppose it wouldn't be strange", 20);
+                this.createText(size.x, size.y+110, "even if Death itself showed up.", 20);
+                break;
+            }
+            case EnemyMenus.SATANS_BLADE: {
+                this.createSprite(size.x, size.y-200, 1, 1, "flying_sword", "IDLE").scale.set(1.5, 1.5);
+                this.createText(size.x, size.y-50, "Satan's Blade", 25)
+                this.createText(size.x, size.y+50, "A demon of great strength, once", 20);
+                this.createText(size.x, size.y+80, "seen as a threat to the current demon king.", 20);
+                this.createText(size.x, size.y+110, "He was sealed away into a sword,", 20);
+                this.createText(size.x, size.y+140, "and like Azazel, has been waiting", 20);
+                this.createText(size.x, size.y+170, "centuries for this day to come.", 20);
+                break;
+            }
+            case EnemyMenus.DEMON_KING: {
+                this.createSprite(size.x, size.y-200, 1, 1, "wraith", "IDLE_LEFT").scale.set(1.5, 1.5);
+                this.createText(size.x, size.y-50, "Demon King", 25)
+                this.createText(size.x, size.y+50, "A wraith demon, utilizing", 20);
+                this.createText(size.x, size.y+80, "the power of others to take the throne.", 20);
+                this.createText(size.x, size.y+110, "Once he had obtained the crown,", 20);
+                this.createText(size.x, size.y+140, "he mercilessly took down anyone", 20);
+                this.createText(size.x, size.y+170, "who dared stand in his way.", 20);
+                this.createText(size.x, size.y+200, "At long last, his bell tolls.", 20);
+                break;
+            }
+        }
+
+        // Back button:
+        let back = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            MenuLayers.MAIN,
+            {
+                position: new Vec2(size.x-500, size.y+340),
+                text: "Back"
+            }
+        );
+        back.backgroundColor = Color.BLACK;
+        back.borderColor = Color.BLACK;
+        back.borderRadius = 0;
+        back.font = "PixelSimple";
+        back.fontSize = 30;
+        back.textColor = Color.RED;
+        back.size.set(100, 60);
+
+        back.onClick = () => {
+            this.sceneManager.changeToScene(Help);
         }
     }
 

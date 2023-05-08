@@ -164,7 +164,7 @@
         },
         {
             "name": "IDLE",
-            "repeat": true,
+            "repeat": false,
             "frames": [
                 {
                     "index": 19,

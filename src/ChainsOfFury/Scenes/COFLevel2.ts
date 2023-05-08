@@ -359,7 +359,8 @@ export default class COFLevel2 extends COFLevel {
 
         for (let i = 0; i < 12; i++) {
             if (this.mineBalls[i].boundary.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
-                this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.mineBalls[i].id, entity: COFEntities.MINION});
+                (this.mineBalls[i]._ai as MineBehavior).exploding = true;
+                this.explodeMine(this.mineBalls[i].id);
             }
         }
     }
@@ -389,18 +390,21 @@ export default class COFLevel2 extends COFLevel {
     private explodeMine(node: number): void {
         for (let i = 0; i < 12; i++) {
             if (this.mineBalls[i].id == node) {
+                this.mineBalls[i].animation.playIfNotAlready("EXPLODE");
+
                 this.mineBalls[i].scale = new Vec2(2,2);
 
                 if (this.mineBalls[i].boundary.overlaps(this.player.collisionShape)) {
                     this.emitter.fireEvent(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
                 }
 
-                let mineDissappearTimer = new Timer(51, () => {
+                let mineDissappearTimer = new Timer(54, () => {
                     this.mineBalls[i].position.copy(Vec2.ZERO);
                     this.mineBalls[i].visible = false;
                     this.mineBalls[i].animation.stop();
 
                     (this.enemyBoss._ai as DarkStalkerController).activeMines -= 1;
+                    (this.mineBalls[i]._ai as MineBehavior).exploding = false;
                 });
                 mineDissappearTimer.start();
 

@@ -41,9 +41,6 @@ export default abstract class MoonDogState extends State {
 		// if(direction.x !== 0){
 		// 	this.owner.invertX = MathUtils.sign(direction.x) < 0;
 		// }
-        if (this.parent.health === 0) {
-			this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
-		}
     }
 
     public abstract onExit(): Record<string, any>;

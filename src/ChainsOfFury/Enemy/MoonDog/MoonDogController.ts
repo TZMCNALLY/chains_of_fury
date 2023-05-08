@@ -14,6 +14,7 @@ import HorizontalCharge from "./MoonDogStates/HorizontalCharge";
 import Magic from "./MoonDogStates/Magic";
 import Summon from "./MoonDogStates/Summon";
 import Pound from "./MoonDogStates/Pound";
+import Death from "./MoonDogStates/Death";
 import { MoonDogEvents } from "./MoonDogEvents";
 
 export const MoonDogStates = {
@@ -28,30 +29,19 @@ export const MoonDogStates = {
     HORIZONTAL_CHARGE: "HORIZONTAL_CHARGE",
     MAGIC: "MAGIC",
     SUMMON: "SUMMON",
-    POUND: "POUND"
+    POUND: "POUND",
+    DEATH: "DEATH"
 } as const
 
 export const MoonDogAnimation = {
     IDLE: "IDLE",
-    ATTACK_RIGHT: "ATTACK_RIGHT",
-    ATTACK_LEFT: "ATTACK_LEFT",
-    TAKINGDAMAGE_RIGHT: "DAMAGE_RIGHT",
-    TAKINGDAMAGE_LEFT: "DAMAGE_LEFT",
-    RUN_RIGHT: "RUN_RIGHT",
-    RUN_LEFT: "RUN_LEFT",
-    DYING_RIGHT: "DYING_RIGHT",
-    DYING_LEFT: "DYING_LEFT",
-    DEAD_RIGHT: "DEAD_RIGHT",
-    DEAD_LEFT: "DEAD_LEFT",
-    CHARGE_RIGHT: "WALKING_RIGHT",
-    CHARGE_LEFT: "WALKING_LEFT",
-
     CHARGE: "CHARGE",
     PREPARING_MAGIC: "PREPARING_MAGIC",
     MAGIC: "MAGIC",
     SUMMON: "DAMAGE_LEFT", // TODO: change these later.
     POUND: "ATTACKING_LEFT",
-    WALKING: "WALKING_LEFT"
+    WALKING: "WALKING_LEFT",
+    DEATH: "DYING/DEAD"
 } as const
 
 export default class MoonDogController extends EnemyController {
@@ -63,15 +53,6 @@ export default class MoonDogController extends EnemyController {
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
-
-        // this.addState(MoonDogStates.RUN, new Run(this, this.owner));
-        // this.addState(MoonDogStates.ATTACK, new Attack(this, this.owner));
-        // this.addState(MoonDogStates.CHARGE, new Charge(this, this.owner));
-        // this.addState(MoonDogStates.DAMAGED, new Damaged(this, this.owner));
-        // this.addState(MoonDogStates.DEAD, new Dead(this, this.owner));
-        // this.addState(MoonDogStates.STUNNED, new Stunned(this, this.owner));
-
-        // Plans to reword the entire boss, abandoning the above states.
 
         // Current plan:
         // Two phase:
@@ -90,6 +71,7 @@ export default class MoonDogController extends EnemyController {
         this.addState(MoonDogStates.SUMMON, new Summon(this, this.owner));
         this.addState(MoonDogStates.POUND, new Pound(this, this.owner));
         this.addState(MoonDogStates.IDLE, new Idle(this, this.owner));
+        this.addState(MoonDogStates.DEATH, new Death(this, this.owner));
 
         this.initialize(MoonDogStates.SUMMON);
 
@@ -128,6 +110,10 @@ export default class MoonDogController extends EnemyController {
 
         this.health -= this.damageFromPhysical;
         this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+
+        if (this.health == 0) {
+            this.changeState(MoonDogStates.DEATH);
+        }
     }
 
     public handleEnemyFireballHit(id: number, entity: string): void {
@@ -138,6 +124,10 @@ export default class MoonDogController extends EnemyController {
 
         if (this.currentState == this.stateMap.get(MoonDogStates.MAGIC)) {
             return; // Invul when casting magic.
+        }
+
+        if (this.health == 0) {
+            this.changeState(MoonDogStates.DEATH);
         }
 
         this.health -= this.damageFromProjectile;

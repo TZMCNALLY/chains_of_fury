@@ -146,6 +146,7 @@ export default class LevelSelect extends Scene {
             MainMenu.boss4Defeated = true;
             MainMenu.boss5Defeated = true;
             MainMenu.boss6Defeated = true;
+            this.sceneManager.changeToScene(LevelSelect)
         }
     }
 

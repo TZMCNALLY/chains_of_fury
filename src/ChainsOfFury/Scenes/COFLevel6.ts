@@ -1,9 +1,6 @@
 import COFLevel, { COFLayers } from "./COFLevel";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Input from "../../Wolfie2D/Input/Input";
 import DemonKingController from "../Enemy/DemonKing/DemonKingController";
-import EnemyController from "../Enemy/EnemyController";
-import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import MainMenu from "./MainMenu";
 import GameEvent from '../../Wolfie2D/Events/GameEvent';
 import { COFEvents } from '../COFEvents';

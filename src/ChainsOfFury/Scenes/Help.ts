@@ -84,6 +84,7 @@ export default class Help extends Scene {
         this.createText(size.x+420, size.y+105, "Cheat codes");
         this.createText(size.x+420, size.y+135, "O - Infinite Damage");
         this.createText(size.x+420, size.y+165, "P - Infinite Health");
+        this.createText(size.x+420, size.y+195, "I - Unlock All Levels")
 
         // Cheat Codes Section
         // ================================================================================

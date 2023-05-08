@@ -13,6 +13,8 @@ import COFLevel3 from "./COFLevel3";
 import COFLevel4 from "./COFLevel4";
 import COFLevel5 from "./COFLevel5";
 import COFLevel6 from "./COFLevel6";
+import { COFCheats } from "../COFCheats";
+import Input from "../../Wolfie2D/Input/Input";
 
 
 export default class LevelSelect extends Scene {
@@ -25,10 +27,12 @@ export default class LevelSelect extends Scene {
 
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
     public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
+    protected static levelCheatOn = false;
 
     public loadScene(): void {
         // Load the menu song
         // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+        this.load.spritesheet("lock", "cof_assets/images/lock.json")
     }
 
     public startScene(): void {
@@ -71,29 +75,37 @@ export default class LevelSelect extends Scene {
         let level5 = this.makeLevelBox(size.x, size.y+200, "Level 5");
         let level6 = this.makeLevelBox(size.x+350, size.y+200, "Level 6");
 
+        console.log(LevelSelect.levelCheatOn)
+
         // Scene transitions:
         level1.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel1);
+            if(MainMenu.boss1Defeated || LevelSelect.levelCheatOn)
+                this.sceneManager.changeToScene(COFLevel1);
         };
 
         level2.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel2);
+            if(MainMenu.boss2Defeated || LevelSelect.levelCheatOn)
+                this.sceneManager.changeToScene(COFLevel2);
         };
 
         level3.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel3);
+            if(MainMenu.boss3Defeated || LevelSelect.levelCheatOn)
+                this.sceneManager.changeToScene(COFLevel3);
         };
 
         level4.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel4);
+            if(MainMenu.boss4Defeated || LevelSelect.levelCheatOn)
+                this.sceneManager.changeToScene(COFLevel4);
         };
 
         level5.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel5);
+            if(MainMenu.boss5Defeated || LevelSelect.levelCheatOn)
+                this.sceneManager.changeToScene(COFLevel5);
         };
         
         level6.onClick = () => {
-            this.sceneManager.changeToScene(COFLevel6);
+            if(MainMenu.boss6Defeated || LevelSelect.levelCheatOn)
+                this.sceneManager.changeToScene(COFLevel6);
         };
 
         // Back button:
@@ -116,9 +128,18 @@ export default class LevelSelect extends Scene {
         back.onClick = () => {
             this.sceneManager.changeToScene(MainMenu);
         }
+
+        this.handleLockedLevels();
     }
 
     public unloadScene(): void {
+    }
+
+    public update(deltaT: number): void {
+        super.update(deltaT);
+        if (Input.isJustPressed(COFCheats.UNLOCK_ALL)) {
+            LevelSelect.levelCheatOn = true
+        }
     }
 
     // Creates a level box and appends it onto main layer.
@@ -141,5 +162,55 @@ export default class LevelSelect extends Scene {
         levelBox.size.set(200, 200);
 
         return levelBox;
+    }
+
+    private handleLockedLevels() {
+
+        if(!LevelSelect.levelCheatOn) {
+
+            let size = this.viewport.getHalfSize();
+
+            if(!MainMenu.boss1Defeated) {
+
+                let lock = this.add.sprite("lock", MenuLayers.MAIN)
+                lock.scale.set(4, 4)
+                lock.position = new Vec2(size.x-350, size.y-100)
+            }
+
+            if(!MainMenu.boss2Defeated) {
+                
+                let lock = this.add.sprite("lock", MenuLayers.MAIN)
+                lock.scale.set(4, 4)
+                lock.position = new Vec2(size.x, size.y-100)
+            }
+
+            if(!MainMenu.boss3Defeated) {
+                
+                let lock = this.add.sprite("lock", MenuLayers.MAIN)
+                lock.scale.set(4, 4)
+                lock.position = new Vec2(size.x+350, size.y-100)
+            }
+
+            if(!MainMenu.boss4Defeated) {
+                
+                let lock = this.add.sprite("lock", MenuLayers.MAIN)
+                lock.scale.set(4, 4)
+                lock.position = new Vec2(size.x-350, size.y+200)
+            }
+
+            if(!MainMenu.boss5Defeated) {
+                
+                let lock = this.add.sprite("lock", MenuLayers.MAIN)
+                lock.scale.set(4, 4)
+                lock.position = new Vec2(size.x, size.y+200)
+            }
+
+            if(!MainMenu.boss6Defeated) {
+                
+                let lock = this.add.sprite("lock", MenuLayers.MAIN)
+                lock.scale.set(4, 4)
+                lock.position = new Vec2(size.x+350, size.y+200)
+            }
+        }
     }
 }

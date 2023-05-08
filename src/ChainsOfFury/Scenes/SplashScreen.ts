@@ -21,7 +21,7 @@ export default class SplashScreen extends Scene {
     public loadScene(): void {
         this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
-        this.load.spritesheet("logo", "cof_assets/logo/logo.json");
+        this.load.spritesheet("logo", "cof_assets/images/logo.json");
     }
 
     public startScene(): void {

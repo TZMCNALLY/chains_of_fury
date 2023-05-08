@@ -115,6 +115,10 @@ export default class COFLevel2 extends COFLevel {
                 this.despawnProjectile(event.data.get("node"));
                 break;
             }
+            case DarkStalkerEvents.SHOOT_MISSLE: {
+                this.shootMissle(event.data.get("origin"), event.data.get("dir"));
+                break;
+            }
         }
     }
 
@@ -136,7 +140,7 @@ export default class COFLevel2 extends COFLevel {
         for (let i = 0; i < 12; i++) {
             // TODO make a sprite for this!!!
             this.mineBalls[i] = this.add.animatedSprite("mine", COFLayers.PRIMARY);
-            this.missles[i] = this.add.animatedSprite("missle", COFLayers.PRIMARY);
+            this.missles[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
 
             this.mineBalls[i].visible = false; // Turns them off.
             this.missles[i].visible = false;
@@ -153,6 +157,8 @@ export default class COFLevel2 extends COFLevel {
             // TODO make a sprite for them!!
             this.eyeBalls[i] = this.add.animatedSprite("eyeball", COFLayers.PRIMARY);
             this.portals[i] = this.add.animatedSprite("portal", COFLayers.PRIMARY);
+
+            this.portals[i].scale = new Vec2(1.5,1.5);
 
             this.eyeBalls[i].addAI(EyeballBehavior, {player: this.player, factory: this.add});
 
@@ -182,6 +188,19 @@ export default class COFLevel2 extends COFLevel {
                 ]
             })
 
+            this.portals[i].tweens.add("rotate", {
+                startDelay: 0,
+                duration: 200,
+                effects: [
+                    {
+                        property: TweenableProperties.rotation,
+                        start: 0,
+                        end: Math.PI*2,
+                        ease: EaseFunctionType.IN_OUT_QUINT,
+                    }
+                ]
+            })
+
             this.eyeBalls[i].visible = false;
             this.portals[i].visible = false;
 
@@ -197,13 +216,13 @@ export default class COFLevel2 extends COFLevel {
         this.receiver.subscribe(DarkStalkerEvents.TELEPORT);
         this.receiver.subscribe(DarkStalkerEvents.DESPAWN_MISSLE);
         this.receiver.subscribe(DarkStalkerEvents.EYEBALL_DEAD);
+        this.receiver.subscribe(DarkStalkerEvents.SHOOT_MISSLE);
     }
 
     protected shootMissle(origin: Vec2, dir: Vec2): void {
         for (let i = 0; i < 12; i++) {
             if (!this.missles[i].visible) {
                 // Move object to enemy boss position.
-                // TODO: Adjust when animation is added.
                 this.missles[i].position.copy(origin);
 
                 // Add physics
@@ -227,9 +246,6 @@ export default class COFLevel2 extends COFLevel {
     private misslePortal(): void {
         let timeOffset = 0;
 
-        // TODO: Make this more possible (add more delay and slow down dir vector)
-
-        // TODO: Pick 4 valid position for the portal around the boss
         for (let i = 0; i < 4; i++) {
             let rnd = RandUtils.randInt(50, 80);
             let rndVec = new Vec2(rnd, rnd);
@@ -242,27 +258,29 @@ export default class COFLevel2 extends COFLevel {
 
             this.portals[i].visible = true;
             this.portals[i].animation.play("IDLE");
-
-            // TODO: Adjust the direction vector of missle with random values.
+            this.portals[i].tweens.play("rotate", true);
 
             let speedVec = new Vec2(150, 150);
 
-            let portalFlashTimer = new Timer(timeOffset, () => {
-                this.portals[i].animation.play("FLASH");
-            })
-            portalFlashTimer.start();
-
-            let missleTimer1 = new Timer(timeOffset+RandUtils.randInt(200, 500), () => {
-                this.shootMissle(this.portals[i].position, speedVec.rotateCCW(RandUtils.randFloat(0, Math.PI)));
+            let missleTimer1 = new Timer(timeOffset+RandUtils.randInt(100, 150), () => {
+                this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
+                    origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
+                this.portals[i].animation.queue("IDLE");
+                
             });
-            let missleTimer2 = new Timer(timeOffset+RandUtils.randInt(400, 800), () => {
-                this.shootMissle(this.portals[i].position, speedVec.rotateCCW(RandUtils.randFloat(0, Math.PI)));
+            let missleTimer2 = new Timer(timeOffset+RandUtils.randInt(500, 550), () => {
+                this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
+                    origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
+                this.portals[i].animation.queue("IDLE");
             });
-            let missleTimer3 = new Timer(timeOffset+RandUtils.randInt(600, 1000), () => {
-                this.shootMissle(this.portals[i].position, speedVec.rotateCCW(RandUtils.randFloat(0, Math.PI)));
+            let missleTimer3 = new Timer(timeOffset+RandUtils.randInt(900, 1000), () => {
+                this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
+                    origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
+                this.portals[i].animation.queue("IDLE");
 
-                // Despawn this portal after 100ms.
-                let despawnTimer = new Timer(100, () => {
+
+                // Despawn this portal after 200ms.
+                let despawnTimer = new Timer(400, () => {
                     // Play despawn animation and play an event which destroys the portal??
                     this.despawnProtalSingular(i); // Make this for singular portal
                 })
@@ -420,6 +438,7 @@ export default class COFLevel2 extends COFLevel {
     private despawnProtalSingular(portalIndex: number): void {
         this.portals[portalIndex].position.copy(Vec2.ZERO);
         this.portals[portalIndex].visible = false;
+        this.portals[portalIndex].tweens.stopAll();
     }
 
     protected handleBossTeleportation(location: Vec2): void { 

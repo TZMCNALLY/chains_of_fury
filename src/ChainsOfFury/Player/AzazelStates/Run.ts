@@ -10,7 +10,6 @@ export default class Run extends PlayerState {
     protected dashDuration: number;
 
 	onEnter(options: Record<string, any>): void {
-		this.parent.speed = 150;
         if(this.parent.lastFace == -1)
             this.owner.animation.playIfNotAlready(AzazelAnimations.RUN_LEFT);
         else

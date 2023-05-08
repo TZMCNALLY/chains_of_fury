@@ -349,6 +349,10 @@ export default class AzazelController extends StateMachineAI {
             this.health -= this.maxHealth;
             this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
         }
+        if (effect === SpellEffects.SLOW) {
+            this.speed = this.speed / 2;
+            setTimeout(() => {this.speed = this.speed * 2}, 5000);
+        }
     }
 
     public handlePlayerHurl(event: GameEvent): void {

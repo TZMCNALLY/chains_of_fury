@@ -14,6 +14,8 @@ export default class FireballBehavior implements AI {
         this.owner = owner;
         this.velocity = new Vec2(0,0);
         this.receiver = new Receiver();
+        this.owner.animation.play("IDLE");
+        
         this.activate(options);
     }
 

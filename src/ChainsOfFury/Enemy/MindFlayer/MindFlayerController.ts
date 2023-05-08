@@ -12,12 +12,14 @@ import CastFireballs from "./MindFlayerStates/CastFireballs";
 import SpawnShadowDemons from "./MindFlayerStates/SpawnShadowDemons";
 import Healing from "./MindFlayerStates/Healing";
 import { MindFlayerEvents } from "./MindFlayerEvents";
+import CastIceSpell from "./MindFlayerStates/CastIceSpell";
 
 export const MindFlayerStates = {
     IDLE: "IDLE",
     WALK: "WALK",
 	DAMAGED: "DAMAGED",
     CAST_FIREBALLS: "CAST_FIREBALLS",
+    CAST_ICE_SPELL: "CAST_ICE_SPELL",
     SPAWN_SHADOW_DEMONS: "SPAWN_SHADOW_DEMONS",
     TELEPORT: "TELEPORT",
     HEALING: "HEALING",
@@ -27,6 +29,7 @@ export const MindFlayerStates = {
 export const MindFlayerAnimation = {
     IDLE: "IDLE",
     CAST_FIREBALLS: "CASTING_LEFT",
+    CAST_ICE_SPELL: "IDLE",
     TAKING_DAMAGE: "TAKING_DAMAGE",
     WALK_RIGHT: "WALKING_RIGHT",
     WALK_LEFT: "WALKING_LEFT",
@@ -73,6 +76,7 @@ export default class MindFlayerController extends EnemyController {
         this.addState(MindFlayerStates.IDLE, new Idle(this, this.owner));
         this.addState(MindFlayerStates.WALK, new Walk(this, this.owner));
         this.addState(MindFlayerStates.CAST_FIREBALLS, new CastFireballs(this, this.owner));
+        this.addState(MindFlayerStates.CAST_ICE_SPELL, new CastIceSpell(this, this.owner));
         this.addState(MindFlayerStates.SPAWN_SHADOW_DEMONS, new SpawnShadowDemons(this, this.owner));
         this.addState(MindFlayerStates.TELEPORT, new Teleport(this, this.owner));
         this.addState(MindFlayerStates.HEALING, new Healing(this, this.owner));
@@ -81,7 +85,7 @@ export default class MindFlayerController extends EnemyController {
 
         this.initialize(MindFlayerStates.IDLE);
         this.lastActionTime = new Date();
-        this.actionDelay = 5000;
+        this.actionDelay = 3500;
 
         this.maxHealth = 2000;
         this.health = this.maxHealth;

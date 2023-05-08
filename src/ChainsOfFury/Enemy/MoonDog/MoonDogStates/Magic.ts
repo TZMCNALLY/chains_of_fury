@@ -10,7 +10,6 @@ export default class Magic extends MoonDogState {
     protected _stateTime: number; // How long does this take.
 
 	public onEnter(options: Record<string, any>): void {
-		// TODO: make this state invul.
         this.owner.animation.play(MoonDogAnimation.PREPARING_MAGIC, false, MoonDogEvents.MAGIC);
         this.owner.animation.queue(MoonDogAnimation.MAGIC, true);
 

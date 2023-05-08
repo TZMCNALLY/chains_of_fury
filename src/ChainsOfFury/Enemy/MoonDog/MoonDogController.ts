@@ -39,9 +39,9 @@ export const MoonDogAnimation = {
     PREPARING_MAGIC: "PREPARING_MAGIC",
     MAGIC: "MAGIC",
     SUMMON: "DAMAGE_LEFT", // TODO: change these later.
-    POUND: "ATTACKING_LEFT",
+    POUND: "POUND",
     WALKING: "WALKING_LEFT",
-    DEATH: "DYING/DEAD"
+    DEATH: "DEATH"
 } as const
 
 export default class MoonDogController extends EnemyController {

@@ -70,10 +70,12 @@ export default class COFLevel4 extends COFLevel {
      */
     protected subscribeToEvents(): void {
         super.subscribeToEvents();
+        this.receiver.subscribe(ReaperEvents.REAPER_SWIPE);
         this.receiver.subscribe(ReaperEvents.SPAWN_DEATH_CIRCLE);
         this.receiver.subscribe(DeathCircleEvents.CIRCLE_ACTIVE);
         this.receiver.subscribe(DeathCircleEvents.DESPAWN_CIRCLE);
         this.receiver.subscribe(ReaperEvents.THROW_SLASH);
+        this.receiver.subscribe(SlashEvents.SLASH_HIT_PLAYER);
         this.receiver.subscribe(SlashEvents.DESPAWN_SLASH);
     }
 
@@ -84,8 +86,12 @@ export default class COFLevel4 extends COFLevel {
      protected handleEvent(event: GameEvent): void {
         super.handleEvent(event);
         switch (event.type) {
+            case ReaperEvents.REAPER_SWIPE: {
+                this.handleReaperSwipe(event.data.get("direction"));
+                break;
+            }
             case ReaperEvents.SPAWN_DEATH_CIRCLE: {
-                this.handleSpawnDeathCircle(event.data.get("location"));
+                this.handleSpawnDeathCircle(event.data.get("location"), event.data.get("radius"));
                 break;
             }
             case DeathCircleEvents.CIRCLE_ACTIVE: {
@@ -100,6 +106,10 @@ export default class COFLevel4 extends COFLevel {
                 this.handleThrowSlash(event.data.get("spawn"), event.data.get("direction"), event.data.get("speed"));
                 break;
             }
+            case SlashEvents.SLASH_HIT_PLAYER: {
+                this.handleSlashHitPlayer();
+                break;
+            }
             case SlashEvents.DESPAWN_SLASH: {
                 this.handleDespawnSlash(event.data.get("id"));
                 break;
@@ -107,7 +117,19 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleSpawnDeathCircle(location: Vec2) {
+    protected handleReaperSwipe(direction: number) {
+        let reaperSwipeHitbox = this.enemyBoss.boundary.getHalfSize().clone();
+        reaperSwipeHitbox.x = reaperSwipeHitbox.x-16;
+
+        let swingPosition = this.enemyBoss.position.clone();
+        swingPosition.x += direction*40;
+
+        if (this.player.collisionShape.overlaps(new AABB(swingPosition,reaperSwipeHitbox))) {
+            this.emitter.fireEvent(COFEvents.PHYSICAL_ATTACK_HIT_PLAYER);
+        }
+    }
+
+    protected handleSpawnDeathCircle(location: Vec2, radius?: number) {
         for (let i = 0; i < this.deathCircles.length; i++) {
             if (!this.deathCircles[i].visible) {
                 this.deathCircles[i].visible = true;
@@ -115,7 +137,16 @@ export default class COFLevel4 extends COFLevel {
                 this.deathCircles[i].position.copy(location);
                 this.deathCircles[i].addAI(DeathCircleBehavior);
 
-                let deathCircleHitbox = new Circle(location, 155)
+                let deathCircleHitbox;
+                if (radius) {
+                    deathCircleHitbox = new Circle(location, radius);
+                    this.deathCircles[i].scale.set(12, 12);
+                }
+                else {
+                    deathCircleHitbox = new Circle(location, 155);
+                    this.deathCircles[i].scale.set(6, 6);
+                }
+
                 this.deathCircles[i].addPhysics(deathCircleHitbox, Vec2.ZERO, false, true);
                 break;
             }
@@ -128,7 +159,7 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleDespawnDeathCircle(id: number) {
+    protected handleDespawnDeathCircle(id: number) {
         for (let i = 0; i < this.deathCircles.length; i++) {
             if (this.deathCircles[i].id === id) {
                 this.deathCircles[i].position.copy(Vec2.ZERO);
@@ -138,7 +169,7 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleThrowSlash(spawn: Vec2, direction: number, speed: number) {
+    protected handleThrowSlash(spawn: Vec2, direction: number, speed: number) {
         for (let i = 0; i < this.slashes.length; i++) {
             if (!this.slashes[i].visible) {
                 this.slashes[i].visible = true;
@@ -161,7 +192,11 @@ export default class COFLevel4 extends COFLevel {
         }
     }
 
-    public handleDespawnSlash(id: number) {
+    protected handleSlashHitPlayer() {
+        this.emitter.fireEvent(COFEvents.ENEMY_SPELL_HIT_PLAYER, {effect: SpellEffects.DAMAGE, damage: 10});
+    }
+
+    protected handleDespawnSlash(id: number) {
         for (let i = 0; i < this.slashes.length; i++) {
             if (this.slashes[i].id === id) {
                 this.slashes[i].position.copy(Vec2.ZERO);
@@ -170,57 +205,4 @@ export default class COFLevel4 extends COFLevel {
             }
         }
     }
-
-    /**
-	 * This method checks for a collision between an AABB and a circle.
-	 * 
-	 * @param aabb the AABB
-	 * @param circle the Circle
-	 * @return true if the AABB is colliding with the circle; false otherwise. 
-	 * 
-	 * @see AABB for more information about AABBs
-	 * @see Circle for more information about Circles
-	 * @see MathUtils for more information about MathUtil functions
-	 */
-	public checkAABBtoCircleCollision(aabb: AABB, circle: Circle): boolean {
-		// =================================================
-		let radius = circle.radius;
-		let circleX = circle.center.x;
-		let circleY = circle.center.y;
-
-		let aabbWidth = aabb.topRight.x - aabb.topLeft.x;
-		let aabbHeight = aabb.bottomLeft.y - aabb.topLeft.y;
-		let aabbX = aabb.center.x;
-		let aabbY = aabb.center.y;
-
-		// Find the point on AABB to use to calculate distance to the center of the circle.
-		let x = circleX;
-		let y = circleY;
-
-		// top left edge
-		if (circleX < aabbX - aabbWidth/2)
-			x = aabbX - (aabbWidth/2);
-		// top right edge
-		else if (circleX > aabbX + aabbWidth/2)
-			x = aabbX + (aabbWidth/2);
-
-		// bottom left edge
-		if (circleY < aabbY - aabbHeight/2)
-			y = aabbY - (aabbHeight/2);
-		// bottom right edge
-		else if (circleY > aabbY + aabbHeight/2)
-			y = aabbY + (aabbHeight/2);
-
-		let distX = circleX - x;
-		let distY = circleY - y;
-		let distance = Math.sqrt((distX * distX) + (distY * distY));
-
-		if (distance <= radius) {
-			return true;
-		}
-		
-		return false;
-
-		// =================================================
-	}
 }

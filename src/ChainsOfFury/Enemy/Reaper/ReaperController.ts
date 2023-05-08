@@ -39,8 +39,9 @@ export const ReaperAnimation = {
 
 export default class ReaperController extends EnemyController {
 
-    protected _lastActionTime : Date ;
+    protected _lastActionTime : Date;
     protected _berserkState: boolean;
+    protected _hitCounter: number;
 
     public get lastActionTime() : Date {
         return this._lastActionTime;
@@ -54,6 +55,13 @@ export default class ReaperController extends EnemyController {
     }
     public set berserkState(isActive: boolean) {
         this._berserkState = isActive;
+    }
+
+    public get hitCounter() : number {
+        return this._hitCounter;
+    }
+    public set hitCounter(hitCount: number) {
+        this._hitCounter = hitCount;
     }
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
@@ -71,6 +79,7 @@ export default class ReaperController extends EnemyController {
         this.initialize(ReaperStates.IDLE);
         this.lastActionTime = new Date();
         this.berserkState = false;
+        this.hitCounter = 0;
 
         this.maxHealth = 2000;
         this.health = this.maxHealth;

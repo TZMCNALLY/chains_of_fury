@@ -3,5 +3,6 @@
  */
 
 export const SpellEffects = {
+    DAMAGE: "DAMAGE",
     INSTADEATH: "INSTADEATH"
 }

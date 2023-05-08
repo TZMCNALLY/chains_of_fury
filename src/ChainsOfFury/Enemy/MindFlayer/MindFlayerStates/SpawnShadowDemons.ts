@@ -1,9 +1,8 @@
 import { MindFlayerAnimation, MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
 import { MindFlayerEvents } from "../MindFlayerEvents";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
-import EnemyController from "../../EnemyController";
+import { DemonSummoningCircleEvents } from "../../../Spells/DemonSummonCircle/DemonSummoningCircleEvents";
 
 export default class SpawnShadowDemons extends MindFlayerState {
 
@@ -29,9 +28,9 @@ export default class SpawnShadowDemons extends MindFlayerState {
 	}
 
 	public spawnShadowDemons(spawns : number) {
-		let spawnPoints = [new Vec2(640, 220), new Vec2(640, 740), new Vec2(260, 480), new Vec2(1000, 480), new Vec2(640, 480)];
+		let spawnPoints = [new Vec2(640, 480), new Vec2(640, 220), new Vec2(640, 740), new Vec2(260, 480), new Vec2(1000, 480)];
 		for (let i = 0; i < spawns; i++) {
-			this.emitter.fireEvent(MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON, {location: spawnPoints[i]})
+			this.emitter.fireEvent(DemonSummoningCircleEvents.SPAWN_CIRCLE, {location: spawnPoints[i]});
 		}
 	}
 }

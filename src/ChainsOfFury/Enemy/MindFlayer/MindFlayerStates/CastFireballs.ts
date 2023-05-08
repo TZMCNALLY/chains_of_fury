@@ -1,9 +1,6 @@
 import { MindFlayerAnimation, MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
 import { MindFlayerEvents } from "../MindFlayerEvents";
-import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
-import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 
 export default class CastFireballs extends MindFlayerState {
 
@@ -29,6 +26,7 @@ export default class CastFireballs extends MindFlayerState {
 			this.fireballsToFire--;
 		}
 		else if (!this.owner.animation.isPlaying(MindFlayerAnimation.CAST_FIREBALLS) && this.fireballsToFire === 0) {
+			this.parent.lastActionTime = new Date();
 			this.finished(MindFlayerStates.IDLE);
 		}
 	}

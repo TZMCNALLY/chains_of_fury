@@ -32,6 +32,10 @@ import EnemyController from "../Enemy/EnemyController";
 import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import PlayerController from '../../demos/PlatformerPlayerController';
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import { COFCheats } from "../COFCheats";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import { HealMarkEvents } from "../Spells/HealMarks/HealMarkEvents";
+import HealMarkBehavior from "../Spells/HealMarks/HealMarkBehavior";
 
 /**
  * A const object for the layer names
@@ -40,7 +44,9 @@ export const COFLayers = {
     // The primary layer
     PRIMARY: "PRIMARY",
     // The UI layer
-    UI: "UI"
+    UI: "UI",
+    // The Pause layer
+    PAUSE: "PAUSE"
 } as const;
 
 // The layers as a type
@@ -78,6 +84,9 @@ export default class COFLevel extends Scene {
     
     /** Object pool for fire projectiles */
     private fireballs: Array<AnimatedSprite>;
+
+    /** Object pool for heal marks */
+    private healMarks: Array<AnimatedSprite>;
 
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
@@ -167,7 +176,16 @@ export default class COFLevel extends Scene {
         // Load the tilemap
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
         
-        this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/fireball.json")
+        this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/fireball.json");
+
+        this.load.spritesheet("heal_marks", "cof_assets/spritesheets/Spells/healing.json");
+    }
+
+    public update(deltaT: number): void {
+        super.update(deltaT);
+        if (Input.isJustPressed(COFCheats.ESCAPE)) {
+            this.emitter.fireEvent(COFEvents.PAUSE_GAME);
+        }
     }
 
     public startScene(): void {
@@ -232,6 +250,14 @@ export default class COFLevel extends Scene {
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
+            case HealMarkEvents.DISPLAY_HEAL_MARKS: {
+                this.handleDisplayHealMarks(event.data.get("location"), event.data.get("scale"));
+                break;
+            }
+            case HealMarkEvents.REMOVE_HEAL_MARKS: {
+                this.handleRemoveHealMarks(event.data.get("id"));
+                break;
+            }
             case COFEvents.CHANGE_MANA: {
                 this.handlePlayerManaChange(event.data.get("currMana"), event.data.get("maxMana"));
                 break;
@@ -277,28 +303,10 @@ export default class COFLevel extends Scene {
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
-            // // When the level starts, reenable user input
-            // case HW3Events.LEVEL_START: {
-            //     Input.enableInput();
-            //     break;
-            // }
-            // // When the level ends, change the scene to the next level
-            // case HW3Events.LEVEL_END: {
-            //     this.sceneManager.changeToScene(this.nextLevel);
-            //     break;
-            // }
-            // case HW3Events.HEALTH_CHANGE: {
-            //     this.handleHealthChange(event.data.get("curhp"), event.data.get("maxhp"));
-            //     break;
-            // }
-            // case HW3Events.PLAYER_DEAD: {
-            //     this.sceneManager.changeToScene(MainMenu);
-            //     break;
-            // }
-            // case HW3Events.HIT_TILE: {
-            //     this.handleParticleHit(event.data.get("node"));
-            //     break;
-            // }
+            case COFEvents.PAUSE_GAME: {
+                this.handlePauseGame();
+                break;
+            }
         }
     }
 
@@ -335,6 +343,16 @@ export default class COFLevel extends Scene {
             this.fireballs[i].setGroup(COFPhysicsGroups.FIREBALL);
 			this.fireballs[i].scale.set(1.5, 1.5);
 	    }
+
+        this.healMarks = new Array(2);
+        for (let i = 0; i < this.healMarks.length; i++) {
+            this.healMarks[i] = this.add.animatedSprite("heal_marks", COFLayers.PRIMARY);
+
+            this.healMarks[i].visible = false;
+
+            this.healMarks[i].position = Vec2.ZERO;
+            this.healMarks[i].addAI(HealMarkBehavior);
+        }
     }
    
     /**
@@ -381,7 +399,7 @@ export default class COFLevel extends Scene {
         }
     }
 
-    // should be overriden inside of respective levels
+    // should be overridden inside of respective levels
     protected handleMinionDead(id: number): void{
     }
 
@@ -471,7 +489,145 @@ export default class COFLevel extends Scene {
 		this.enemyHealthBar.position.set(this.enemyHealthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.enemyHealthBarBg.position.y);
 	}
 
+    // currently generating a pause menu every time esc is pressed
+    // for some reason the unpause button does not work when clicked on
+    // the button appears to be elsewhere on the screen, as when i randomly clicked around
+    // i eventually found the onclick area of the button
+    protected handlePauseGame() {
+        // stops all the active AI
+        this.aiManager.actors.forEach(
+            actor => actor.setAIActive(false, {})
+        )
 
+        this.generatePauseMenu();
+    }
+
+    protected generatePauseMenu() {        
+        let center = new Vec2();
+        center.copy(this.viewport.getOrigin());
+        center.x += this.viewport.getHalfSize().x;
+        center.y += this.viewport.getHalfSize().y;
+
+        // Pause menu background
+        let pauseMenu = <Label>this.add.uiElement(
+            UIElementType.LABEL, 
+            COFLayers.PAUSE, 
+            {
+                position: center,
+                text: ""
+            }
+        );
+        pauseMenu.size.set(600, 400);
+        pauseMenu.backgroundColor = new Color(186, 186, 174, 1);
+        pauseMenu.borderWidth = 3;
+        pauseMenu.borderColor = Color.BLACK;
+        pauseMenu.textColor = Color.BLACK;
+
+        // Unpause button
+        let unpause = <Button>this.add.uiElement(
+            UIElementType.BUTTON,
+            COFLayers.PAUSE,
+            {
+                position: new Vec2(center.x, center.y + 200),
+                text: "Resume"
+            }
+        );
+        unpause.size.set(100, 60);
+        unpause.backgroundColor = new Color(186, 186, 174, 1);
+        unpause.borderWidth = 3;
+        unpause.borderColor = Color.BLACK;
+        unpause.textColor = Color.BLACK;
+        unpause.fontSize = 15;
+
+        unpause.onClick = () => {
+            this.handleUnpauseGame();
+        }
+    }
+
+    protected handleUnpauseGame() {
+        // remove pause screen here
+        this.uiLayers.delete(COFLayers.PAUSE);
+
+        // unpauses all the active AI
+        this.aiManager.actors.forEach(
+            actor => actor.setAIActive(true, {})
+        )
+    }
+
+    protected handleDisplayHealMarks(location: Vec2, scale: number) {
+        for (let i = 0; i < this.healMarks.length; i++) {
+            if (!this.healMarks[i].visible) {
+                this.healMarks[i].scale.set(scale, scale);
+                this.healMarks[i].position = location;
+                this.healMarks[i].visible = true;
+                this.healMarks[i].animation.play("HEALING");
+                break;
+            }
+        }
+    }
+
+    protected handleRemoveHealMarks(id: number) {
+        for (let i = 0; i < this.healMarks.length; i++) {
+            if (this.healMarks[i].id === id) {
+                this.healMarks[i].visible = false;
+                this.healMarks[i].position.copy(Vec2.ZERO);
+                break;
+            }
+        }
+    }
+    
+   /**
+	 * This method checks for a collision between an AABB and a circle.
+	 * 
+	 * @param aabb the AABB
+	 * @param circle the Circle
+	 * @return true if the AABB is colliding with the circle; false otherwise. 
+	 * 
+	 * @see AABB for more information about AABBs
+	 * @see Circle for more information about Circles
+	 * @see MathUtils for more information about MathUtil functions
+	 */
+	public checkAABBtoCircleCollision(aabb: AABB, circle: Circle): boolean {
+		// =================================================
+		let radius = circle.radius;
+		let circleX = circle.center.x;
+		let circleY = circle.center.y;
+
+		let aabbWidth = aabb.topRight.x - aabb.topLeft.x;
+		let aabbHeight = aabb.bottomLeft.y - aabb.topLeft.y;
+		let aabbX = aabb.center.x;
+		let aabbY = aabb.center.y;
+
+		// Find the point on AABB to use to calculate distance to the center of the circle.
+		let x = circleX;
+		let y = circleY;
+
+		// top left edge
+		if (circleX < aabbX - aabbWidth/2)
+			x = aabbX - (aabbWidth/2);
+		// top right edge
+		else if (circleX > aabbX + aabbWidth/2)
+			x = aabbX + (aabbWidth/2);
+
+		// bottom left edge
+		if (circleY < aabbY - aabbHeight/2)
+			y = aabbY - (aabbHeight/2);
+		// bottom right edge
+		else if (circleY > aabbY + aabbHeight/2)
+			y = aabbY + (aabbHeight/2);
+
+		let distX = circleX - x;
+		let distY = circleY - y;
+		let distance = Math.sqrt((distX * distX) + (distY * distY));
+
+		if (distance <= radius) {
+			return true;
+		}
+		
+		return false;
+
+		// =================================================
+	}
 
     /* Initialization methods for everything in the scene */
 
@@ -483,6 +639,8 @@ export default class COFLevel extends Scene {
         this.addUILayer(COFLayers.UI);
         // Add a layer for players and enemies
         this.addLayer(COFLayers.PRIMARY);
+        // Add a layer for pause
+        this.addLayer(COFLayers.PAUSE);
     }
     /**
      * Initializes the tilemaps
@@ -514,6 +672,8 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.PLAYER_SWING);
         this.receiver.subscribe(COFEvents.BOSS_TOOK_DAMAGE);
         this.receiver.subscribe(COFEvents.BOSS_HEALED);
+        this.receiver.subscribe(HealMarkEvents.DISPLAY_HEAL_MARKS);
+        this.receiver.subscribe(HealMarkEvents.REMOVE_HEAL_MARKS);
         this.receiver.subscribe(COFEvents.CHANGE_STAMINA);
         this.receiver.subscribe(COFEvents.CHANGE_MANA);
         this.receiver.subscribe(COFEvents.PLAYER_HURL);
@@ -527,6 +687,7 @@ export default class COFLevel extends Scene {
         this.receiver.subscribe(COFEvents.MINION_DEAD);
         this.receiver.subscribe(COFEvents.BOSS_DEFEATED);
         this.receiver.subscribe(COFEvents.LEVEL_END);
+        this.receiver.subscribe(COFEvents.PAUSE_GAME);
     }
 
     /**

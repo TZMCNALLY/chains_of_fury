@@ -4,7 +4,7 @@ import DemonKingState from "./DemonKingState";
 import DemonKingController from "../DemonKingController";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
-import { DemonKingEvents } from "./DemonKingEvents";
+import { DemonKingEvents } from "../DemonKingEvents";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 export default class LightningStrike extends DemonKingState {
@@ -30,8 +30,10 @@ export default class LightningStrike extends DemonKingState {
 
         else if(this.strikeTimer.isStopped()){
 
-            if(this.numStrikes == 5)
+            if(this.numStrikes == 5) {
+                this.parent.walkTime = new Date();
                 this.finished(DemonKingStates.WALK)
+            }
 
             else {
                 

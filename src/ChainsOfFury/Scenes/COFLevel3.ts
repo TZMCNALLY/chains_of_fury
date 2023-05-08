@@ -12,7 +12,8 @@ import { COFEvents } from "../COFEvents";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import ShadowDemonController from "../Enemy/MindFlayer/MindFlayerSummons/ShadowDemon/ShadowDemonController";
 import { ShadowDemonEvents } from "../Enemy/MindFlayer/MindFlayerSummons/ShadowDemon/ShadowDemonEvents";
-import EnemyController from "../Enemy/EnemyController";
+import { DemonSummoningCircleEvents } from "../Spells/DemonSummonCircle/DemonSummoningCircleEvents";
+import DemonSummoningCircleBehavior from "../Spells/DemonSummonCircle/DemonSummoningCircleBehavior";
 
 export default class COFLevel3 extends COFLevel {
 
@@ -21,6 +22,8 @@ export default class COFLevel3 extends COFLevel {
     /** Object pool for shadow demons */
     private shadowDemons: Array<AnimatedSprite> = new Array(5);
     private shadowDemonFireballs: AnimatedSprite[][] = new Array(5);
+    /** Object pool for shadow demon summoning circles */
+    private demonSummoningCircles: Array<AnimatedSprite> = new Array(5);
 
     /**
      * @see Scene.update()
@@ -30,6 +33,7 @@ export default class COFLevel3 extends COFLevel {
         super.loadScene();
         this.load.spritesheet("mind_flayer", "cof_assets/spritesheets/Enemies/mind_flayer.json");
         this.load.spritesheet("shadow_demon", "cof_assets/spritesheets/Enemies/shadow_demon.json")
+        this.load.spritesheet("demon_summoning_circle", "cof_assets/spritesheets/Spells/demon_summoning_circle.json");
     }
 
     public startScene(): void {
@@ -50,10 +54,13 @@ export default class COFLevel3 extends COFLevel {
         super.subscribeToEvents();
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_TELEPORT);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL);
-        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON);
+        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SPAWN_DEMON_CIRCLE);
         this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL);
         this.receiver.subscribe(ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON);
         this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_SWIPE);
+        this.receiver.subscribe(DemonSummoningCircleEvents.SPAWN_CIRCLE);
+        this.receiver.subscribe(DemonSummoningCircleEvents.SUMMON_SHADOW_DEMON);
+        this.receiver.subscribe(DemonSummoningCircleEvents.DESPAWN_CIRCLE);
     }
 
     /**
@@ -71,8 +78,16 @@ export default class COFLevel3 extends COFLevel {
                 this.spawnBossFireball(event.data.get("faceDir"));
                 break;
             }
-            case MindFlayerEvents.MIND_FLAYER_SUMMON_SHADOW_DEMON: {
+            case DemonSummoningCircleEvents.SPAWN_CIRCLE: {
+                this.spawnDemonCircle(event.data.get("location"));
+                break;
+            }
+            case DemonSummoningCircleEvents.SUMMON_SHADOW_DEMON: {
                 this.spawnShadowDemon(event.data.get("location"));
+                break;
+            }
+            case DemonSummoningCircleEvents.DESPAWN_CIRCLE: {
+                this.despawnDemonCircle(event.data.get("id"));
                 break;
             }
             case ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL: {
@@ -139,6 +154,14 @@ export default class COFLevel3 extends COFLevel {
                 this.shadowDemonFireballs[i][j].scale.set(1.5, 1.5);
             }
         }
+
+        for (let i = 0; i < this.demonSummoningCircles.length; i++) {
+            this.demonSummoningCircles[i] = this.add.animatedSprite("demon_summoning_circle", COFLayers.PRIMARY);
+
+			this.demonSummoningCircles[i].visible = false;
+            
+            this.demonSummoningCircles[i].scale.set(1.5, 1.5);
+        }
     }
     
     /**
@@ -178,6 +201,30 @@ export default class COFLevel3 extends COFLevel {
             if (this.bossFireballs[i].id === node) {
                 this.bossFireballs[i].position.copy(Vec2.ZERO);
                 this.bossFireballs[i].visible = false;
+                break;
+            }
+        }
+    }
+
+    protected spawnDemonCircle(location: Vec2) {
+        for (let i = 0; i < this.demonSummoningCircles.length; i++) {
+            if (!this.demonSummoningCircles[i].visible) {
+                this.demonSummoningCircles[i].visible = true;
+
+                this.demonSummoningCircles[i].position.copy(location);
+                this.demonSummoningCircles[i].addAI(DemonSummoningCircleBehavior);
+
+                (this.demonSummoningCircles[i]._ai as DemonSummoningCircleBehavior).location = location;
+                break;
+            }
+        }
+    }
+
+    protected despawnDemonCircle(id: number) {
+        for (let i = 0; i < this.demonSummoningCircles.length; i++) {
+            if (this.demonSummoningCircles[i].id === id) {
+                this.demonSummoningCircles[i].position.copy(Vec2.ZERO);
+                this.demonSummoningCircles[i].visible = false;
                 break;
             }
         }

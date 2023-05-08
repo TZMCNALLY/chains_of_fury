@@ -43,14 +43,17 @@ export default class SlashBehavior implements AI {
         if (this.owner.visible) {
             // Update position of the slash
             this.owner.move(this.velocity.scaled(deltaT));
-        }
-        // check to see if the slash has gone out of bounds, and if so, fire despawn event
-        if (this.owner.position.x < 260 || this.owner.position.x > 990 ||
-            this.owner.position.y < 210 || this.owner.position.y > 770 ||
-            (this.owner.collisionShape as AABB).touchesAABB(this.player.collisionShape as AABB)) {
-            this.emitter.fireEvent(SlashEvents.DESPAWN_SLASH, {id: this.owner.id});
-            if (this.owner.position.x != 0)
-                console.log(this.owner.id);
+
+            // checks to see if slash is hitting the player
+            if ((this.owner.collisionShape as AABB).touchesAABB(this.player.collisionShape as AABB)) {
+                this.emitter.fireEvent(SlashEvents.SLASH_HIT_PLAYER);
+                this.emitter.fireEvent(SlashEvents.DESPAWN_SLASH, {id: this.owner.id});
+            }
+            // check to see if the slash has gone out of bounds
+            else if (this.owner.position.x < 260 || this.owner.position.x > 990 ||
+                this.owner.position.y < 210 || this.owner.position.y > 770) {
+                this.emitter.fireEvent(SlashEvents.DESPAWN_SLASH, {id: this.owner.id});
+            }
         }
     }
 

@@ -175,6 +175,10 @@ export default class Viewport {
         this.smoothingFactor = smoothingFactor;
     }
 
+    getFocus(): Vec2 {
+        return this.focus;
+    }
+
     /**
      * Tells the viewport to focus on a point. Overidden by "following".
      * @param focus The point the  viewport should focus on

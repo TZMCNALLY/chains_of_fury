@@ -1,6 +1,5 @@
 import { MindFlayerAnimation, MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
 
 export default class Damaged extends MindFlayerState {
 

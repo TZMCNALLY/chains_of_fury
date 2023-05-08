@@ -1,0 +1,24 @@
+{
+	"name": "Dark Stalker Silhouette",
+	"spriteSheetImage": "dark_stalker_silhouette.png",
+	"spriteWidth": 64,
+	"spriteHeight": 128,
+	"columns": 1,
+	"rows": 1,
+	"leftBuffer": 0,
+	"rightBuffer": 0,
+	"topBuffer": 0,
+	"bottomBuffer": 0,
+	"animations": [
+		{
+			"name": "IDLE",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 10
+				}
+			]
+		}
+	]
+}

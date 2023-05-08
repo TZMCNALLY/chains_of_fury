@@ -1,10 +1,7 @@
 import COFLevel, { COFEntities, COFLayers } from "./COFLevel";
 import COFLevel2 from "./COFLevel2"
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Input from "../../Wolfie2D/Input/Input";
 import MoonDogController from "../Enemy/MoonDog/MoonDogController";
-import EnemyController from "../Enemy/EnemyController";
-import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import { MoonDogEvents } from "../Enemy/MoonDog/MoonDogEvents";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import FireballBehavior from "../Fireball/FireballBehavior";
@@ -22,6 +19,7 @@ import { COFEvents } from "../COFEvents";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import SmallDogBehavior from "../Enemy/MoonDog/AttackBehavior/SmallDogBehavior";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import MainMenu from "./MainMenu";
 
 export default class COFLevel1 extends COFLevel {
 
@@ -111,7 +109,8 @@ export default class COFLevel1 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
-        this.sceneManager.changeToScene(COFLevel2)
+        MainMenu.boss1Defeated = true;
+        this.sceneManager.changeToScene(COFLevel2);
     }
 
     protected subscribeToEvents(): void {

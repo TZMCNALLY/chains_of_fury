@@ -1,15 +1,12 @@
 import COFLevel, { COFEntities, COFLayers } from "./COFLevel";
 import COFLevel6 from "./COFLevel6";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Input from "../../Wolfie2D/Input/Input";
 import SwordController from "../Enemy/Sword/SwordController";
 import EnemyController from "../Enemy/EnemyController";
 import AssistController, { AssistTweens } from "../Enemy/Sword/AssistController"
-import AI from "../../Wolfie2D/DataTypes/Interfaces/AI";
 import { SwordTweens } from "../Enemy/Sword/SwordController";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
-import { AzazelTweens } from "../Player/AzazelController";
 import AABB from '../../Wolfie2D/DataTypes/Shapes/AABB';
 import { SwordEvents } from "../Enemy/Sword/SwordEvents";
 import { COFEvents } from "../COFEvents";
@@ -20,9 +17,8 @@ import FireballBehavior from '../Fireball/FireballBehavior';
 import Viewport from '../../Wolfie2D/SceneGraph/Viewport';
 import SceneManager from '../../Wolfie2D/Scene/SceneManager';
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
-import Game from "../../Wolfie2D/Loop/Game";
-import { GameEventType } from '../../Wolfie2D/Events/GameEventType';
 import { AssistEvents } from "../Enemy/Sword/AssistEvents";
+import MainMenu from "./MainMenu";
 
 export default class COFLevel5 extends COFLevel {
 
@@ -207,7 +203,7 @@ export default class COFLevel5 extends COFLevel {
         this.swordAssist.scale.set(scaleSize, scaleSize);
         this.swordAssist.position.copy(new Vec2(enemySpawn[0], enemySpawn[1]));
 
-        this.swordAssist.addAI(controller, {player: this.player});
+        this.swordAssist.addAI(controller, {player: this.player, enemyBossId: this.enemyBoss.id});
 
         let enemyHitbox = this.swordAssist.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
@@ -309,7 +305,6 @@ export default class COFLevel5 extends COFLevel {
         let swingPosition = this.player.position.clone();
         swingPosition.x += faceDir*14;
 
-        // This should loop through all hitable object? and fire event.
         if (this.swordAssist.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
             this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }
@@ -334,6 +329,7 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
+        MainMenu.boss5Defeated = true;
         this.sceneManager.changeToScene(COFLevel6)
     }
 

@@ -20,7 +20,8 @@ import { COFCheats } from "./ChainsOfFury/COFCheats";
             {name: AzazelControls.DASH, keys: ["shift"]},
             {name: COFCheats.ESCAPE, keys: ["escape"]},
             {name: COFCheats.INFINITE_DAMAGE, keys: ["o"]},
-            {name: COFCheats.INFINITE_HEALTH, keys: ["p"]}
+            {name: COFCheats.INFINITE_HEALTH, keys: ["p"]},
+            {name: COFCheats.UNLOCK_ALL, keys: ["i"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

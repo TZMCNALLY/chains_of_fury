@@ -50,7 +50,7 @@ export const MoonDogAnimation = {
     PREPARING_MAGIC: "PREPARING_MAGIC",
     MAGIC: "MAGIC",
     SUMMON: "DAMAGE_LEFT", // TODO: change these later.
-    POUND: "ATTACK_LEFT",
+    POUND: "ATTACKING_LEFT",
     WALKING: "WALKING_LEFT"
 } as const
 
@@ -81,7 +81,7 @@ export default class MoonDogController extends EnemyController {
         // Boss goes in a magic state where meteor(moons) falls on player, there will need to be an indicatior on the ground for this
         // Phase 2:
         // Boss stop magic attack, and gains a gound pound attack.
-        // -> Ground pound attack triggers a ranged attack?
+        // -> Ground pound attack.
         // Charges as much as possible
         // Summons minions to 5 max
 

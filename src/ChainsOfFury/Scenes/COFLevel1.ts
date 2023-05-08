@@ -29,6 +29,8 @@ export default class COFLevel1 extends COFLevel {
     private moonIndicators: Array<AnimatedSprite>;
     private moons: Array<AnimatedSprite>;
 
+    private groundCracks: AnimatedSprite;
+
     /** Overrides collision matrix so enemy projectiles can pass through */
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
@@ -68,6 +70,7 @@ export default class COFLevel1 extends COFLevel {
         this.load.spritesheet("hellhound", "cof_assets/spritesheets/Enemies/hell_hound.json");
         this.load.spritesheet("moon", "cof_assets/spritesheets/Spells/moon.json");
         this.load.spritesheet("moon_indicator", "cof_assets/spritesheets/Spells/moon_indicator.json");
+        this.load.spritesheet("ground_crack", "cof_assets/spritesheets/Spells/ground_crack.json");
     }
 
     public startScene(): void {
@@ -77,6 +80,12 @@ export default class COFLevel1 extends COFLevel {
 
         this.initLittleOnes();
         this.initMoons();
+
+        // Just init this here b/c it is only 1 sprite.
+        this.groundCracks = this.add.animatedSprite("ground_crack", COFLayers.PRIMARY);
+        this.groundCracks.visible = false;
+        this.groundCracks.scale = new Vec2(8,8);
+        this.groundCracks.position.copy(Vec2.ZERO);
 
         // Remove trigger for enemy projectiles (since they aren't really used here).
         let layerNumber = this.getPhysicsManager().getGroupNumber(COFPhysicsGroups.ENEMY_PROJECTILE);
@@ -262,7 +271,18 @@ export default class COFLevel1 extends COFLevel {
     }
 
     private poundAttack(): void {
+        this.groundCracks.position.copy(this.enemyBoss.position);
+        this.groundCracks.position.y += 30;
+        this.groundCracks.visible = true;
+        let groundCrackTimer = new Timer(200, () => {
+            this.groundCracks.visible = false;
+            this.groundCracks.position.copy(Vec2.ZERO);
+        })
+        groundCrackTimer.start();
 
+        if (this.groundCracks.boundary.overlaps(this.player.collisionShape)) {
+            this.emitter.fireEvent(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
+        }
     }
 
     private rainMoons(): void {

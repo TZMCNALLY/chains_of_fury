@@ -71,6 +71,7 @@ export default class Idle extends MoonDogState {
 					// 50% chance to charge. (with faster repositioning and chargespeed)
 					// Charge will also end with a pound instead of going back to IDLE.
 					this.finished(MoonDogStates.HORIZONTAL_CHARGE);
+					return;
 				}
 
 				// Max minion counts are raised to 5 here, so chances change as well.

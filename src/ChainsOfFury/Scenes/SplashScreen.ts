@@ -1,14 +1,10 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
-import { COFLayers } from "./COFLevel";
 import MainMenu from "./MainMenu";
 import { MenuLayers } from "./MainMenu";
 

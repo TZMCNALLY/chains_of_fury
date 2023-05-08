@@ -112,9 +112,7 @@ export default class SplashScreen extends Scene {
                 
                 let dir = (this.upperRight.dirTo(this.bottomLeft)).scale(deltaT)
                 this.viewport.setFocus(new Vec2(x - 1, y + 1))
-                console.log(dir)
             }
-
         }
 
         else if(this.viewportObjective == this.bottomRight) {

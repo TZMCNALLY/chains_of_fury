@@ -18,6 +18,7 @@ export default class SpawnShadowDemons extends MindFlayerState {
 		super.update(deltaT);
         
         if (!this.owner.animation.isPlaying(MindFlayerAnimation.SPAWN_SHADOW_DEMONS)) {
+			this.parent.lastActionTime = new Date();
             this.finished(MindFlayerStates.IDLE);
         }
 	}

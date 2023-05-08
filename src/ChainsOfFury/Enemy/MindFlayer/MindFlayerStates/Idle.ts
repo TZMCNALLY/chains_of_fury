@@ -8,7 +8,7 @@ export default class Idle extends MindFlayerState {
 		if (this.parent.health < 500 && !this.parent.berserk) {
 			this.parent.berserk = true;
 		}
-        this.owner.animation.play(MindFlayerAnimation.IDLE);
+        this.owner.animation.play(MindFlayerAnimation.IDLE, true);
 	}
 
 	public update(deltaT: number): void {
@@ -33,7 +33,12 @@ export default class Idle extends MindFlayerState {
 				this.finished(MindFlayerStates.HEALING);
 			}
 			else {
-				this.finished(MindFlayerStates.CAST_FIREBALLS);
+				if (Math.random() > 0.5) {
+					this.finished(MindFlayerStates.CAST_ICE_SPELL);
+				}
+				else {
+					this.finished(MindFlayerStates.CAST_FIREBALLS);
+				}
 			}
 		}
 	}

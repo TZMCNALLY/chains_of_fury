@@ -78,6 +78,20 @@ export default class COFLevel1 extends COFLevel {
         super.initializeBossUI("Moon Dog");
         this.initializeEnemyBoss("moondog", MoonDogController, 1, [750, 600], -15, -15);
 
+        // Adding tween here b/c I don't want to override the initializeboss method
+        this.enemyBoss.tweens.add("invul", {
+            startDelay: 0,
+            duration: 1000,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 1,
+                    end: .3,
+                    ease: EaseFunctionType.OUT_IN_QUAD
+                }
+            ]
+        });
+
         this.initLittleOnes();
         this.initMoons();
 

@@ -32,6 +32,8 @@ export default class SmallDogBehavior implements AI {
 
     private player: AnimatedSprite;
 
+    private health: number;
+
     private debugPoint: Point;
 
     public initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -48,6 +50,8 @@ export default class SmallDogBehavior implements AI {
 
         this.circleVec = new Vec2(0, 150);
         this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);
+
+        this.health = 3;
 
         this.circlingDir = 1;
 
@@ -93,6 +97,8 @@ export default class SmallDogBehavior implements AI {
         })
 
         this.activate(options);
+
+        this.receiver.subscribe(MoonDogEvents.MINION_HIT);
     }
 
     public destroy(): void {}
@@ -105,6 +111,26 @@ export default class SmallDogBehavior implements AI {
 
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
+            case MoonDogEvents.MINION_HIT: {
+                if (event.data.get("node") == this.owner.id) {
+                    this.health -= 1;
+
+                    if (this.health == 0) {
+                        // Pause and reset the timers
+                        this.attackTimer.pause();
+                        this.attackTimer.reset();
+                        this.circleTimer.pause();
+                        this.circleTimer.reset();
+                        this.owner.animation.play("DYING_RIGHT", false);
+                        this.owner.tweens.play("death");
+                    } else {
+                        if (!this.owner.animation.isPlaying("RUNNING_RIGHT") && this.health > 0) {
+                            this.owner.animation.play("DAMAGED_RIGHT", false);
+                        }
+                    }
+                }
+                break;
+            }
 
             default: {
                 throw new Error("Unhandled event caught in SmallDogBehavior! Event type: " + event.type);
@@ -118,14 +144,14 @@ export default class SmallDogBehavior implements AI {
             this.handleEvent(this.receiver.getNextEvent());
         }
 
-        if (this.owner.visible) {        
+        if (this.owner.visible && this.health > 0) {        
             if (!this.circling && !this.charging) {
                 // Flip when preparing to charge.
                 this.owner.invertX = Math.sign(this._owner.position.x - this.player.position.x) > 0;
             }
             
 
-            if (this.attackTimer.isStopped() && this.circleTimer.isStopped()) {
+            if ((this.attackTimer.isStopped() && this.circleTimer.isStopped()) || (this.attackTimer.isPaused() && this.circleTimer.isPaused())) {
                 // Start attack timer if both timer is stopped (when minion is alive again)
                 this.attackTimer.start();
 
@@ -172,6 +198,7 @@ export default class SmallDogBehavior implements AI {
             /** DEBUG */
             this.debugPoint.position.copy(this.target);
 
+            // Stops spasm at when arrived at target.
             if (this.target.distanceTo(this._owner.position) < 20) {
 
                 if (this.charging) {
@@ -182,9 +209,8 @@ export default class SmallDogBehavior implements AI {
                 }
 
                 return;
-                // Stops spasm at when arrived at target.
             }
-
+            
             // Update position
             this.owner.move(this.velocity.scaled(deltaT));
         }

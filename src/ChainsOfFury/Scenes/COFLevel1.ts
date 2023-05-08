@@ -1,4 +1,4 @@
-import COFLevel, { COFLayers } from "./COFLevel";
+import COFLevel, { COFEntities, COFLayers } from "./COFLevel";
 import COFLevel2 from "./COFLevel2"
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Input from "../../Wolfie2D/Input/Input";
@@ -98,6 +98,7 @@ export default class COFLevel1 extends COFLevel {
         this.receiver.subscribe(MoonDogEvents.MAGIC);
         this.receiver.subscribe(MoonDogEvents.POUND);
         this.receiver.subscribe(MoonDogEvents.MOON_LANDED);
+        this.receiver.subscribe(MoonDogEvents.MINION_DEATH);
     }
 
     protected handleEvent(event: GameEvent): void {
@@ -120,6 +121,10 @@ export default class COFLevel1 extends COFLevel {
                 this.handleMoonLanded(event.data.get("index"));
                 break;
             }
+            case MoonDogEvents.MINION_DEATH: {
+                this.handleLittleOnePassAway(event.data.get("node"));
+                break;
+            }
         }
     }
 
@@ -138,7 +143,7 @@ export default class COFLevel1 extends COFLevel {
             // Tweens for coming into and leaving life.
             this.minions[i].tweens.add("death", {
                 startDelay: 0,
-                duration: 500,
+                duration: 360,
                 effects: [
                     {
                         property: TweenableProperties.alpha,
@@ -326,5 +331,34 @@ export default class COFLevel1 extends COFLevel {
             this.moonIndicators[index].position.copy(Vec2.ZERO);
         });
         removeIndicatorTimer.start();
+    }
+
+    // Override to add support for minions.
+    protected handlePlayerSwing(faceDir: number) {
+        let playerSwingHitbox = this.player.boundary.getHalfSize().clone();
+        playerSwingHitbox.x = playerSwingHitbox.x-16;
+
+        let swingPosition = this.player.position.clone();
+        swingPosition.x += faceDir*14;
+
+        // This should loop through all hitable object? and fire event.
+        if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
+        }
+
+        for (let i = 0; i < 5; i++) {
+            if (this.minions[i].boundary.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+                this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.minions[i].id, entity: COFEntities.MINION});
+            }
+        }
+    }
+
+    private handleLittleOnePassAway(id: number): void {
+        for (let i = 0; i < 5; i++) {
+            if (this.minions[i].id == id) {
+                this.minions[i].visible = false;
+                this.minions[i].animation.stop();
+            }
+        }
     }
 }

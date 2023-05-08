@@ -14,6 +14,7 @@ import HorizontalCharge from "./MoonDogStates/HorizontalCharge";
 import Magic from "./MoonDogStates/Magic";
 import Summon from "./MoonDogStates/Summon";
 import Pound from "./MoonDogStates/Pound";
+import { MoonDogEvents } from "./MoonDogEvents";
 
 export const MoonDogStates = {
     // RUN: "RUN",
@@ -111,5 +112,16 @@ export default class MoonDogController extends EnemyController {
     public get walkSpeed(): number { return this._walkSpeed; }
     public set walkSpeed(walkSpeed: number) {
         this._walkSpeed = walkSpeed;
+    }
+
+
+    public handleEnemySwingHit(id: number, entity: string): void {
+        if (id !== this.owner.id) {
+            this.emitter.fireEvent(MoonDogEvents.MINION_HIT, {node: id});
+            return;
+        }
+
+        this.health -= this.damageFromPhysical;
+        this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
     }
 }

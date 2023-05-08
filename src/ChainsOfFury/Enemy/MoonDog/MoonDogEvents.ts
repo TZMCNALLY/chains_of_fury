@@ -18,4 +18,7 @@ export const MoonDogEvents = {
 
     /** with data: index */
     MOON_LANDED: "MOON_LANDEd",
+
+    /** with data: node */
+    MINION_HIT: "MINION_HIT"
 }

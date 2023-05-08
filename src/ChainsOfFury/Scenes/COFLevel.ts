@@ -26,6 +26,8 @@ import { COFCheats } from "../COFCheats";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { HealMarkEvents } from "../Spells/HealMarks/HealMarkEvents";
 import HealMarkBehavior from "../Spells/HealMarks/HealMarkBehavior";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 
 /**
  * A const object for the layer names
@@ -103,6 +105,12 @@ export default class COFLevel extends Scene {
     protected levelEndTimer: Timer;
     protected levelEndLabel: Label;
 
+    // Level end transition timer and graphic
+    protected levelBeginTimer: Timer;
+    protected levelTransitionScreen: Rect;
+    protected levelBeginEndPosition: Vec2;
+    protected isLevelBeginTransitioning: boolean;
+
     /** The keys to the tilemap and different tilemap layers */
     protected tilemapKey: string;
     protected destructibleLayerKey: string;
@@ -172,6 +180,20 @@ export default class COFLevel extends Scene {
     }
 
     public update(deltaT: number): void {
+
+        if(this.isLevelBeginTransitioning) {
+
+            if(this.viewport.getFocus().x <= this.levelBeginEndPosition.x) {
+                this.viewport.setFocus(new Vec2(this.viewport.getCenter().x + 3, this.viewport.getCenter().y))
+            }
+
+            else {
+                this.isLevelBeginTransitioning = false;
+                this.levelTransitionScreen.tweens.play("fadeIn")
+                this.levelBeginTimer.start();
+            }
+        }
+
         super.update(deltaT);
         if (Input.isJustPressed(COFCheats.ESCAPE)) {
             this.emitter.fireEvent(COFEvents.PAUSE_GAME);
@@ -193,7 +215,7 @@ export default class COFLevel extends Scene {
         this.initObjectPools();
 
         // Enable player movement
-        Input.enableInput();
+        Input.disableInput();
 
         // this.initializeEnemyBoss("moondog", MoonDogController);
 
@@ -202,6 +224,8 @@ export default class COFLevel extends Scene {
         this.subscribeToEvents();
 
         this.initializeLevelEndUI();
+        this.initializeLevelTransitionUI();
+
         
         // Initialize the ends of the levels - must be initialized after the primary layer has been added
         //this.initializeLevelEnds();
@@ -211,6 +235,17 @@ export default class COFLevel extends Scene {
         //     // After the level end timer ends, fade to black and then go to the next scene
         //     this.levelTransitionScreen.tweens.play("fadeIn");
         // });
+
+        this.levelBeginTimer = new Timer(500, () => {
+            this.levelTransitionScreen.tweens.play("fadeOut");
+            this.enemyBoss.setAIActive(true, {})
+            this.player.setAIActive(true, {})
+            this.viewport.follow(this.player)
+            Input.enableInput();
+        });
+
+        // Start the black screen fade out
+        this.levelTransitionScreen.tweens.play("fadeOut");
     }
 
     /* Update method for the scene */
@@ -344,7 +379,7 @@ export default class COFLevel extends Scene {
             this.healMarks[i].addAI(HealMarkBehavior);
         }
     }
-   
+
     /**
     * Displays a fire projectile on the map
     * 
@@ -734,12 +769,50 @@ export default class COFLevel extends Scene {
         });
     }
 
+    protected initializeLevelTransitionUI(): void {
+
+        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, COFLayers.UI, { position: new Vec2(300, 200), size: new Vec2(1000, 1000)});
+        this.levelTransitionScreen.color = new Color(34, 32, 52);
+        this.levelTransitionScreen.alpha = 1;
+
+        this.levelTransitionScreen.tweens.add("fadeIn", {
+            startDelay: 0,
+            duration: 1000,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 0,
+                    end: 1,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+        });
+
+        /*
+             Adds a tween to fade in the start of the level. After the tween has
+             finished playing, a level start event gets sent to the EventQueue.
+        */
+        this.levelTransitionScreen.tweens.add("fadeOut", {
+            startDelay: 0,
+            duration: 1000,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 1,
+                    end: 0,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+            onEnd: COFEvents.LEVEL_START
+        });
+    }
+
     /**
      * Initializes the player, setting the player's initial position to the given position.
      * @param position the player's spawn position
      */
     protected initializePlayer(key: string): void {
-        this.playerSpawn = new Vec2(300, 250);
+        this.playerSpawn = new Vec2(500, 480);
 
         // Add the player to the scene
         this.player = this.add.animatedSprite(key, COFLayers.PRIMARY);
@@ -748,6 +821,8 @@ export default class COFLevel extends Scene {
 
         // Give the player it's AI
         this.player.addAI(AzazelController);
+        // Set AI to stop state at first while level begin transition is happening
+        this.player.setAIActive(false, {})
 
         let playerHitbox = this.player.boundary.getHalfSize().clone();
         playerHitbox.x = playerHitbox.x-15;
@@ -816,6 +891,7 @@ export default class COFLevel extends Scene {
 
         // Give enemy boss its AI
         this.enemyBoss.addAI(controller, {player: this.player});
+        this.enemyBoss.setAIActive(false, {});
 
         let enemyHitbox = this.enemyBoss.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
@@ -831,9 +907,18 @@ export default class COFLevel extends Scene {
      */
     protected initializeViewport(): void {
         if (this.player === undefined) {
-            throw new Error("Player must be initialized before setting the viewport to folow the player");
+            throw new Error("Player must be initialized before setting the viewport to follow the player");
         }
-        this.viewport.follow(this.player);
+        //this.viewport.follow(this.player);
+
+        // Tells the scene to play the level begin transition
+        this.isLevelBeginTransitioning = true
+
+        // Positions that the levelBegin transition will move to
+        this.levelBeginEndPosition = new Vec2(800, 400)
+
+        this.viewport.setCenter(new Vec2(200, this.player.position.y))
+        this.viewport.setFocus(new Vec2(200, this.player.position.y))
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
     }

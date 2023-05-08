@@ -183,6 +183,8 @@ export default class AzazelController extends StateMachineAI {
             this.maxHealth = Number.MAX_SAFE_INTEGER;
             this.health = Number.MAX_SAFE_INTEGER;
         }
+
+        this.handlePlayerRegenerateMana();
 	}
 
     public handleEvent(event: GameEvent): void {
@@ -368,6 +370,15 @@ export default class AzazelController extends StateMachineAI {
     public handlePlayerDash(event : GameEvent) : void {
         this.stamina -= 5;
         this.emitter.fireEvent(COFEvents.CHANGE_STAMINA, {currStamina : this.stamina, maxStamina : this.maxStamina});
+    }
+
+    public handlePlayerRegenerateMana() : void {
+        this.mana += 0.02;
+
+        if (this.mana > this.maxMana)
+            this.mana = this.maxMana;
+
+        this.emitter.fireEvent(COFEvents.CHANGE_MANA, {currMana : this.mana, maxMana : this.maxMana});
     }
 
     public handlePlayerSwing(event : GameEvent) : void {

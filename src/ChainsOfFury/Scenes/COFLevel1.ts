@@ -74,7 +74,7 @@ export default class COFLevel1 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Moon Dog");
-        this.initializeEnemyBoss("moondog", MoonDogController, 1, [750, 600], -15, -15);
+        this.initializeEnemyBoss("moondog", MoonDogController, 1, [750, 480], -15, -15);
 
         this.initLittleOnes();
         this.initMoons();

@@ -102,6 +102,20 @@ export default class DarkStalkerController extends EnemyController {
         // }
     }
 
+    public handleEnemyFireballHit(id: number, entity: string): void {
+        if (id !== this.owner.id) {
+            this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
+            return;
+        }
+
+        if (this.health == 0) {
+            // this.changeState(DarkStalkerEvents.DEATH);
+        }
+
+        this.health -= this.damageFromProjectile;
+        this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+    }
+
     public handleEvent(event: GameEvent): void {
         super.handleEvent(event);
 

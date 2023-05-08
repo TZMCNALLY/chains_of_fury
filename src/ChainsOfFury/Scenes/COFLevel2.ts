@@ -299,9 +299,8 @@ export default class COFLevel2 extends COFLevel {
             if (this.eyeBalls[i].visible) {
                 continue;
             } else {
-                // TODO: Make this random spawn better later.
-                let x = RandUtils.randInt(300, 900);
-                let y = RandUtils.randInt(300, 700);
+                let x = RandUtils.randInt(400, 800);
+                let y = RandUtils.randInt(400, 600);
 
                 this.eyeBalls[i].position = new Vec2(x, y);
                 let hitbox = new AABB(
@@ -310,6 +309,7 @@ export default class COFLevel2 extends COFLevel {
                 );
                 this.eyeBalls[i].addPhysics(hitbox);
                 this.eyeBalls[i].setGroup(COFPhysicsGroups.ENEMY);
+                this.eyeBalls[i].setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, "");
                 (this.eyeBalls[i]._ai as EyeballBehavior).reset();
                 this.eyeBalls[i].visible = true;
                 this.eyeBalls[i].tweens.play("summon");

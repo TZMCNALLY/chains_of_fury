@@ -4,15 +4,20 @@ import MoonDogState from "./MoonDogState";
 import MoonDogController from "../MoonDogController";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import { COFEvents } from "../../../COFEvents";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 export default class Idle extends MoonDogState {
 
 	protected lastActionTime: number;
 
+	private repositioningSpeed: Vec2;
+
 	public onEnter(options: Record<string, any>): void {
         this.owner.animation.play(MoonDogAnimation.IDLE);
 
-		this.lastActionTime = 2; // How many seconds it takes until it goes into new state.
+		this.lastActionTime = 5; // How many seconds it takes until it goes into new state.
+
+		this.repositioningSpeed = new Vec2(50,50);
 	}
 
 	public update(deltaT: number): void {
@@ -25,9 +30,18 @@ export default class Idle extends MoonDogState {
 			if (this.parent.health > 300) {
 				// Stage 1
 
-				if (rnd < 20) {
+				// Make it more like to dash if player is close and boss is backed up in the corner. (up to 60%)
+				let increasedChance = 0;
+				if (this.owner.position.x > 800 || this.owner.position.x < 350) {
+					if (this.owner.position.distanceTo(this.parent.player.position) < 200) {
+						increasedChance = (this.owner.position.distanceTo(this.parent.player.position) / 200) * 40;
+					}
+				}
+
+				if (rnd < 20 + increasedChance) {
 					// 20% chance to charge.
 					this.finished(MoonDogStates.HORIZONTAL_CHARGE);
+					return;
 				}
 
 				let summonChance = 5; // 5% chance to re-summon even if all are still alive.
@@ -42,7 +56,9 @@ export default class Idle extends MoonDogState {
 					summonChance += 40; // 75% chance to summon if no minions left. 
 				}
 
-				if (rnd < 20 + this.parent.minionCount) {
+				// the minion chance subtracted by incrased charge chance.
+				// side effect is that if the boss is cornered, they won't summon but instead go into magic (which is invul)
+				if (rnd < 20 + summonChance - increasedChance) {
 					this.finished(MoonDogStates.SUMMON);
 				} else {
 					// Perform magic here!
@@ -55,28 +71,13 @@ export default class Idle extends MoonDogState {
 					// 50% chance to charge. (with faster repositioning and chargespeed)
 					// Charge will also end with a pound instead of going back to IDLE.
 					this.finished(MoonDogStates.HORIZONTAL_CHARGE);
+					return;
 				}
 
 				// Max minion counts are raised to 5 here, so chances change as well.
+				let summonChance = 10 + 10*(5-this.parent.minionCount-1);
 
-				let summonChance = 10; // 10% chance to re-summon even if all are still alive.
-
-				if (this.parent.minionCount < 4) {
-					summonChance += 10; // 20% chance to re-summon if have 3 left.
-				}
-				if (this.parent.minionCount < 3) {
-					summonChance += 10; // 30% chance to re-summon if have 2 left.
-				}
-				if (this.parent.minionCount < 2) {
-					summonChance += 10; // 40% chance to re-summon if 1 minions left. 
-				}
-				if (this.parent.minionCount < 1) {
-					summonChance += 10; // 50% chance to re-summon if no minions are left.
-				}
-
-				// What am i writing up there.. I'll change above to equation later TODO
-
-				if (rnd < 50 + this.parent.minionCount) {
+				if (rnd < 50 + summonChance) {
 					this.finished(MoonDogStates.SUMMON);
 				} else {
 					// Perform magic here!
@@ -86,6 +87,20 @@ export default class Idle extends MoonDogState {
 		} else {
 			// Reduce time until next action.
 			this.lastActionTime -= deltaT;
+
+			// A simple walking algorithm
+			if (this.owner.position.distanceTo(this.parent.player.position) < 400) {
+				this.owner.move(
+					// Move the other way from the player.
+					new Vec2(
+						Math.sign(this.parent.player.position.clone().sub(this.owner.position).x) * -this.repositioningSpeed.x,
+						this.parent.player.position.clone().sub(this.owner.position).normalize().scale(-1).mult(this.repositioningSpeed).y
+					).scaled(deltaT)
+				);
+				
+				this.owner.animation.playIfNotAlready(MoonDogAnimation.WALKING);
+				this.owner.invertX = Math.sign(this.owner.position.x - this.parent.player.position.x) < 0;
+			}
 		}
 	}
 

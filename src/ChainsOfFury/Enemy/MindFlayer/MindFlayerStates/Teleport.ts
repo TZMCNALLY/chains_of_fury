@@ -1,6 +1,5 @@
-import { MindFlayerAnimation, MindFlayerStates } from "../MindFlayerController";
+import { MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
-import MindFlayerController from "../MindFlayerController";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import { MindFlayerEvents } from "../MindFlayerEvents";
 
@@ -13,6 +12,7 @@ export default class Teleport extends MindFlayerState {
         let locationToTeleportTo = locations[Math.trunc(Math.random()*locations.length)];
         this.emitter.fireEvent(MindFlayerEvents.MIND_FLAYER_TELEPORT, {location: locationToTeleportTo});
 
+		this.parent.lastActionTime = new Date();
         this.finished(MindFlayerStates.IDLE);
 	}
 

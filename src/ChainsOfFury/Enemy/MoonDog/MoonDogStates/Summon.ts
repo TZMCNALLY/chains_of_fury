@@ -17,11 +17,6 @@ export default class Summon extends MoonDogState {
         this.parent.minionCount = 3;
 
         this.stateTime = 4;
-
-        // let stateEndTimer = new Timer(5000, () => {
-            // this.finished(MoonDogStates.IDLE);
-        // });
-        // stateEndTimer.start();
 	}
 
 	public update(deltaT: number): void {

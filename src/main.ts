@@ -18,6 +18,7 @@ import { COFCheats } from "./ChainsOfFury/COFCheats";
             {name: AzazelControls.MOVE_DOWN, keys: ["s"]},
             {name: AzazelControls.HURL, keys: ["e"]},
             {name: AzazelControls.DASH, keys: ["shift"]},
+            {name: COFCheats.ESCAPE, keys: ["escape"]},
             {name: COFCheats.INFINITE_DAMAGE, keys: ["o"]},
             {name: COFCheats.INFINITE_HEALTH, keys: ["p"]}
         ],

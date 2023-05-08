@@ -26,6 +26,7 @@ import { SpellEffects } from "../Spells/SpellEffects";
 import { DemonKingEvents } from '../Enemy/DemonKing/DemonKingEvents';
 import Game from "../../Wolfie2D/Loop/Game";
 import Timer from "../../Wolfie2D/Timing/Timer";
+
 /**
  * Animation keys for the Azazel spritesheet
  */
@@ -195,7 +196,7 @@ export default class AzazelController extends StateMachineAI {
 				break;
 			}
             case COFEvents.ENEMY_SPELL_HIT_PLAYER: {
-                this.handleSpellPlayerHit(event.data.get("effect"));
+                this.handleSpellPlayerHit(event);
             }
             case COFEvents.PLAYER_HURL: {
 				this.handlePlayerHurl(event);
@@ -336,9 +337,16 @@ export default class AzazelController extends StateMachineAI {
             this.changeState(AzazelStates.DAMAGED);
     }
 
-    public handleSpellPlayerHit(effect: String) {
+    public handleSpellPlayerHit(event: GameEvent) {
+        let effect = event.data.get("effect");
+        if (effect === SpellEffects.DAMAGE) {
+            if (this.health > 0)
+                this.changeState(AzazelStates.DAMAGED);
+            this.health -= event.data.get("damage");
+            this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
+        }
         if (effect === SpellEffects.INSTADEATH) {
-            this.health -= 100;
+            this.health -= this.maxHealth;
             this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
         }
     }

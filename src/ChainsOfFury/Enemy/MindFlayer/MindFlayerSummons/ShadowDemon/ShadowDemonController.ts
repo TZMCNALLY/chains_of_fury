@@ -7,7 +7,6 @@ import Damaged from "./ShadowDemonStates/Damaged";
 import Dead from "./ShadowDemonStates/Dead";
 import Attack from "./ShadowDemonStates/Attack";
 import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
-import { ShadowDemonEvents } from "./ShadowDemonEvents";
 import { COFEvents } from "../../../../COFEvents";
 
 export const ShadowDemonStates = {

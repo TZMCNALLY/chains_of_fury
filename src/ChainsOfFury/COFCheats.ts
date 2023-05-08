@@ -3,6 +3,7 @@
  */
 
 export const COFCheats = {
+    ESCAPE: "ESCAPE",
 
     INFINITE_HEALTH: "INFINITE_HEALTH",
 

@@ -21,13 +21,14 @@ export default class Idle extends ReaperState {
 			this.finished(ReaperStates.ATTACK);
 		}
 		else if (timeSinceLastAction > 5000) {
-			if (this.parent.getDistanceFromPlayer() < 100) {
+			if (this.parent.player.position.x > 460 &&
+				this.parent.player.position.x < 800) {
 				if (this.parent.player.position.x < 630) {
-					this.owner.position.copy(new Vec2(990, 485));
+					this.owner.position.copy(new Vec2(940, 485));
 					this.parent.lastFace = -1;
 				}
 				else {
-					this.owner.position.copy(new Vec2(270, 485));
+					this.owner.position.copy(new Vec2(320, 485));
 					this.parent.lastFace = 1;
 				}
 				this.finished(ReaperStates.THROW_SLASHES);

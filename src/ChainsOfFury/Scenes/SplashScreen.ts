@@ -54,6 +54,7 @@ export default class SplashScreen extends Scene {
         // Incredibly high padding so that button covers whole screen.
         this.playBtn.setPadding(new Vec2(size.x*2, size.y*4));
         this.playBtn.font = "PixelSimple";
+        this.playBtn.visible = false;
 
         // When the play button is clicked, go to the main menu
         this.playBtn.onClick = () => {
@@ -61,7 +62,7 @@ export default class SplashScreen extends Scene {
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
         };
 
-        this.blinkTimer = new Timer(200);
+        this.blinkTimer = new Timer(500);
 
         this.upperLeft = new Vec2(480, 320);
         this.upperRight = new Vec2(800, 320);
@@ -77,6 +78,11 @@ export default class SplashScreen extends Scene {
 
     // Handles the viewport panning around the arena
     public updateScene(deltaT: number) {
+
+        if(this.blinkTimer.isStopped()) {
+            this.blinkTimer.start()
+            this.playBtn.visible = !this.playBtn.visible
+        }
 
         let x = this.viewport.getCenter().x
         let y = this.viewport.getCenter().y

@@ -79,6 +79,7 @@ export default class MainMenu extends Scene {
         let controls = this.createButton(size.x, size.y+180, "Controls");
         let help = this.createButton(size.x, size.y+260, "Help");
 
+
         // Scene transitions:
 
         startGame.onClick = () => {

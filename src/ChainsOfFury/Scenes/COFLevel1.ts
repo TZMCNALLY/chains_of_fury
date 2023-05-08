@@ -379,6 +379,7 @@ export default class COFLevel1 extends COFLevel {
             if (this.minions[i].id == id) {
                 this.minions[i].visible = false;
                 this.minions[i].animation.stop();
+                (this.enemyBoss._ai as MoonDogController).minionCount -= 1;
             }
         }
     }

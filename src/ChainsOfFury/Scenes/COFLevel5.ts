@@ -23,6 +23,7 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import Game from "../../Wolfie2D/Loop/Game";
 import { GameEventType } from '../../Wolfie2D/Events/GameEventType';
 import { AssistEvents } from "../Enemy/Sword/AssistEvents";
+import MainMenu from "./MainMenu";
 
 export default class COFLevel5 extends COFLevel {
 
@@ -334,6 +335,7 @@ export default class COFLevel5 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
+        MainMenu.boss5Defeated = true;
         this.sceneManager.changeToScene(COFLevel6)
     }
 

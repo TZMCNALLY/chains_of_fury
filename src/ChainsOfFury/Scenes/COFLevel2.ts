@@ -25,6 +25,7 @@ import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
+import MainMenu from "./MainMenu";
 
 export default class COFLevel2 extends COFLevel {
 
@@ -125,6 +126,7 @@ export default class COFLevel2 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
+        MainMenu.boss2Defeated = true;
         this.sceneManager.changeToScene(COFLevel3)
     }
 

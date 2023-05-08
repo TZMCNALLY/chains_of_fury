@@ -5,11 +5,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import MainMenu from "./MainMenu";
-
-// Layers for the main menu scene
-export const MenuLayers = {
-    MAIN: "MAIN"
-} as const;
+import { MenuLayers } from "./MainMenu";
 
 export default class SplashScreen extends Scene {
 

@@ -109,7 +109,6 @@ export default class COFLevel2 extends COFLevel {
             }
             case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {
                 event.data.get("node"); // handles this event, missle despawn by themselves
-                // this.despawnProjectile(event.data.get("node"));
                 break;
             }
             case DarkStalkerEvents.DESPAWN_MISSLE: {

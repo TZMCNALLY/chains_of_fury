@@ -208,7 +208,7 @@ export default class COFLevel5 extends COFLevel {
         this.swordAssist.scale.set(scaleSize, scaleSize);
         this.swordAssist.position.copy(new Vec2(enemySpawn[0], enemySpawn[1]));
 
-        this.swordAssist.addAI(controller, {player: this.player});
+        this.swordAssist.addAI(controller, {player: this.player, enemyBossId: this.enemyBoss.id});
 
         let enemyHitbox = this.swordAssist.boundary.getHalfSize().clone();
         enemyHitbox.x = enemyHitbox.x - 6;
@@ -310,7 +310,6 @@ export default class COFLevel5 extends COFLevel {
         let swingPosition = this.player.position.clone();
         swingPosition.x += faceDir*14;
 
-        // This should loop through all hitable object? and fire event.
         if (this.swordAssist.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
             this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }

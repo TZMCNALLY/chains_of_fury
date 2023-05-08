@@ -41,6 +41,11 @@ export default class HorizontalCharge extends MoonDogState {
                     MathUtils.clamp(this.owner.position.x - (this.owner.position.x-this.parent.player.position.x)*this.overshootFactor, 300, 1000),
                     this.owner.position.y
                 )
+
+                // Adjust target to other side if still in phase 1
+                if (this.parent.health > 300) {
+                    this._target.x = (this.owner.position.x > 600 ? 400 : 800);
+                }
             }
             
             // Calculate distance to target.

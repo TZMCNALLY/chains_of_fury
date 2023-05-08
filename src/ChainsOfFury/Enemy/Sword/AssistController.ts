@@ -48,6 +48,7 @@ export const AssistTweens = {
 export default class AssistController extends EnemyController {
 
     public walkTime: Date; // tracks when the sword started walking
+    public enemyBossId: number // the id of the enemy boss this assist is related to
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {
         super.initializeAI(owner, options);
@@ -62,10 +63,10 @@ export default class AssistController extends EnemyController {
         this.addState(AssistStates.DEAD, new Dead(this, this.owner));
 
         this.walkTime = new Date();
-        this.initialize(AssistStates.SPAWN);
-
+        this.enemyBossId = options.enemyBossId
         this.maxHealth = 2000;
         this.health = this.maxHealth;
+        this.initialize(AssistStates.SPAWN);
     }
 
     public handleEvent(event: GameEvent): void {

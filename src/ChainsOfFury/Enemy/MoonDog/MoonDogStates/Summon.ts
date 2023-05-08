@@ -9,12 +9,11 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 export default class Summon extends MoonDogState {
 
     private stateTime: number;
+    private animationPlayed: boolean;
 
 	public onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(MoonDogAnimation.SUMMON, false, MoonDogEvents.SUMMON);
-        this.owner.animation.queue(MoonDogAnimation.IDLE);
-
         this.stateTime = 4;
+        this.animationPlayed = false;
 	}
 
 	public update(deltaT: number): void {
@@ -23,6 +22,12 @@ export default class Summon extends MoonDogState {
 
         if (this.stateTime > 0) {
             this.stateTime -= deltaT;
+
+            if (!this.animationPlayed) {
+                this.owner.animation.play(MoonDogAnimation.SUMMON, false, MoonDogEvents.SUMMON);
+                this.owner.animation.queue(MoonDogAnimation.IDLE);
+                this.animationPlayed = true;
+            }
         } else {
             this.finished(MoonDogStates.IDLE);
         }

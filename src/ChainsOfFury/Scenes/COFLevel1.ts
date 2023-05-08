@@ -22,6 +22,7 @@ import { COFEvents } from "../COFEvents";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import SmallDogBehavior from "../Enemy/MoonDog/AttackBehavior/SmallDogBehavior";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import MainMenu from "./MainMenu";
 
 export default class COFLevel1 extends COFLevel {
 
@@ -97,7 +98,8 @@ export default class COFLevel1 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
-        this.sceneManager.changeToScene(COFLevel2)
+        MainMenu.boss1Defeated = true;
+        this.sceneManager.changeToScene(COFLevel2);
     }
 
     protected subscribeToEvents(): void {

@@ -16,6 +16,7 @@ import { SpellEffects } from "../Spells/SpellEffects";
 import SlashBehavior from "../Spells/Slash/SlashBehavior";
 import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import { SlashEvents } from "../Spells/Slash/SlashEvents";
+import MainMenu from "./MainMenu";
 
 export default class COFLevel4 extends COFLevel {
 
@@ -62,6 +63,7 @@ export default class COFLevel4 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
+        MainMenu.boss4Defeated = true;
         this.sceneManager.changeToScene(COFLevel5)
     }
 

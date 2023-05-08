@@ -4,9 +4,8 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import SplashScreen from "./SplashScreen";
 import MainMenu from "./MainMenu";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import { MenuLayers } from "./MainMenu";
 
 import COFLevel1 from "./COFLevel1";
 import COFLevel2 from "./COFLevel2";
@@ -15,10 +14,6 @@ import COFLevel4 from "./COFLevel4";
 import COFLevel5 from "./COFLevel5";
 import COFLevel6 from "./COFLevel6";
 
-// Layers for the main menu scene
-export const MenuLayers = {
-    MAIN: "MAIN"
-} as const;
 
 export default class LevelSelect extends Scene {
 
@@ -28,8 +23,8 @@ export default class LevelSelect extends Scene {
     // - Enemy silhouettes
     // - Label level on upper side of button.
 
-    // public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    // public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
+    public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
+    public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
 
     public loadScene(): void {
         // Load the menu song

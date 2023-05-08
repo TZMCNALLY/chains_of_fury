@@ -279,6 +279,7 @@ export default class COFLevel6 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
+        MainMenu.boss6Defeated = true;
         this.sceneManager.changeToScene(MainMenu)
     }
 }

@@ -4,29 +4,14 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import LevelSelect from "./LevelSelect";
+import EnemyScreen from "./EnemyScreen";
 import MainMenu from "./MainMenu";
-import SplashScreen from "./SplashScreen";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-
-// Layers for the main menu scene
-export const MenuLayers = {
-    MAIN: "MAIN"
-} as const;
+import { MenuLayers } from "./MainMenu";
+import { EnemyMenus } from "./EnemyScreen";
 
 export default class Help extends Scene {
-
-    // TODO:
-    // - Music (maybe start playing from splash screen)
-    // - Background
-    // - Sprite/logo on top.
-
-    // public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    // public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
-
     public loadScene(): void {
-        // Load the menu song
-        // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+        // this.load.spritesheet("moondog_silhouette", "cof_assets/spritesheets/Silhouettes/moondog_silhouette.json");  
     }
 
     public startScene(): void {
@@ -41,7 +26,7 @@ export default class Help extends Scene {
             UIElementType.LABEL,
             MenuLayers.MAIN,
             {
-                position: new Vec2(size.x, size.y-330),
+                position: new Vec2(size.x, size.y-350),
                 text: "Help"
             }
         );
@@ -51,32 +36,54 @@ export default class Help extends Scene {
         // ================================================================================
         // Backstory Section
 
-        this.createBackground(size.x, size.y-175, 1150, 200);
+        this.createBackground(size.x, size.y-127.5, 1150, 350);
 
-        this.createText(size.x, size.y-250, "Backstory: Hell is a place where only one reigns supreme: the Demon King. No demon can go against his power, primarily because he possesses the Crown of Obedience.");
-        this.createText(size.x, size.y-220, "All creatures of Hell must follow his rule, or be vanquished from existence by the Crown. This power is not everlasting, however. Every millennium, the crown decides upon a new owner.");
-        this.createText(size.x, size.y-190, "As the time is close at hand, the current demon king announces a tournament boasting Hell's cream of the crop to fight for the throne.");
-        this.createText(size.x, size.y-160, "Azazel, a vengeful demon residing in the depths of Hell, has been training with his meteor hammer for centuries, all for this moment.");
-        this.createText(size.x, size.y-130, "Ever since the Demon King sentenced his father to death, Azazel had been patiently waiting for his chance at revenge.");
-        this.createText(size.x, size.y-100, "And so he enters the tournament with only two goals in mind: to claim the Crown and kill the current Demon King.");
+        this.createText(size.x, size.y-270, "Backstory: Hell is a place where only one reigns supreme: the Demon King.");
+        this.createText(size.x, size.y-230, "No demon can go against his power, primarily because he possesses the Crown of Obedience.");
+        this.createText(size.x, size.y-190, "All creatures of Hell must follow his rule, or be vanquished from existence by the Crown.");
+        this.createText(size.x, size.y-150, "This power is not everlasting, however. Every millennium, the crown decides upon a new owner.");
+        this.createText(size.x, size.y-110, "As the time is close at hand, the current demon king announces a tournament boasting Hell's cream of the crop to fight for the throne.");
+        this.createText(size.x, size.y-70, "Azazel, a vengeful demon residing in the depths of Hell, has been training with his meteor hammer for centuries, all for this moment.");
+        this.createText(size.x, size.y-30, "Ever since the Demon King sentenced his father to death, Azazel had been patiently waiting for his chance at revenge.");
+        this.createText(size.x, size.y+10, "And so he enters the tournament with only two goals in mind: to claim the Crown and kill the current Demon King.");
 
         // Backstory Section
         // ================================================================================
 
         // ================================================================================
-        // Characters Section
+        // Enemies Section
 
-        this.createBackground(size.x-200, size.y+100, 600, 350);
-        this.createText(size.x-300, size.y-50, "Characters here");
+        this.createBackground(size.x-170, size.y+175, 800, 200);
+        this.createText(size.x-170, size.y+115, "Enemies");
         
-        // Characters Section
+        MainMenu.boss1Defeated ? this.createText(size.x-425, size.y+165, "Moon Dog").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.MOON_DOG})}
+                               : this.createText(size.x-425, size.y+165, "???")
+
+        MainMenu.boss2Defeated ? this.createText(size.x-170, size.y+165, "Dark Stalker").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.DARK_STALKER})}
+                               : this.createText(size.x-170, size.y+165, "???")
+
+        MainMenu.boss3Defeated ? this.createText(size.x+85, size.y+165, "Lord Reyalf").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.LORD_REYALF})}
+                               : this.createText(size.x+85, size.y+165, "???")
+
+        MainMenu.boss4Defeated ? this.createText(size.x-425, size.y+225, "Reaper").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.REAPER})}
+                               : this.createText(size.x-425, size.y+225, "???")
+
+        MainMenu.boss5Defeated ? this.createText(size.x-170, size.y+225, "Satan's Blade").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.SATANS_BLADE})}
+                               : this.createText(size.x-170, size.y+225, "???")
+
+        MainMenu.boss6Defeated ? this.createText(size.x+85, size.y+225, "Demon King").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.DEMON_KING})}
+                               : this.createText(size.x+85, size.y+225, "???")
+        
+        // Enemies Section
         // ================================================================================
 
         // ================================================================================
         // Cheat Codes Section
 
-        this.createBackground(size.x+200, size.y+100, 600, 350);
-        this.createText(size.x+200, size.y-50, "Cheat codes here");
+        this.createBackground(size.x+420, size.y+175, 300, 200);
+        this.createText(size.x+420, size.y+105, "Cheat codes");
+        this.createText(size.x+420, size.y+135, "O - Infinite Damage");
+        this.createText(size.x+420, size.y+165, "P - Infinite Health");
 
         // Cheat Codes Section
         // ================================================================================
@@ -85,7 +92,7 @@ export default class Help extends Scene {
         // ================================================================================
         // Developers Section
 
-        this.createBackground(size.x, size.y+330, 400, 50);
+        this.createBackground(size.x, size.y+330, 550, 50);
         this.createText(size.x, size.y+330, "Developed by: Aaron Liang, Torin McNally, and Vincent Ke");
 
         // Developers Section
@@ -97,7 +104,7 @@ export default class Help extends Scene {
             UIElementType.BUTTON,
             MenuLayers.MAIN,
             {
-                position: new Vec2(size.x-480, size.y+320),
+                position: new Vec2(size.x-480, size.y+340),
                 text: "Back"
             }
         );
@@ -121,11 +128,13 @@ export default class Help extends Scene {
 
     // Creates a text label and appends it onto main layer.
     // x and y are positions of the label, and string is the text that goes inside of the label.
-    public createText(x : number, y : number, txt : String): void {
+    public createText(x : number, y : number, txt : String): Label {
         let label = <Label>this.add.uiElement(UIElementType.LABEL,MenuLayers.MAIN,{position: new Vec2(x, y), text:txt});
-        label.fontSize = 15;
+        label.fontSize = 20;
         label.font = "PixelSimple";
         label.textColor = Color.RED;
+
+        return label;
     }
 
     // Creates a background label and appends it onto main layer.
@@ -136,5 +145,14 @@ export default class Help extends Scene {
         background.borderWidth = 5;
         background.borderColor = Color.RED;
         background.backgroundColor = Color.BLACK;
+    }
+
+    // Create animated sprite at x,y.
+    // s: scale, key: key of sprite.
+    public createSprite(x: number, y: number, sx: number, sy: number, key: string, animation: string) {
+        let sprite = this.add.animatedSprite(key, MenuLayers.MAIN);
+        sprite.scale.set(sx, sy);
+        sprite.position.set(x, y);
+        sprite.animation.play(animation);
     }
 }

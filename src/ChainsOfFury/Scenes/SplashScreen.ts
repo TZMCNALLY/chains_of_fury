@@ -10,11 +10,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { COFLayers } from "./COFLevel";
 import MainMenu from "./MainMenu";
-
-// Layers for the main menu scene
-export const MenuLayers = {
-    MAIN: "MAIN"
-} as const;
+import { MenuLayers } from "./MainMenu";
 
 export default class SplashScreen extends Scene {
 

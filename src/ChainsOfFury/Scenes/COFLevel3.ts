@@ -14,6 +14,7 @@ import ShadowDemonController from "../Enemy/MindFlayer/MindFlayerSummons/ShadowD
 import { ShadowDemonEvents } from "../Enemy/MindFlayer/MindFlayerSummons/ShadowDemon/ShadowDemonEvents";
 import { DemonSummoningCircleEvents } from "../Spells/DemonSummonCircle/DemonSummoningCircleEvents";
 import DemonSummoningCircleBehavior from "../Spells/DemonSummonCircle/DemonSummoningCircleBehavior";
+import MainMenu from "./MainMenu";
 
 export default class COFLevel3 extends COFLevel {
 
@@ -38,12 +39,13 @@ export default class COFLevel3 extends COFLevel {
 
     public startScene(): void {
         super.startScene();
-        super.initializeBossUI("Mind Flayer");
+        super.initializeBossUI("Lord Reyalf");
         this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [1000, 500], -5, -5);
     }
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
+        MainMenu.boss3Defeated = true;
         this.sceneManager.changeToScene(COFLevel4);
     }
 

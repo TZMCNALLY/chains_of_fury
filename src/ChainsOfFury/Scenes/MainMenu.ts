@@ -5,7 +5,6 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
-import COFLevel from "./COFLevel";
 import Help from "./Help";
 import Controls from "./Controls";
 import COFLevel1 from "./COFLevel1";
@@ -16,7 +15,8 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 // Layers for the main menu scene
 export const MenuLayers = {
-    MAIN: "MAIN"
+    MAIN: "MAIN",
+    SPRITES: "SPRITES"
 } as const;
 
 export default class MainMenu extends Scene {
@@ -31,6 +31,13 @@ export default class MainMenu extends Scene {
     protected nextScene: number // number denoting which scene to transition to. 0 for start game, 1 for level select,
                                 // 2 for controls, 3 for help
 
+    public static boss1Defeated: boolean;
+    public static boss2Defeated: boolean;
+    public static boss3Defeated: boolean;
+    public static boss4Defeated: boolean;
+    public static boss5Defeated: boolean;
+    public static boss6Defeated: boolean;
+
     // TODO:
     // - Background
     // - Sprite/logo on top.
@@ -41,6 +48,7 @@ export default class MainMenu extends Scene {
 
     public startScene(): void {
         this.addUILayer(MenuLayers.MAIN);
+        this.addUILayer(MenuLayers.SPRITES);
 
         // Center the viewport
         let size = this.viewport.getHalfSize();

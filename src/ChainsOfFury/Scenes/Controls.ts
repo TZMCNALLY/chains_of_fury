@@ -1,31 +1,15 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import LevelSelect from "./LevelSelect";
 import MainMenu from "./MainMenu";
-import SplashScreen from "./SplashScreen";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-
-// Layers for the main menu scene
-export const MenuLayers = {
-    MAIN: "MAIN",
-    SPRITES: "SPRITES"
-} as const;
+import { MenuLayers } from "./MainMenu";
 
 export default class Controls extends Scene {
-
-    // public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
-    // public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
-
     public loadScene(): void {
-        // Load the menu song
-        // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
-
-        this.load.spritesheet("player", "cof_assets/spritesheets/Player/chain_devil.json");  
+        this.load.spritesheet("player", "cof_assets/spritesheets/Player/chain_devil.json");
     }
 
     public startScene(): void {

@@ -16,27 +16,31 @@ import COFLevel6 from "./COFLevel6";
 import { COFCheats } from "../COFCheats";
 import Input from "../../Wolfie2D/Input/Input";
 
-
 export default class LevelSelect extends Scene {
-
-    // TODO:
-    // - Music (maybe start playing from splash screen)
-    // - Background
-    // - Enemy silhouettes
-    // - Label level on upper side of button.
-
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
     public static readonly MUSIC_PATH = "hw4_assets/music/menu.mp3";
-    protected static levelCheatOn = false;
 
     public loadScene(): void {
-        // Load the menu song
-        // this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
+        this.load.spritesheet("moondog", "cof_assets/spritesheets/Enemies/moondog.json");  
+        this.load.spritesheet("darkstalker", "cof_assets/spritesheets/Enemies/dark_stalker.json");
+        this.load.spritesheet("mind_flayer", "cof_assets/spritesheets/Enemies/mind_flayer.json");
+        this.load.spritesheet("reaper", "cof_assets/spritesheets/Enemies/reaper.json");
+        this.load.spritesheet("flying_sword", "cof_assets/spritesheets/Enemies/flying_sword.json");
+        this.load.spritesheet("wraith", "cof_assets/spritesheets/Enemies/wraith.json");
+
+        this.load.spritesheet("moondog_silhouette", "cof_assets/spritesheets/Silhouettes/moondog_silhouette.json");
+        this.load.spritesheet("darkstalker_silhouette", "cof_assets/spritesheets/Silhouettes/dark_stalker_silhouette.json");
+        this.load.spritesheet("mind_flayer_silhouette", "cof_assets/spritesheets/Silhouettes/mind_flayer_silhouette.json");
+        this.load.spritesheet("reaper_silhouette", "cof_assets/spritesheets/Silhouettes/reaper_silhouette.json");
+        this.load.spritesheet("flying_sword_silhouette", "cof_assets/spritesheets/Silhouettes/flying_sword_silhouette.json");
+        this.load.spritesheet("wraith_silhouette", "cof_assets/spritesheets/Silhouettes/wraith_silhouette.json");
+
         this.load.spritesheet("lock", "cof_assets/images/lock.json")
     }
 
     public startScene(): void {
         this.addUILayer(MenuLayers.MAIN);
+        this.addUILayer(MenuLayers.SPRITES);
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
@@ -68,41 +72,41 @@ export default class LevelSelect extends Scene {
 
 
         // Buttons:
-        let level1 = this.makeLevelBox(size.x-350, size.y-100, "Level 1");
-        let level2 = this.makeLevelBox(size.x, size.y-100, "Level 2");
-        let level3 = this.makeLevelBox(size.x+350, size.y-100, "Level 3");
-        let level4 = this.makeLevelBox(size.x-350, size.y+200, "Level 4");
-        let level5 = this.makeLevelBox(size.x, size.y+200, "Level 5");
-        let level6 = this.makeLevelBox(size.x+350, size.y+200, "Level 6");
+        let level1 = this.makeLevelBox(size.x-350, size.y-100, "");
+        let level2 = this.makeLevelBox(size.x, size.y-100, "");
+        let level3 = this.makeLevelBox(size.x+350, size.y-100, "");
+        let level4 = this.makeLevelBox(size.x-350, size.y+200, "");
+        let level5 = this.makeLevelBox(size.x, size.y+200, "");
+        let level6 = this.makeLevelBox(size.x+350, size.y+200, "");
 
         // Scene transitions:
         level1.onClick = () => {
-            if(MainMenu.boss1Defeated || LevelSelect.levelCheatOn)
+            if (MainMenu.boss1Defeated)
                 this.sceneManager.changeToScene(COFLevel1);
         };
 
         level2.onClick = () => {
-            if(MainMenu.boss2Defeated || LevelSelect.levelCheatOn)
+            if (MainMenu.boss2Defeated)
                 this.sceneManager.changeToScene(COFLevel2);
         };
 
         level3.onClick = () => {
-            if(MainMenu.boss3Defeated || LevelSelect.levelCheatOn)
+            if (MainMenu.boss3Defeated)
                 this.sceneManager.changeToScene(COFLevel3);
         };
 
         level4.onClick = () => {
-            if(MainMenu.boss4Defeated || LevelSelect.levelCheatOn)
+            if (MainMenu.boss4Defeated)
                 this.sceneManager.changeToScene(COFLevel4);
         };
 
         level5.onClick = () => {
-            if(MainMenu.boss5Defeated || LevelSelect.levelCheatOn)
+            if (MainMenu.boss5Defeated)
                 this.sceneManager.changeToScene(COFLevel5);
         };
         
         level6.onClick = () => {
-            if(MainMenu.boss6Defeated || LevelSelect.levelCheatOn)
+            if (MainMenu.boss6Defeated)
                 this.sceneManager.changeToScene(COFLevel6);
         };
 
@@ -127,7 +131,7 @@ export default class LevelSelect extends Scene {
             this.sceneManager.changeToScene(MainMenu);
         }
 
-        this.handleLockedLevels();
+        this.generateLevelImages();
     }
 
     public unloadScene(): void {
@@ -136,7 +140,12 @@ export default class LevelSelect extends Scene {
     public update(deltaT: number): void {
         super.update(deltaT);
         if (Input.isJustPressed(COFCheats.UNLOCK_ALL)) {
-            LevelSelect.levelCheatOn = true
+            MainMenu.boss1Defeated = true;
+            MainMenu.boss2Defeated = true;
+            MainMenu.boss3Defeated = true;
+            MainMenu.boss4Defeated = true;
+            MainMenu.boss5Defeated = true;
+            MainMenu.boss6Defeated = true;
         }
     }
 
@@ -151,9 +160,9 @@ export default class LevelSelect extends Scene {
                 text: txt
             }
         );
-        levelBox.backgroundColor = Color.BLACK;
+        levelBox.backgroundColor = new Color(139, 0, 0);
         levelBox.borderColor = Color.BLACK;
-        levelBox.borderRadius = 0;
+        levelBox.borderWidth = 3;
         levelBox.font = "PixelSimple";
         levelBox.fontSize = 20;
         levelBox.textColor = Color.RED;
@@ -162,53 +171,72 @@ export default class LevelSelect extends Scene {
         return levelBox;
     }
 
-    private handleLockedLevels() {
+    private generateLevelImages() {
+        let size = this.viewport.getHalfSize();
 
-        if(!LevelSelect.levelCheatOn) {
-
-            let size = this.viewport.getHalfSize();
-
-            if(!MainMenu.boss1Defeated) {
-
-                let lock = this.add.sprite("lock", MenuLayers.MAIN)
-                lock.scale.set(4, 4)
-                lock.position = new Vec2(size.x-350, size.y-100)
-            }
-
-            if(!MainMenu.boss2Defeated) {
-                
-                let lock = this.add.sprite("lock", MenuLayers.MAIN)
-                lock.scale.set(4, 4)
-                lock.position = new Vec2(size.x, size.y-100)
-            }
-
-            if(!MainMenu.boss3Defeated) {
-                
-                let lock = this.add.sprite("lock", MenuLayers.MAIN)
-                lock.scale.set(4, 4)
-                lock.position = new Vec2(size.x+350, size.y-100)
-            }
-
-            if(!MainMenu.boss4Defeated) {
-                
-                let lock = this.add.sprite("lock", MenuLayers.MAIN)
-                lock.scale.set(4, 4)
-                lock.position = new Vec2(size.x-350, size.y+200)
-            }
-
-            if(!MainMenu.boss5Defeated) {
-                
-                let lock = this.add.sprite("lock", MenuLayers.MAIN)
-                lock.scale.set(4, 4)
-                lock.position = new Vec2(size.x, size.y+200)
-            }
-
-            if(!MainMenu.boss6Defeated) {
-                
-                let lock = this.add.sprite("lock", MenuLayers.MAIN)
-                lock.scale.set(4, 4)
-                lock.position = new Vec2(size.x+350, size.y+200)
-            }
+        if (!MainMenu.boss1Defeated) {
+            this.createSprite(size.x-350, size.y-100, 1.5, 1.5, "moondog_silhouette", "IDLE");
+            this.createLock(size.x-350, size.y-100);
         }
+        else {
+            this.createSprite(size.x-350, size.y-100, 1.5, 1.5, "moondog", "IDLE");
+        }
+
+        if (!MainMenu.boss2Defeated) {
+            this.createSprite(size.x, size.y-100, 1.5, 1.5, "darkstalker_silhouette", "IDLE");
+            this.createLock(size.x, size.y-100);
+        }
+        else {
+            this.createSprite(size.x, size.y-100, 1.5, 1.5, "darkstalker", "IDLE");
+        }
+
+        if (!MainMenu.boss3Defeated) {
+            this.createSprite(size.x+350, size.y-100, 0.7, 0.7, "mind_flayer_silhouette", "IDLE");
+            this.createLock(size.x+350, size.y-100);
+        }
+        else {
+            this.createSprite(size.x+350, size.y-100, 0.7, 0.7, "mind_flayer", "IDLE");
+        }
+
+        if (!MainMenu.boss4Defeated) {
+            this.createSprite(size.x-350, size.y+200, 1.5, 1.5, "reaper_silhouette", "IDLE");
+            this.createLock(size.x-350, size.y+200);
+        }
+        else {
+            this.createSprite(size.x-350, size.y+200, 1.5, 1.5, "reaper", "IDLE");
+        }
+
+        if (!MainMenu.boss5Defeated) {
+            this.createSprite(size.x, size.y+200, 1.5, 1.5, "flying_sword_silhouette", "IDLE");
+            this.createLock(size.x, size.y+200);
+        }
+        else {
+            this.createSprite(size.x, size.y+200, 1.5, 1.5, "flying_sword", "IDLE");
+        }
+
+        if (!MainMenu.boss6Defeated) {
+            this.createSprite(size.x+350, size.y+200, 1.5, 1.5, "wraith_silhouette", "IDLE");
+            this.createLock(size.x+350, size.y+200);
+        }
+        else {
+            this.createSprite(size.x+350, size.y+200, 1.5, 1.5, "wraith", "IDLE_LEFT");
+        }
+    }
+
+    protected createLock(posX: number, posY: number) {
+        let lock = this.add.sprite("lock", MenuLayers.SPRITES);
+        lock.scale.set(4, 4);
+        lock.position = new Vec2(posX, posY);
+    }
+
+    // Create animated sprite at x,y.
+    // s: scale, key: key of sprite.
+    protected createSprite(x: number, y: number, sx: number, sy: number, key: string, animation: string) {
+        let sprite = this.add.animatedSprite(key, MenuLayers.SPRITES);
+        sprite.scale.set(sx, sy);
+        sprite.position.set(x, y);
+        sprite.animation.play(animation, true);
+
+        return sprite;
     }
 }

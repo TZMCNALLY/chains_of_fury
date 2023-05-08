@@ -20,6 +20,8 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import MoonBehavior from "../Enemy/MoonDog/AttackBehavior/MoonBehavior";
 import { COFEvents } from "../COFEvents";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import SmallDogBehavior from "../Enemy/MoonDog/AttackBehavior/SmallDogBehavior";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 
 export default class COFLevel1 extends COFLevel {
 
@@ -122,13 +124,16 @@ export default class COFLevel1 extends COFLevel {
     }
 
     private initLittleOnes() {
-        this.minions = new Array(3);
-        for (let i = 0; i < 3; i++) {
+        this.minions = new Array(5);
+        for (let i = 0; i < 5; i++) {
             this.minions[i] = this.add.animatedSprite("hellhound", COFLayers.PRIMARY);
 
-            // Placeholder until I add AI for the little ones.
-            this.minions[i].addAI(FireballBehavior);
-            this.minions[i].scale = new Vec2(.4,.4);
+            let p = this.add.graphic(GraphicType.POINT, COFLayers.PRIMARY, {position: Vec2.ZERO});
+
+            this.minions[i].addAI(SmallDogBehavior, {player: this.player, debug_point: p});
+            this.minions[i].scale = new Vec2(.5,.5); // Lower values cause wall collisions to break.
+            this.minions[i].addPhysics(this.minions[i].boundary);
+            this.minions[i].setGroup(COFPhysicsGroups.ENEMY);
 
             // Tweens for coming into and leaving life.
             this.minions[i].tweens.add("death", {
@@ -214,18 +219,38 @@ export default class COFLevel1 extends COFLevel {
     }
 
     private summonLittleOnes(): void {
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
+            // Checks if max amount of minions is reached.
+            if ((this.enemyBoss._ai as MoonDogController).minionCount >= 3 && 
+            (this.enemyBoss._ai as MoonDogController).health > 300) {
+                return;
+            }
+
+
             if (this.minions[i].visible) {
+                // Instead of resummong, just gonna do a power up instead.
+
                 continue;
             } else {
                 // Sets the minion to a position on a random point on a circle around the boss.
                 let aroundBoss = new Vec2(80,80);
                 aroundBoss.rotateCCW(Math.PI * RandUtils.randFloat(0, 2));
                 this.minions[i].position.copy(this.enemyBoss.position.clone().add(aroundBoss));
-                // TODO: check bound.
+
+                // check bound. (flip direction of the around boss if out of bounce.)
+                if (this.enemyBoss.position.clone().add(aroundBoss).y > 740 || 
+                    this.enemyBoss.position.clone().add(aroundBoss).y < 230) {
+                        aroundBoss.y *= -1;
+                }
+                if (this.enemyBoss.position.clone().add(aroundBoss).x > 990 || 
+                    this.enemyBoss.position.clone().add(aroundBoss).x < 270) {
+                        aroundBoss.x *= -1;
+                }
 
                 this.minions[i].visible = true;
                 this.minions[i].tweens.play("summon");
+
+                (this.enemyBoss._ai as MoonDogController).minionCount += 1;
             }
         }
     }
@@ -273,8 +298,6 @@ export default class COFLevel1 extends COFLevel {
             this.moons[i].visible = true;
             this.moons[i].animation.play("STATIC", true);
             this.moons[i].tweens.play("rotate");
-
-            console.log(this.moons[i].position);
 
             return;
         }

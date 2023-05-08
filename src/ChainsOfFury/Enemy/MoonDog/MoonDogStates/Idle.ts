@@ -28,6 +28,7 @@ export default class Idle extends MoonDogState {
 				if (rnd < 20) {
 					// 20% chance to charge.
 					this.finished(MoonDogStates.HORIZONTAL_CHARGE);
+					return;
 				}
 
 				let summonChance = 5; // 5% chance to re-summon even if all are still alive.

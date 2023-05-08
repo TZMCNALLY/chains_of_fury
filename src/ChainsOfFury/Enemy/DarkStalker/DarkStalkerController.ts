@@ -32,7 +32,8 @@ export const DarkStalkerAnimations = {
     /** Simplify so I can just use flip later. */
     RUN: "WALKING_LEFT",
     TAKING_DAMAGE: "DAMAGE_LEFT",
-    TELEPORT: "DYING" // TODO: Using this animation, rename this later.
+    TELEPORT: "DYING", // TODO: Using this animation, rename this later.
+    MAGIC: "MAGIC"
 } as const
 
 export default class DarkStalkerController extends EnemyController {

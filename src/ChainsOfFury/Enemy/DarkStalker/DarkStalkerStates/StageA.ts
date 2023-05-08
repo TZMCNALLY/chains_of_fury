@@ -14,7 +14,7 @@ export default class StageA extends DarkStalkerState {
 	private actionWaitTime: number;
 
 	public onEnter(options: Record<string, any>): void {
-        // this.owner.animation.play(DarkStalkerAnimations.IDLE);
+        this.owner.animation.play(DarkStalkerAnimations.IDLE);
 
 		this.actionWaitTime = 2;
 	}

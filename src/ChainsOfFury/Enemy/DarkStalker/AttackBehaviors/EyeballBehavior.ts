@@ -177,7 +177,7 @@ export default class EyeballBehavior implements AI {
 
     public reset(): void {
         this.exploding = false;
-        this.health = 3;
+        this.health = 2;
 
         this.circleVec = new Vec2(0, 150);
         this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);

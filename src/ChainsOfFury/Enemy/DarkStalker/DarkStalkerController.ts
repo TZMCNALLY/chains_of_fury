@@ -10,6 +10,8 @@ import { COFEvents } from "../../COFEvents";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import { DarkStalkerEvents } from "./DarkStalkerEvents";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import COFLevel from "../../Scenes/COFLevel";
 
 export const DarkStalkerStates = {
     IDLE: "IDLE",
@@ -114,6 +116,7 @@ export default class DarkStalkerController extends EnemyController {
             // Two event to kill minion with fireball.
             this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
             this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.ENEMY_HIT_KEY});
             return;
         }
 

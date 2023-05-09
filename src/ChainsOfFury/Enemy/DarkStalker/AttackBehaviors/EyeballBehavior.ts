@@ -2,6 +2,7 @@ import AI from "../../../../Wolfie2D/DataTypes/Interfaces/AI";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Emitter from "../../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import Receiver from "../../../../Wolfie2D/Events/Receiver";
 import { GraphicType } from "../../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Line from "../../../../Wolfie2D/Nodes/Graphics/Line";
@@ -12,6 +13,7 @@ import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import { COFEvents } from "../../../COFEvents";
 import { COFLayers } from "../../../Scenes/COFLevel";
+import COFLevel2 from "../../../Scenes/COFLevel2";
 import { DarkStalkerEvents } from "../DarkStalkerEvents";
 
 export default class EyeballBehavior implements AI {
@@ -69,6 +71,7 @@ export default class EyeballBehavior implements AI {
             let shootTimer = new Timer(1000, () => {
                 this.aimingLine.thickness = 5;
                 this.aimingLine.color = Color.RED;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel2.BOOM_AUDIO});
                 if (this.lineIntersect()) {
                     this.emitter.fireEvent(COFEvents.ENEMY_PROJECTILE_HIT_PLAYER);
                 }                

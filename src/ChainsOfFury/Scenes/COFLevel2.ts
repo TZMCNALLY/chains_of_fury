@@ -30,6 +30,8 @@ export default class COFLevel2 extends COFLevel {
     private eyeBalls: Array<AnimatedSprite>;
     private portals: Array<AnimatedSprite>;
 
+    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/Demon King/lightning_strike.wav";
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
         let groupNames : string[] = [
@@ -70,6 +72,8 @@ export default class COFLevel2 extends COFLevel {
         this.load.spritesheet("portal", "cof_assets/spritesheets/Spells/portal.json");
         this.load.spritesheet("mine", "cof_assets/spritesheets/Spells/mines.json");
         this.load.spritesheet("eyeball", "cof_assets/spritesheets/Enemies/eyeball.json");
+
+        this.load.audio(COFLevel2.BOOM_AUDIO, COFLevel2.BOOM_AUDIO);
     }
 
     public startScene(): void {
@@ -238,6 +242,7 @@ export default class COFLevel2 extends COFLevel {
 
                 (this.missles[i]._ai as MissleBehavior).reset();
                 this.missles[i].visible = true;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.FIREBALL_THROWN_KEY});
 
                 return;
             }
@@ -337,6 +342,8 @@ export default class COFLevel2 extends COFLevel {
             this.mineBalls[i].addPhysics(hitbox);
             // Since this group have no collision with projectiles and player
             this.mineBalls[i].setGroup(COFPhysicsGroups.ENEMY);
+            // So mines can be explode by fireball as well.
+            this.mineBalls[i].setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY, "");
 
             let rndSpeed = RandUtils.randInt(100, 180);
             let rndDir = new Vec2(rndSpeed, rndSpeed);
@@ -414,6 +421,8 @@ export default class COFLevel2 extends COFLevel {
         for (let i = 0; i < 12; i++) {
             if (this.mineBalls[i].id == node) {
                 this.mineBalls[i].animation.playIfNotAlready("EXPLODE");
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel2.BOOM_AUDIO});
+
 
                 this.mineBalls[i].scale = new Vec2(2,2);
 
@@ -452,6 +461,7 @@ export default class COFLevel2 extends COFLevel {
 
     protected handleBossTeleportation(location: Vec2): void { 
         this.enemyBoss.position.copy(location);
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_TELEPORTED_KEY});
     }
 
     private handleEyeballDeath(): void {

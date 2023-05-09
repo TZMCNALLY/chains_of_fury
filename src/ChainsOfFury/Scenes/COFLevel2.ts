@@ -458,6 +458,7 @@ export default class COFLevel2 extends COFLevel {
         for (let i = 0; i < 4; i++) {
             if ((this.eyeBalls[i]._ai as EyeballBehavior).health <= 0 && this.eyeBalls[i].visible) {
                 this.eyeBalls[i].visible = false;
+                this.eyeBalls[i].position = Vec2.ZERO;
                 this.eyeBalls[i].animation.stop();
             }
         }

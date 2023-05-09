@@ -111,6 +111,8 @@ export default class DarkStalkerController extends EnemyController {
 
     public handleEnemyFireballHit(id: number, entity: string): void {
         if (id !== this.owner.id) {
+            // Two event to kill minion with fireball.
+            this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
             this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
             return;
         }

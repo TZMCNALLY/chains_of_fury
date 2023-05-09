@@ -26,6 +26,7 @@ import { COFCheats } from "../COFCheats";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { HealMarkEvents } from "../Spells/HealMarks/HealMarkEvents";
 import HealMarkBehavior from "../Spells/HealMarks/HealMarkBehavior";
+import Actor from "../../Wolfie2D/DataTypes/Interfaces/Actor";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import AudioManager from '../../Wolfie2D/Sound/AudioManager';
@@ -146,6 +147,10 @@ export default class COFLevel extends Scene {
     public static readonly ENEMY_HIT_KEY = "ENEMY_HIT_KEY";
     public static readonly ENEMY_HIT_PATH = "cof_assets/sounds/Enemies/enemy_hit.mp3";
 
+    private paused: boolean;
+    private pausedActors: Array<boolean>;
+    private pauseMenuGenerated: boolean;
+
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
         // Allow overriding collision matrix from child
@@ -252,6 +257,9 @@ export default class COFLevel extends Scene {
         this.subscribeToEvents();
 
         this.initializeLevelEndUI();
+
+        this.pauseMenuGenerated = false;
+      
         this.initializeLevelTransitionUI();
 
         
@@ -554,15 +562,49 @@ export default class COFLevel extends Scene {
     // the button appears to be elsewhere on the screen, as when i randomly clicked around
     // i eventually found the onclick area of the button
     protected handlePauseGame() {
-        // stops all the active AI
-        this.aiManager.actors.forEach(
-            actor => actor.setAIActive(false, {})
-        )
+        if (!this.paused) {
+            this.paused = true;
 
-        this.generatePauseMenu();
+            // Putting this somewhere else seems to mess up the positioning.
+            this.generatePauseMenu();
+
+            // Incredibily inefficient, but oh well.
+            this.pausedActors = new Array(this.aiManager.actors.length);
+
+            // Stop actors that need to be stopped.
+            for (let i = 0; i < this.aiManager.actors.length; i++) {
+                if (this.aiManager.actors[i].aiActive) {
+                    console.log(this.aiManager.actors[i].aiActive);
+                    this.pausedActors[i] = true;
+                    this.aiManager.actors[i].setAIActive(false, {});
+                } else {
+                    this.pausedActors[i] = false;
+                }
+            }
+            this.layers.get(COFLayers.PAUSE).enable();
+        } else {
+            this.paused = false;
+            // Restart stopped actors.
+            for (let i = 0; i < this.pausedActors.length; i++) {
+                if (this.pausedActors[i]) {
+                    this.aiManager.actors[i].setAIActive(true, {});
+                }
+            }
+
+            // Toggle pause screen
+            this.layers.get(COFLayers.PAUSE).disable();
+        }
+
+        
     }
 
-    protected generatePauseMenu() {        
+    protected generatePauseMenu() {       
+        if (this.pauseMenuGenerated) {
+            return;
+        }
+        this.pauseMenuGenerated = true;
+        
+
         let center = new Vec2();
         center.copy(this.viewport.getOrigin());
         center.x += this.viewport.getHalfSize().x;
@@ -602,6 +644,8 @@ export default class COFLevel extends Scene {
         unpause.onClick = () => {
             this.handleUnpauseGame();
         }
+
+        this.layers.get(COFLayers.PAUSE).disable();
     }
 
     protected handleUnpauseGame() {

@@ -20,9 +20,6 @@ export const MenuLayers = {
 } as const;
 
 export default class MainMenu extends Scene {
-    
-    // TODO: Add music / sound effect?
-
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
     public static readonly MUSIC_PATH = "cof_assets/music/cofmusic2.mp3";
     protected clicked: boolean; // whether the user has clicked a button or not
@@ -180,6 +177,7 @@ export default class MainMenu extends Scene {
                 switch(this.nextScene) {
                     
                     case 0: {
+                        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                         this.sceneManager.changeToScene(COFLevel1);
                         break;
                     }

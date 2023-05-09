@@ -9,6 +9,7 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Vec2 from '../../../../Wolfie2D/DataTypes/Vec2';
+import COFLevel5 from "../../../Scenes/COFLevel5";
 
 export default class Frenzy extends SwordState {
 
@@ -24,6 +25,7 @@ export default class Frenzy extends SwordState {
         this.owner.animation.play(SwordAnimations.IDLE)
         this.owner.animation.stop();
         this.owner.tweens.play(SwordTweens.TWIRL)
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel5.FRENZY_AUDIO_KEY})
         this.spinTimer.start()
 	}
 

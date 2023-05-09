@@ -26,10 +26,15 @@ export default class COFLevel5 extends COFLevel {
     public assistExists: boolean;
     protected swordBeams: Array<AnimatedSprite>;
     protected tornado: AnimatedSprite;
-    public static readonly BASIC_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_basic_audio.wav";
-    public static readonly SPIN_ATTACK_AUDIO_PATH = "cof_assets/sounds/sword_spin_audio.wav";
-    protected basicAttackAudioKey = "BASIC_ATTACK_AUDIO_KEY";
-    protected spinAttackAudioKey = "SPIN_ATTACK_AUDIO_KEY"
+
+    public static readonly basicAttackAudioKey = "BASIC_ATTACK_AUDIO_KEY";
+    public static readonly BASIC_ATTACK_AUDIO_PATH = "cof_assets/sounds/Enemies/Sword/sword_basic_audio.mp3";
+    public static readonly spinAttackAudioKey = "SPIN_ATTACK_AUDIO_KEY"
+    public static readonly SPIN_ATTACK_AUDIO_PATH = "cof_assets/sounds/Enemies/Sword/sword_spin_audio.mp3";
+    public static readonly FRENZY_AUDIO_KEY = "FRENZY_AUDIO_KEY"
+    public static readonly FRENZY_AUDIO_PATH = "cof_assets/sounds/Enemies/Sword/frenzy.mp3";
+    public static readonly BEAM_AUDIO_KEY = "BEAM_AUDIO_KEY"
+    public static readonly BEAM_AUDIO_PATH = "cof_assets/sounds/Enemies/Sword/sword_beam.mp3";
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
@@ -44,8 +49,11 @@ export default class COFLevel5 extends COFLevel {
     public loadScene(): void {
         // Load enemy
         super.loadScene();
-        this.load.audio(this.basicAttackAudioKey, COFLevel5.BASIC_ATTACK_AUDIO_PATH);
-        this.load.audio(this.spinAttackAudioKey, COFLevel5.SPIN_ATTACK_AUDIO_PATH);
+        this.load.audio(COFLevel5.basicAttackAudioKey, COFLevel5.BASIC_ATTACK_AUDIO_PATH);
+        this.load.audio(COFLevel5.spinAttackAudioKey, COFLevel5.SPIN_ATTACK_AUDIO_PATH);
+        this.load.audio(COFLevel5.FRENZY_AUDIO_KEY, COFLevel5.FRENZY_AUDIO_PATH);
+        this.load.audio(COFLevel5.BEAM_AUDIO_KEY, COFLevel5.BEAM_AUDIO_PATH);
+
         this.load.spritesheet("flying_sword", "cof_assets/spritesheets/Enemies/flying_sword.json");
         this.load.spritesheet("flying_sword_assist", "cof_assets/spritesheets/Enemies/flying_sword_assist.json");
         this.load.spritesheet("sword_beam", "cof_assets/spritesheets/Projectiles/sword_beam.json")
@@ -331,13 +339,5 @@ export default class COFLevel5 extends COFLevel {
         super.handleLevelEnd();
         MainMenu.boss5Defeated = true;
         this.sceneManager.changeToScene(COFLevel6)
-    }
-
-    public getSpinAudio(): string {
-        return this.spinAttackAudioKey;
-    }
-
-    public getBasicAttackAudio(): string {
-        return this.basicAttackAudioKey;
     }
 }

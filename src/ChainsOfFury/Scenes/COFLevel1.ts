@@ -20,6 +20,7 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import SmallDogBehavior from "../Enemy/MoonDog/AttackBehavior/SmallDogBehavior";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import MainMenu from "./MainMenu";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class COFLevel1 extends COFLevel {
 
@@ -377,15 +378,24 @@ export default class COFLevel1 extends COFLevel {
         let swingPosition = this.player.position.clone();
         swingPosition.x += faceDir*14;
 
+        let enemyHit = false;
+
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            enemyHit = true
             this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }
 
         for (let i = 0; i < 5; i++) {
-            if (this.minions[i].boundary.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            if (this.minions[i].boundary.overlaps(new AABB(swingPosition, playerSwingHitbox)) && this.minions[i].visible) {
+                enemyHit = true;
                 this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.minions[i].id, entity: COFEntities.MINION});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.ENEMY_HIT_KEY});
             }
+        }
+
+        if (enemyHit == false) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_WHIFFED_KEY});
         }
     }
 

@@ -108,12 +108,6 @@ export default class COFLevel1 extends COFLevel {
 		this.player.triggerExits[index] = "";
     }
 
-    protected handleLevelEnd(): void {
-        super.handleLevelEnd();
-        MainMenu.boss1Defeated = true;
-        this.sceneManager.changeToScene(COFLevel2);
-    }
-
     protected subscribeToEvents(): void {
         super.subscribeToEvents();
 
@@ -146,6 +140,11 @@ export default class COFLevel1 extends COFLevel {
             }
             case MoonDogEvents.MINION_DEATH: {
                 this.handleLittleOnePassAway(event.data.get("node"));
+                break;
+            }
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss1Defeated = true;
+                this.sceneManager.changeToScene(COFLevel2);
                 break;
             }
         }

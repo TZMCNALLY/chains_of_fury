@@ -28,12 +28,12 @@ export default class Walk extends DemonKingState {
 
         // Adjust animation to which way its walking towards the player
         if(this.owner.position.x < this.parent.player.position.x) {
-            this.owner.animation.playIfNotAlready(DemonKingAnimations.WALKING_RIGHT)
+            this.owner.animation.playIfNotAlready(DemonKingAnimations.WALKING_RIGHT, true)
             this.parent.lastFace = 1
         }
 
         else {
-            this.owner.animation.playIfNotAlready(DemonKingAnimations.WALKING_LEFT)
+            this.owner.animation.playIfNotAlready(DemonKingAnimations.WALKING_LEFT, true)
             this.parent.lastFace = -1
         }
 

@@ -132,6 +132,11 @@ export default class COFLevel6 extends COFLevel {
                 this.handleSwipe(event.data.get("lastFace"))
                 break;
             }
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss6Defeated = true;
+                this.sceneManager.changeToScene(MainMenu);
+                break;
+            }
         }
     }
 
@@ -291,11 +296,5 @@ export default class COFLevel6 extends COFLevel {
         this.receiver.subscribe(DemonKingEvents.SKULLS_SPAWN);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE);
         this.receiver.subscribe(DemonKingEvents.SWIPED);
-    }
-
-    protected handleLevelEnd(): void {
-        super.handleLevelEnd();
-        MainMenu.boss6Defeated = true;
-        this.sceneManager.changeToScene(MainMenu)
     }
 }

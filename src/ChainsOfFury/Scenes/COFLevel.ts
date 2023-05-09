@@ -226,6 +226,8 @@ export default class COFLevel extends Scene {
             else {
                 this.viewport.naniTF = true;
 
+                this.viewport.setFocus(new Vec2(this.viewport.getCenter().x+3, this.viewport.getCenter().clone().y))
+                this.viewport.setCenter(new Vec2(this.viewport.getCenter().x+3, this.viewport.getCenter().clone().y));
                 this.isLevelBeginTransitioning = false;
                 this.levelTransitionScreen.tweens.play("fadeIn")
                 this.levelBeginTimer.start();
@@ -275,7 +277,7 @@ export default class COFLevel extends Scene {
         //     this.levelTransitionScreen.tweens.play("fadeIn");
         // });
 
-        this.levelBeginTimer = new Timer(500, () => {
+        this.levelBeginTimer = new Timer(750, () => {
             this.levelTransitionScreen.tweens.play("fadeOut");
             this.enemyBoss.setAIActive(true, {})
             this.player.setAIActive(true, {})
@@ -284,6 +286,8 @@ export default class COFLevel extends Scene {
             this.initializeBossUI(this.enemyBossName);
             Input.enableInput();
         });
+
+        this.viewport.lastPositions.clear();
 
         // Start the black screen fade out
         this.levelTransitionScreen.tweens.play("fadeOut");
@@ -364,14 +368,15 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.BOSS_DEFEATED: {
+                console.log("BOSS_DEFEATED")
                 this.handleLevelEnd();
                 break;
             }
             // When the boss is defeated, change the scene to fight the next boss
-            case COFEvents.LEVEL_END: {
-                this.sceneManager.changeToScene(MainMenu);
-                break;
-            }
+            // case COFEvents.LEVEL_END: {
+            //     this.sceneManager.changeToScene(MainMenu);
+            //     break;
+            // }
             case COFEvents.PAUSE_GAME: {
                 this.handlePauseGame();
                 break;
@@ -830,11 +835,10 @@ export default class COFLevel extends Scene {
     protected initializeLevelEndUI(): void {
 
         // End of level label (start off screen)
-        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, { position: new Vec2(-300, 100), text: "Level Complete" });
+        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, COFLayers.UI, { position: new Vec2(-300, 100), text:"Opponent Vanquished!" });
         this.levelEndLabel.size.set(800, 60);
         this.levelEndLabel.borderRadius = 0;
-        this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
-        this.levelEndLabel.textColor = Color.WHITE;
+        this.levelEndLabel.textColor = Color.RED;
         this.levelEndLabel.fontSize = 48;
         this.levelEndLabel.font = "PixelSimple";
 
@@ -846,7 +850,7 @@ export default class COFLevel extends Scene {
                 {
                     property: TweenableProperties.posX,
                     start: -300,
-                    end: 300,
+                    end: 400,
                     ease: EaseFunctionType.OUT_SINE
                 }
             ],

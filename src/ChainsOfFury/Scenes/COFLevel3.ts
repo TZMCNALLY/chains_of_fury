@@ -21,6 +21,7 @@ import SnowballBehavior, { SnowballStates } from "../Spells/Snowball/SnowballBeh
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import { SpellEffects } from "../Spells/SpellEffects";
 import { SnowballEvents } from "../Spells/Snowball/SnowballEvents";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 
 export const HitEntity = {
@@ -67,12 +68,6 @@ export default class COFLevel3 extends COFLevel {
         super.startScene();
         this.enemyBossName = "Lord Reyalf"
         this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [750, 480], -5, -5);
-    }
-
-    protected handleLevelEnd(): void {
-        super.handleLevelEnd();
-        MainMenu.boss3Defeated = true;
-        this.sceneManager.changeToScene(COFLevel4);
     }
 
     /**
@@ -156,6 +151,11 @@ export default class COFLevel3 extends COFLevel {
                 this.despawnBossFireball(event.data.get("node"));
                 this.despawnShadowDemonFireball(event.data.get("node"));
                 this.despawnSnowball(event.data.get("node"), HitEntity.PLAYER);
+                break;
+            }
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss3Defeated = true;
+                this.sceneManager.changeToScene(COFLevel4);
                 break;
             }
         }
@@ -463,6 +463,7 @@ export default class COFLevel3 extends COFLevel {
             }
             else if (this.shadowDemons[i].collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
                 this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.shadowDemons[i].id, entity: COFEntities.MINION});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.ENEMY_HIT_KEY});
             }
         }
     }

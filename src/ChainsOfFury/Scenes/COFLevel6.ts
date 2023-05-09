@@ -122,6 +122,10 @@ export default class COFLevel6 extends COFLevel {
                 this.handleSwipe(event.data.get("lastFace"))
                 break;
             }
+            case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {
+                event.data.get("node");
+                break;
+            }
         }
     }
 

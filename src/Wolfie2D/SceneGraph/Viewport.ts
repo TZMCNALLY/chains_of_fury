@@ -23,7 +23,7 @@ export default class Viewport {
     private focus: Vec2;
 
     /** A queue of previous positions of what this viewport is following. Used for smoothing viewport movement */
-    private lastPositions: Queue<Vec2>;
+    public lastPositions: Queue<Vec2>;
 
     /** The number of previous positions this viewport tracks */
     private smoothingFactor: number;

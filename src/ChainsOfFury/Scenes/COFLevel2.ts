@@ -30,7 +30,7 @@ export default class COFLevel2 extends COFLevel {
     private eyeBalls: Array<AnimatedSprite>;
     private portals: Array<AnimatedSprite>;
 
-    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/Demon King/lightning_strike.wav";
+    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/DemonKing/lightning_strike.mp3";
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
@@ -128,13 +128,12 @@ export default class COFLevel2 extends COFLevel {
                 this.shootMissle(event.data.get("origin"), event.data.get("dir"));
                 break;
             }
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss2Defeated = true;
+                this.sceneManager.changeToScene(COFLevel3);
+                break;
+            }
         }
-    }
-
-    protected handleLevelEnd(): void {
-        super.handleLevelEnd();
-        MainMenu.boss2Defeated = true;
-        this.sceneManager.changeToScene(COFLevel3)
     }
 
     protected initObjectPools(): void {

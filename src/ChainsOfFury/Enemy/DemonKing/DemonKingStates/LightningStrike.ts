@@ -6,6 +6,8 @@ import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { DemonKingEvents } from "../DemonKingEvents";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
+import COFLevel6 from "../../../Scenes/COFLevel6";
 
 export default class LightningStrike extends DemonKingState {
 
@@ -21,6 +23,7 @@ export default class LightningStrike extends DemonKingState {
         this.strikeTimer.start();
         this.strikeLocation = new Vec2();
         this.owner.animation.playIfNotAlready(DemonKingAnimations.DANCING, true, null);
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel6.THUNDER_AUDIO_KEY})
 	}
 
 	public update(deltaT: number): void {
@@ -38,6 +41,7 @@ export default class LightningStrike extends DemonKingState {
             else {
                 
                 this.emitter.fireEvent(DemonKingEvents.STRUCK_LIGHTNING, {location: this.strikeLocation});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel6.LIGHTNING_STRIKE_AUDIO_KEY})
                 this.strikeTimer.reset();
                 this.strikeTimer.start();
                 this.numStrikes++;

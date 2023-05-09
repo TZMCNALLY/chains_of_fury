@@ -25,12 +25,21 @@ export default class COFLevel6 extends COFLevel {
     private deathCircles: Array<AnimatedSprite>;
     private skulls: Array<AnimatedSprite>;
 
+    public static readonly LIGHTNING_STRIKE_AUDIO_KEY = "LIGHTNING_STRIKE_AUDIO_KEY";
+    public static readonly LIGHTNING_STRIKE_AUDIO_PATH = "cof_assets/sounds/Enemies/DemonKing/lightning_strike.mp3";
+    public static readonly THUNDER_AUDIO_KEY = "THUNDER_AUDIO_KEY";
+    public static readonly THUNDER_AUDIO_PATH = "cof_assets/sounds/Enemies/DemonKing/thunder.mp3";
+
     /**
      * @see Scene.update()
      */
     public loadScene(): void {
         // Load enemy
         super.loadScene();
+
+        this.load.audio(COFLevel6.LIGHTNING_STRIKE_AUDIO_KEY, COFLevel6.LIGHTNING_STRIKE_AUDIO_PATH);
+        this.load.audio(COFLevel6.THUNDER_AUDIO_KEY, COFLevel6.THUNDER_AUDIO_PATH);
+
         this.load.spritesheet("wraith", "cof_assets/spritesheets/Enemies/wraith.json");
         this.load.spritesheet("lightning_strike", "cof_assets/spritesheets/Spells/lightning_strike.json")
         this.load.spritesheet("death_circle", "cof_assets/spritesheets/Spells/death_circle.json")

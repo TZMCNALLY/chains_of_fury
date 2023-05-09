@@ -5,6 +5,7 @@ import StageA from "./DarkStalkerStates/StageA";
 import Walk from "./DarkStalkerStates/Walk";
 import Cast from "./DarkStalkerStates/Cast"
 import Teleport from "./DarkStalkerStates/Teleport";
+import Death from "./DarkStalkerStates/Death";
 import { COFEvents } from "../../COFEvents";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import { DarkStalkerEvents } from "./DarkStalkerEvents";
@@ -15,7 +16,8 @@ export const DarkStalkerStates = {
     STAGEA: "STAGEA",
     WALK: "WALK",
     CAST: "CAST",
-    TELEPORT: "TELEPORT"
+    TELEPORT: "TELEPORT",
+    DEATH: "DEATH",
 } as const
 
 export const DarkStalkerAnimations = {
@@ -32,7 +34,8 @@ export const DarkStalkerAnimations = {
     /** Simplify so I can just use flip later. */
     RUN: "WALKING_LEFT",
     TAKING_DAMAGE: "DAMAGE_LEFT",
-    TELEPORT: "DYING" // TODO: Using this animation, rename this later.
+    TELEPORT: "DYING", // TODO: Using this animation, rename this later.
+    MAGIC: "MAGIC"
 } as const
 
 export default class DarkStalkerController extends EnemyController {
@@ -53,6 +56,7 @@ export default class DarkStalkerController extends EnemyController {
         this.addState(DarkStalkerStates.WALK, new Walk(this, this.owner));
         this.addState(DarkStalkerStates.CAST, new Cast(this, this.owner));
         this.addState(DarkStalkerStates.TELEPORT, new Teleport(this, this.owner));
+        this.addState(DarkStalkerStates.DEATH, new Death(this, this.owner));
 
         this.receiver.subscribe(DarkStalkerEvents.TELEPORT);
 
@@ -80,6 +84,10 @@ export default class DarkStalkerController extends EnemyController {
         this.health -= this.damageFromPhysical;
         this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
 
+        if (this.health == 0) {
+            this.changeState(DarkStalkerStates.DEATH);
+        }
+
         this._walkVelocity = new Vec2(0, 0);
         let returnWalkspeedTimer = new Timer(300, () => {
             this._walkVelocity = new Vec2(75, 75);
@@ -99,6 +107,20 @@ export default class DarkStalkerController extends EnemyController {
         //         this.emitter.fireEvent(COFEvents.MINION_DYING, {id: id});
         //     }
         // }
+    }
+
+    public handleEnemyFireballHit(id: number, entity: string): void {
+        if (id !== this.owner.id) {
+            this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
+            return;
+        }
+
+        if (this.health == 0) {
+            this.changeState(DarkStalkerStates.DEATH);
+        }
+
+        this.health -= this.damageFromProjectile;
+        this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
     }
 
     public handleEvent(event: GameEvent): void {

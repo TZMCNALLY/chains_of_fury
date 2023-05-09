@@ -16,6 +16,16 @@
             "frames": [
                 {
                     "index": 0,
+                    "duration": 20
+                }
+            ]
+        },
+        {
+            "name": "MAGIC",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
                     "duration": 3
                 },
                 {

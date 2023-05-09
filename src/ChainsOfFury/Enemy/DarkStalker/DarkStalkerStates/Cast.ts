@@ -36,7 +36,7 @@ export default class Cast extends DarkStalkerState {
 			this.castingTime -= deltaT;
 
             // TODO: Play casting animation
-            this.owner.animation.playIfNotAlready(DarkStalkerAnimations.IDLE);
+            this.owner.animation.playIfNotAlready(DarkStalkerAnimations.MAGIC);
 		} else {
             this.emitter.fireEvent(DarkStalkerEvents.CAST);
             let switchStateTimer = new Timer(1000, () => {

@@ -6,7 +6,7 @@ import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 export default class Despawn extends SnowballState {
 
 	public onEnter(options: Record<string, any>): void {
-		this.parent.velocity.x = 0;
+		this.parent.velocity = Vec2.ZERO;
         this.owner.animation.play(SnowballAnimation.EXPLODE);
 	}
 

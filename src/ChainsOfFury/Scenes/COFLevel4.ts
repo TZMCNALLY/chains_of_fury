@@ -37,7 +37,7 @@ export default class COFLevel4 extends COFLevel {
 
     public startScene(): void {
         super.startScene();
-        super.initializeBossUI("Reaper");
+        this.enemyBossName = "Reaper"
         this.initializeEnemyBoss("reaper", ReaperController, 1, [750, 480], -25, -15);
     }
 

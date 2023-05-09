@@ -39,7 +39,7 @@ export default class COFLevel6 extends COFLevel {
 
     public startScene(): void {
         super.startScene();
-        super.initializeBossUI("Demon King");
+        this.enemyBossName = "Demon King"
         this.initializeEnemyBoss("wraith", DemonKingController, 1, [750, 480], -15, -15);
     }
 
@@ -111,6 +111,10 @@ export default class COFLevel6 extends COFLevel {
             case COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE: {
                 this.despawnSkulls(event.data.get("other"))
                 this.despawnFireballs(event.data.get("node"))
+                break;
+            }
+            case COFEvents.ENEMY_PROJECTILE_HIT_PLAYER: {
+                this.despawnSkulls(event.data.get("other"))
                 break;
             }
             case DemonKingEvents.SWIPED: {
@@ -205,6 +209,7 @@ export default class COFLevel6 extends COFLevel {
                 this.skulls[currSkullInd].addPhysics(this.skulls[currSkullInd].boundary);
                 this.skulls[currSkullInd].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
                 this.skulls[currSkullInd].setTrigger(COFPhysicsGroups.FIREBALL, COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE, null)
+                this.skulls[currSkullInd].setTrigger(COFPhysicsGroups.PLAYER, COFEvents.ENEMY_PROJECTILE_HIT_PLAYER, null)
 
                 numSkullsSpawned++;
             }

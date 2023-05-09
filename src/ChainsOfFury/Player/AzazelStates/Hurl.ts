@@ -4,6 +4,8 @@ import Input from "../../../Wolfie2D/Input/Input";
 import { AzazelControls } from "../AzazelControls";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import { COFEvents } from "../../COFEvents";
+import COFLevel from "../../Scenes/COFLevel";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Attack extends PlayerState {
 
@@ -30,8 +32,11 @@ export default class Attack extends PlayerState {
 			&& !this.owner.animation.isPlaying(AzazelAnimations.ATTACK_LEFT))
 		) 
 		{
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.FIREBALL_THROWN_KEY});
 			this.finished(AzazelStates.IDLE);
 		}
+
+		
 	}
 
 	public onExit(): Record<string, any> {

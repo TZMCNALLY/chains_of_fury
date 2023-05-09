@@ -40,7 +40,7 @@ export default class COFLevel6 extends COFLevel {
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Demon King");
-        this.initializeEnemyBoss("wraith", DemonKingController, 1, [400, 400], -15, -15);
+        this.initializeEnemyBoss("wraith", DemonKingController, 1, [750, 480], -15, -15);
     }
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {

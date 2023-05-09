@@ -15,6 +15,17 @@ import { ShadowDemonEvents } from "../Enemy/MindFlayer/MindFlayerSummons/ShadowD
 import { DemonSummoningCircleEvents } from "../Spells/DemonSummonCircle/DemonSummoningCircleEvents";
 import DemonSummoningCircleBehavior from "../Spells/DemonSummonCircle/DemonSummoningCircleBehavior";
 import MainMenu from "./MainMenu";
+import IceMirrorBehavior from "../Spells/IceMirror/IceMirrorBehavior";
+import { IceMirrorEvents } from "../Spells/IceMirror/IceMirrorEvents";
+import SnowballBehavior, { SnowballStates } from "../Spells/Snowball/SnowballBehavior";
+import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
+import { SpellEffects } from "../Spells/SpellEffects";
+import { SnowballEvents } from "../Spells/Snowball/SnowballEvents";
+
+export const HitEntity = {
+    PLAYER: "HIT_PLAYER",
+    WALL: "HIT_WALL"
+} as const
 
 export default class COFLevel3 extends COFLevel {
 
@@ -25,6 +36,10 @@ export default class COFLevel3 extends COFLevel {
     private shadowDemonFireballs: AnimatedSprite[][] = new Array(5);
     /** Object pool for shadow demon summoning circles */
     private demonSummoningCircles: Array<AnimatedSprite> = new Array(5);
+    /** Object pool for ice mirrors */
+    private iceMirrors: Array<AnimatedSprite> = new Array(1);
+    /** Object pool for snowballs */
+    private snowballs: Array<AnimatedSprite> = new Array(1);
 
     /**
      * @see Scene.update()
@@ -35,12 +50,14 @@ export default class COFLevel3 extends COFLevel {
         this.load.spritesheet("mind_flayer", "cof_assets/spritesheets/Enemies/mind_flayer.json");
         this.load.spritesheet("shadow_demon", "cof_assets/spritesheets/Enemies/shadow_demon.json")
         this.load.spritesheet("demon_summoning_circle", "cof_assets/spritesheets/Spells/demon_summoning_circle.json");
+        this.load.spritesheet("ice_mirror", "cof_assets/spritesheets/Spells/ice_mirror.json");
+        this.load.spritesheet("snowball", "cof_assets/spritesheets/Spells/snowball.json");
     }
 
     public startScene(): void {
         super.startScene();
         super.initializeBossUI("Lord Reyalf");
-        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [1000, 500], -5, -5);
+        this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [750, 480], -5, -5);
     }
 
     protected handleLevelEnd(): void {
@@ -56,6 +73,7 @@ export default class COFLevel3 extends COFLevel {
         super.subscribeToEvents();
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_TELEPORT);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL);
+        this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SPAWN_ICE_MIRROR);
         this.receiver.subscribe(MindFlayerEvents.MIND_FLAYER_SPAWN_DEMON_CIRCLE);
         this.receiver.subscribe(ShadowDemonEvents.SHADOW_DEMON_FIRE_FIREBALL);
         this.receiver.subscribe(ShadowDemonEvents.FIREBALL_HIT_SHADOW_DEMON);
@@ -63,6 +81,8 @@ export default class COFLevel3 extends COFLevel {
         this.receiver.subscribe(DemonSummoningCircleEvents.SPAWN_CIRCLE);
         this.receiver.subscribe(DemonSummoningCircleEvents.SUMMON_SHADOW_DEMON);
         this.receiver.subscribe(DemonSummoningCircleEvents.DESPAWN_CIRCLE);
+        this.receiver.subscribe(IceMirrorEvents.DESPAWN_MIRROR);
+        this.receiver.subscribe(IceMirrorEvents.SPAWN_SNOWBALL);
     }
 
     /**
@@ -78,6 +98,18 @@ export default class COFLevel3 extends COFLevel {
             }
             case MindFlayerEvents.MIND_FLAYER_FIRE_FIREBALL: {
                 this.spawnBossFireball(event.data.get("faceDir"));
+                break;
+            }
+            case MindFlayerEvents.MIND_FLAYER_SPAWN_ICE_MIRROR: {
+                this.spawnIceMirror(event.data.get("location"));
+                break;
+            }
+            case IceMirrorEvents.DESPAWN_MIRROR: {
+                this.despawnIceMirror(event.data.get("id"));
+                break;
+            }
+            case IceMirrorEvents.SPAWN_SNOWBALL: {
+                this.spawnSnowball(event.data.get("location"));
                 break;
             }
             case DemonSummoningCircleEvents.SPAWN_CIRCLE: {
@@ -108,11 +140,13 @@ export default class COFLevel3 extends COFLevel {
             case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {
                 this.despawnBossFireball(event.data.get("node"));
                 this.despawnShadowDemonFireball(event.data.get("node"));
+                this.despawnSnowball(event.data.get("node"), HitEntity.WALL);
                 break;
             }
             case COFEvents.ENEMY_PROJECTILE_HIT_PLAYER: {
                 this.despawnBossFireball(event.data.get("node"));
                 this.despawnShadowDemonFireball(event.data.get("node"));
+                this.despawnSnowball(event.data.get("node"), HitEntity.PLAYER);
                 break;
             }
         }
@@ -164,6 +198,25 @@ export default class COFLevel3 extends COFLevel {
             
             this.demonSummoningCircles[i].scale.set(1.5, 1.5);
         }
+
+        for (let i = 0; i < this.iceMirrors.length; i++) {
+            this.iceMirrors[i] = this.add.animatedSprite("ice_mirror", COFLayers.PRIMARY);
+
+			this.iceMirrors[i].visible = false;
+            
+            this.iceMirrors[i].scale.set(1.5, 1.5);
+        }
+
+        for (let i = 0; i < this.snowballs.length; i++) {
+            this.snowballs[i] = this.add.animatedSprite("snowball", COFLayers.PRIMARY);
+
+			this.snowballs[i].visible = false;
+
+            this.snowballs[i].addAI(SnowballBehavior);
+
+            this.snowballs[i].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
+            this.snowballs[i].scale.set(1, 1);
+        }
     }
     
     /**
@@ -203,6 +256,75 @@ export default class COFLevel3 extends COFLevel {
             if (this.bossFireballs[i].id === node) {
                 this.bossFireballs[i].position.copy(Vec2.ZERO);
                 this.bossFireballs[i].visible = false;
+                break;
+            }
+        }
+    }
+
+    protected spawnIceMirror(location: Vec2) {
+        for (let i = 0; i < this.iceMirrors.length; i++) {
+            if (!this.iceMirrors[i].visible) {
+                this.iceMirrors[i].visible = true;
+
+                this.iceMirrors[i].position.copy(location);
+                this.iceMirrors[i].addAI(IceMirrorBehavior);
+
+                (this.iceMirrors[i]._ai as IceMirrorBehavior).location = location;
+                break;
+            }
+        }
+    }
+
+    protected despawnIceMirror(id: number) {
+        for (let i = 0; i < this.iceMirrors.length; i++) {
+            if (this.iceMirrors[i].id === id) {
+                this.iceMirrors[i].position.copy(Vec2.ZERO);
+                this.iceMirrors[i].visible = false;
+                break;
+            }
+        }
+    }
+
+    /**
+    * Displays a snowball on the map
+    * 
+    * @param location the spawn point of the snowball
+    */
+    protected spawnSnowball(location: Vec2) {
+        for (let i = 0; i < this.snowballs.length; i++) {
+
+            if (!this.snowballs[i].visible) {
+                this.snowballs[i].visible = true;
+
+                let dir = location.dirTo(this.player.position);
+
+                // Set the velocity
+                dir.x *= 300;
+                dir.y *= 300;
+
+                (this.snowballs[i]._ai as SnowballBehavior).changeState(SnowballStates.SPAWN);
+                (this.snowballs[i]._ai as SnowballBehavior).velocity = dir;
+
+                // Set the starting position of the fireball
+                this.snowballs[i].position.copy(location);
+
+                // Give physics to this fireball
+                let snowballHitbox = new Circle(location, 18)
+                this.snowballs[i].addPhysics(snowballHitbox);
+                this.snowballs[i].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
+
+                break;
+            }
+        }
+    }
+
+    protected despawnSnowball(id: number, hitEntity: String) {
+        for (let i = 0; i < this.snowballs.length; i++) {
+            if (this.snowballs[i].id === id) {
+                if (hitEntity === HitEntity.PLAYER) {
+                    this.emitter.fireEvent(COFEvents.ENEMY_SPELL_HIT_PLAYER, {effect: SpellEffects.SLOW})
+                }
+                (this.snowballs[i]._ai as SnowballBehavior).changeState(SnowballStates.DESPAWN);
                 break;
             }
         }
@@ -301,7 +423,6 @@ export default class COFLevel3 extends COFLevel {
         }
     }
     
-
     protected despawnShadowDemonFireball(id: number): void {
         for (let i = 0; i < this.shadowDemons.length; i++) {
             for (let j = 0; j < this.shadowDemonFireballs[i].length; j++) {

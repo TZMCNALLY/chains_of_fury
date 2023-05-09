@@ -147,6 +147,7 @@ export default class LevelSelect extends Scene {
             MainMenu.boss5Defeated = true;
             MainMenu.boss6Defeated = true;
 
+
             // Reloads this scene to refresh everything (inefficient but oh well)
             this.sceneManager.changeToScene(LevelSelect);
         }

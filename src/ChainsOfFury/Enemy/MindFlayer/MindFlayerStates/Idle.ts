@@ -8,7 +8,7 @@ export default class Idle extends MindFlayerState {
 		if (this.parent.health < 500 && !this.parent.berserk) {
 			this.parent.berserk = true;
 		}
-        this.owner.animation.play(MindFlayerAnimation.IDLE);
+        this.owner.animation.play(MindFlayerAnimation.IDLE, true);
 	}
 
 	public update(deltaT: number): void {
@@ -26,14 +26,19 @@ export default class Idle extends MindFlayerState {
 		}
 		// otherwise, spawn shadow demons or shoot fireballs
 		else if (timeSinceLastAction > this.parent.actionDelay) {
-			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-2) {
-				this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
-			}
-			else if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
+			// if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-2) {
+			// 	this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
+			// }
+			if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
 				this.finished(MindFlayerStates.HEALING);
 			}
 			else {
-				this.finished(MindFlayerStates.CAST_FIREBALLS);
+				// if (Math.random() > 0.5) {
+					this.finished(MindFlayerStates.CAST_ICE_SPELL);
+				// }
+				// else {
+				// 	this.finished(MindFlayerStates.CAST_FIREBALLS);
+				// }
 			}
 		}
 	}

@@ -20,6 +20,7 @@ import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import MainMenu from "./MainMenu";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class COFLevel2 extends COFLevel {
 
@@ -360,16 +361,24 @@ export default class COFLevel2 extends COFLevel {
         let swingPosition = this.player.position.clone();
         swingPosition.x += faceDir*14;
 
+        let enemyHit = false
+
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            enemyHit = true;
             this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }
 
         for (let i = 0; i < 4; i++) {
-            if (this.eyeBalls[i].boundary.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            if (this.eyeBalls[i].boundary.overlaps(new AABB(swingPosition, playerSwingHitbox)) && this.eyeBalls[i].visible) {
+                enemyHit = true;
                 this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.eyeBalls[i].id, entity: COFEntities.MINION});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.ENEMY_HIT_KEY});
             }
         }
+
+        if (enemyHit == false)
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_WHIFFED_KEY});
 
         for (let i = 0; i < 12; i++) {
             if (this.mineBalls[i].boundary.overlaps(new AABB(swingPosition, playerSwingHitbox))) {

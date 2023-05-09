@@ -50,6 +50,7 @@ export default class SceneManager {
 	 */
 	public changeToScene<T extends Scene>(constr: new (...args: any) => T, init?: Record<string, any>, options?: Record<string, any>): void {
 		console.log("Creating the new scene - change is pending until next update");
+		console.log(constr)
 		this.pendingScene = new constr(this.viewport, this, this.renderingManager, options);
 		this.pendingSceneInit = init;
 	}

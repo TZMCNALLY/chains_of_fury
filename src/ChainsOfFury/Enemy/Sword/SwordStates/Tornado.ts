@@ -28,7 +28,7 @@ export default class Tornado extends SwordState {
         this.emitter.fireEvent(SwordEvents.SPIN_BEGAN)
         
         // Play tornado sound effect
-        let spinAudio = (this.owner.getScene() as COFLevel5).getSpinAudio()
+        let spinAudio = COFLevel5.spinAttackAudioKey
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: spinAudio})
     }
 
@@ -83,10 +83,14 @@ export default class Tornado extends SwordState {
             }
 
             // If the player isn't moving, pull him towards the sword
-            if(!Input.isPressed(AzazelControls.MOVE_RIGHT)
+            if((!Input.isPressed(AzazelControls.MOVE_RIGHT)
                 && !Input.isPressed(AzazelControls.MOVE_LEFT)
                 && !Input.isPressed(AzazelControls.MOVE_UP)
-                && !Input.isPressed(AzazelControls.MOVE_DOWN)) {
+                && !Input.isPressed(AzazelControls.MOVE_DOWN))
+                || this.parent.player.animation.isPlaying(AzazelAnimations.CHARGE_LEFT)
+                || this.parent.player.animation.isPlaying(AzazelAnimations.CHARGE_RIGHT)
+                || this.parent.player.animation.isPlaying(AzazelAnimations.ATTACK_LEFT)
+                || this.parent.player.animation.isPlaying(AzazelAnimations.ATTACK_RIGHT)) {
                 
                 this.parent.player.move(
                     this.parent.player.position.dirTo(this.owner.position).scale(500).scale(deltaT)

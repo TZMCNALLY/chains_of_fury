@@ -212,8 +212,10 @@ export default class COFLevel3 extends COFLevel {
 
 			this.snowballs[i].visible = false;
 
+            this.snowballs[i].addAI(SnowballBehavior);
+
             this.snowballs[i].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
-            this.snowballs[i].scale.set(2, 2);
+            this.snowballs[i].scale.set(1, 1);
         }
     }
     
@@ -297,17 +299,17 @@ export default class COFLevel3 extends COFLevel {
                 let dir = location.dirTo(this.player.position);
 
                 // Set the velocity
-                dir.x *= 400;
-                dir.y *= 400;
+                dir.x *= 300;
+                dir.y *= 300;
 
-                this.snowballs[i].addAI(SnowballBehavior);
+                (this.snowballs[i]._ai as SnowballBehavior).changeState(SnowballStates.SPAWN);
                 (this.snowballs[i]._ai as SnowballBehavior).velocity = dir;
 
                 // Set the starting position of the fireball
                 this.snowballs[i].position.copy(location);
 
                 // Give physics to this fireball
-                let snowballHitbox = new Circle(location, 50)
+                let snowballHitbox = new Circle(location, 18)
                 this.snowballs[i].addPhysics(snowballHitbox);
                 this.snowballs[i].setGroup(COFPhysicsGroups.ENEMY_PROJECTILE);
 
@@ -421,7 +423,6 @@ export default class COFLevel3 extends COFLevel {
         }
     }
     
-
     protected despawnShadowDemonFireball(id: number): void {
         for (let i = 0; i < this.shadowDemons.length; i++) {
             for (let j = 0; j < this.shadowDemonFireballs[i].length; j++) {

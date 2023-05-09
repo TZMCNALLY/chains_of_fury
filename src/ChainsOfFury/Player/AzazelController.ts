@@ -199,6 +199,7 @@ export default class AzazelController extends StateMachineAI {
 			}
             case COFEvents.ENEMY_SPELL_HIT_PLAYER: {
                 this.handleSpellPlayerHit(event);
+                break;
             }
             case COFEvents.PLAYER_HURL: {
 				this.handlePlayerHurl(event);
@@ -347,13 +348,13 @@ export default class AzazelController extends StateMachineAI {
             this.health -= event.data.get("damage");
             this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
         }
-        if (effect === SpellEffects.INSTADEATH) {
+        else if (effect === SpellEffects.INSTADEATH) {
             this.health -= this.maxHealth;
             this.emitter.fireEvent(COFEvents.PLAYER_TOOK_DAMAGE, {currHealth : this.health, maxHealth : this.maxHealth});
         }
-        if (effect === SpellEffects.SLOW) {
+        else if (effect === SpellEffects.SLOW) {
             this.speed = this.speed / 2;
-            setTimeout(() => {this.speed = this.speed * 2}, 5000);
+            setTimeout(() => {this.speed = this.speed * 2}, 3000);
         }
     }
 

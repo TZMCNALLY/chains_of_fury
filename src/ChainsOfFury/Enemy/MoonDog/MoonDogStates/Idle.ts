@@ -44,21 +44,20 @@ export default class Idle extends MoonDogState {
 					return;
 				}
 
-				let summonChance = 5; // 5% chance to re-summon even if all are still alive.
+				let summonChance = 0; // 0% chance to summon even if all are still alive.
 
 				if (this.parent.minionCount < 3) {
-					summonChance += 10; // 15% chance to re-summon if have 2 left.
+					summonChance += 10; // 10% chance to summon if have 2 left.
 				}
 				if (this.parent.minionCount < 2) {
-					summonChance += 20; // 35% chance to re-summon if have 1 left.
+					summonChance += 20; // 30% chance to summon if have 1 left.
 				}
 				if (this.parent.minionCount < 1) {
-					summonChance += 40; // 75% chance to summon if no minions left. 
+					summonChance += 40; // 70% chance to summon if no minions left. 
 				}
 
-				// the minion chance subtracted by incrased charge chance.
-				// side effect is that if the boss is cornered, they won't summon but instead go into magic (which is invul)
-				if (rnd < 20 + summonChance - increasedChance) {
+				// Magic chance is higher when boss is not in danger and has more minions.
+				if (rnd < 20 + summonChance) {
 					this.finished(MoonDogStates.SUMMON);
 				} else {
 					// Perform magic here!

@@ -42,23 +42,8 @@ export default class SmallDogBehavior implements AI {
         this.receiver = new Receiver();
         this.emitter = new Emitter();
 
-        this.charging = false;
-        this.circling = true;
-
         this.circleSpeed = new Vec2(200, 200);
         this.chargeSpeed = new Vec2(380, 380);
-
-        this.circleVec = new Vec2(0, 150);
-        this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);
-
-        this.health = 2;
-
-        this.circlingDir = 1;
-
-        this.target = Vec2.ZERO;
-
-        this._owner.animation.play("WALKING_RIGHT", true);
-
 
         // This timer starts the charging process, then circling.
         this.attackTimer = new Timer(4000, () => {
@@ -150,15 +135,6 @@ export default class SmallDogBehavior implements AI {
                 this.owner.invertX = Math.sign(this._owner.position.x - this.player.position.x) > 0;
             }
             
-
-            if ((this.attackTimer.isStopped() && this.circleTimer.isStopped()) || (this.attackTimer.isPaused() && this.circleTimer.isPaused())) {
-                // Start attack timer if both timer is stopped (when minion is alive again)
-                this.attackTimer.start();
-
-                // Randomly reset the circling vector
-                this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);
-            }
-
             if (this.circling) {
                 // Flip sprite to correct way while circling.
                 this.owner.invertX = Math.sign(this._owner.position.x - this.player.position.x) > 0;
@@ -214,6 +190,24 @@ export default class SmallDogBehavior implements AI {
             // Update position
             this.owner.move(this.velocity.scaled(deltaT));
         }
+    }
+
+    public reset(): void {
+        this.circleVec = new Vec2(0, 150);
+        this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);
+
+        this.health = 2;
+
+        this.circlingDir = 1;
+
+        this.target = Vec2.ZERO;
+
+        this._owner.animation.play("WALKING_RIGHT", true);
+
+        this.charging = false;
+        this.circling = true;
+
+        this.circleTimer.start();
     }
 
     public get owner() { return this._owner }

@@ -287,6 +287,8 @@ export default class COFLevel extends Scene {
 
         // Start the black screen fade out
         this.levelTransitionScreen.tweens.play("fadeOut");
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY, loop: true, holdReference: true});
     }
 
     /* Update method for the scene */
@@ -480,6 +482,7 @@ export default class COFLevel extends Scene {
 
     protected handleLevelEnd(): void {
         this.levelEndLabel.tweens.play("slideIn")
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY});
     }
 
     /**

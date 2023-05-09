@@ -62,15 +62,14 @@ export default class COFLevel3 extends COFLevel {
 
         COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL3_MUSIC_KEY";
         COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel3.mp3";
+        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
 
         this.load.audio(COFLevel3.FIRE_SNOWBALL_KEY, COFLevel3.FIRE_SNOWBALL_PATH);
         this.load.audio(COFLevel3.SUMMON_DEMON_KEY, COFLevel3.SUMMON_DEMON_PATH);
-        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
     }
 
     public startScene(): void {
         super.startScene();
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY, loop: true, holdReference: true});
         this.enemyBossName = "Lord Reyalf"
         this.initializeEnemyBoss("mind_flayer", MindFlayerController, 0.35, [750, 480], -5, -5);
     }
@@ -78,7 +77,6 @@ export default class COFLevel3 extends COFLevel {
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
         MainMenu.boss3Defeated = true;
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY});
         this.sceneManager.changeToScene(COFLevel4);
     }
 

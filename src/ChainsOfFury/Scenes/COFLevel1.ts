@@ -74,6 +74,10 @@ export default class COFLevel1 extends COFLevel {
         this.load.spritesheet("moon_indicator", "cof_assets/spritesheets/Spells/moon_indicator.json");
         this.load.spritesheet("ground_crack", "cof_assets/spritesheets/Spells/ground_crack.json");
 
+        COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL1_MUSIC_KEY";
+        COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel1.mp3";
+        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
+
         this.load.audio(COFLevel1.MOON_AUDIO_PATH, COFLevel1.MOON_AUDIO_PATH);
         this.load.audio(COFLevel1.BOOM_AUDIO, COFLevel1.BOOM_AUDIO);
     }

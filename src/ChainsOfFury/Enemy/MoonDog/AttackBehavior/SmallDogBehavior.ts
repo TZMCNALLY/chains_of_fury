@@ -89,9 +89,11 @@ export default class SmallDogBehavior implements AI {
     public destroy(): void {}
 
     public activate(options: Record<string, any>): void {
-        this.player = options.player;
-        this.debugPoint = options.debug_point;
-        this.debugPoint.visible = false;
+        if ("player" in options) { this.player = options.player; }
+        if ("debug_point" in options) {
+            this.debugPoint = options.debug_point;
+            this.debugPoint.visible = false;
+        }
     }
 
     public handleEvent(event: GameEvent): void {

@@ -615,40 +615,41 @@ export default class COFLevel extends Scene {
         center.x += this.viewport.getHalfSize().x;
         center.y += this.viewport.getHalfSize().y;
 
+        center.y -= 10;
+
         // Pause menu background
         let pauseMenu = <Label>this.add.uiElement(
             UIElementType.LABEL, 
             COFLayers.PAUSE, 
             {
-                position: center,
-                text: ""
+                position: center.clone(),
+                text: "PAUSED"
             }
         );
-        pauseMenu.size.set(600, 400);
-        pauseMenu.backgroundColor = new Color(186, 186, 174, 1);
-        pauseMenu.borderWidth = 3;
-        pauseMenu.borderColor = Color.BLACK;
-        pauseMenu.textColor = Color.BLACK;
+        pauseMenu.size.set(300, 150);
+        pauseMenu.backgroundColor = new Color(0, 0, 0, .9);
+        pauseMenu.borderWidth = 5;
+        pauseMenu.borderColor = Color.RED;
+        pauseMenu.fontSize = 35;
+        pauseMenu.textColor = Color.RED;
 
-        // Unpause button
-        let unpause = <Button>this.add.uiElement(
-            UIElementType.BUTTON,
+        center.y += 30;
+
+        let unpauseText = <Label>this.add.uiElement(
+            UIElementType.LABEL,
             COFLayers.PAUSE,
             {
-                position: new Vec2(center.x, center.y + 200),
-                text: "Resume"
+                position: center,
+                text: "Press [ESC] to unpause"
             }
-        );
-        unpause.size.set(100, 60);
-        unpause.backgroundColor = new Color(186, 186, 174, 1);
-        unpause.borderWidth = 3;
-        unpause.borderColor = Color.BLACK;
-        unpause.textColor = Color.BLACK;
-        unpause.fontSize = 15;
-
-        unpause.onClick = () => {
-            this.handleUnpauseGame();
-        }
+        )
+        unpauseText.size.set(300,100);
+        unpauseText.size.set(300, 100);
+        unpauseText.backgroundColor = new Color(0, 0, 0, 0);
+        unpauseText.borderWidth = 5;
+        unpauseText.borderColor = new Color(0, 0, 0, 0);
+        unpauseText.fontSize = 18;
+        unpauseText.textColor = Color.RED;
 
         this.layers.get(COFLayers.PAUSE).disable();
     }

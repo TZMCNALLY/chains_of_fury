@@ -73,7 +73,7 @@ export default class COFLevel2 extends COFLevel {
 
     public startScene(): void {
         super.startScene();
-        super.initializeBossUI("darkstalker");
+        this.enemyBossName = "Darkstalker"
         this.initializeEnemyBoss("darkstalker", DarkStalkerController, 1, [750, 480], -15, -15);
     }
 

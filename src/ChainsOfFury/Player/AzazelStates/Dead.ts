@@ -4,6 +4,8 @@ import { AzazelControls } from "../AzazelControls";
 import PlayerState from "./PlayerState";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import { COFEvents } from "../../COFEvents";
+import COFLevel from "../../Scenes/COFLevel";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Dead extends PlayerState {
 
@@ -16,6 +18,8 @@ export default class Dead extends PlayerState {
             this.owner.animation.play(AzazelAnimations.DYING_RIGHT, false, null);
             this.owner.animation.queue(AzazelAnimations.DEAD_RIGHT);
         }
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_DEFEATED_KEY});
 	}
 
 	update(deltaT: number): void {

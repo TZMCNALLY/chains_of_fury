@@ -4,6 +4,8 @@ import { AzazelControls } from "../AzazelControls";
 import PlayerState from "./PlayerState";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import { COFEvents } from "../../COFEvents";
+import COFLevel from "../../Scenes/COFLevel";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Run extends PlayerState {
 
@@ -73,6 +75,8 @@ export default class Run extends PlayerState {
             // Doesn't seem enough to time to notice.
             this.parent.iFrames = .1;
             this.owner.tweens.play(AzazelTweens.IFRAME, true);
+
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_DASHED_KEY});
         }
 
         if (this.dashDuration == 0) {

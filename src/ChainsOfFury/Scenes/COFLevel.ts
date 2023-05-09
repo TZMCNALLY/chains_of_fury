@@ -28,6 +28,9 @@ import { HealMarkEvents } from "../Spells/HealMarks/HealMarkEvents";
 import HealMarkBehavior from "../Spells/HealMarks/HealMarkBehavior";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import AudioManager from '../../Wolfie2D/Sound/AudioManager';
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import Game from "../../Wolfie2D/Loop/Game";
 
 /**
  * A const object for the layer names
@@ -82,6 +85,7 @@ export default class COFLevel extends Scene {
 
     /** The enemy boss sprite */
     protected enemyBoss: AnimatedSprite;
+    protected enemyBossName: string;
 
     /** Object pool for fire projectiles */
     // private fireballs: Array<Graphic>
@@ -123,10 +127,24 @@ export default class COFLevel extends Scene {
     protected walls: OrthogonalTilemap;
 
     /** Sound and music */
-    protected levelMusicKey: string;
-    protected jumpAudioKey: string;
-    protected tileDestroyedAudioKey: string;
-    protected dyingAudioKey: string;
+    public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
+    public static readonly LEVEL_MUSIC_PATH = ""; // up to each level to decide
+    public static readonly PLAYER_DAMAGED_KEY = "PLAYER_DAMAGED_KEY";
+    public static readonly PLAYER_DAMAGED_PATH = "cof_assets/sounds/Player/player_damaged.mp3";
+    public static readonly PLAYER_TELEPORTED_KEY = "PLAYER_TELEPORTED_KEY";
+    public static readonly PLAYER_TELEPORTED_PATH = "cof_assets/sounds/Player/player_teleported.mp3";
+    public static readonly PLAYER_DASHED_KEY = "PLAYER_DASHED_KEY";
+    public static readonly PLAYER_DASHED_PATH = "cof_assets/sounds/Player/player_dashed.mp3";
+    public static readonly PLAYER_WHIFFED_KEY = "PLAYER_WHIFFED_KEY";
+    public static readonly PLAYER_WHIFFED_PATH = "cof_assets/sounds/Player/player_whiffed.mp3";
+    public static readonly PLAYER_HIT_KEY = "PLAYER_HIT_KEY";
+    public static readonly PLAYER_HIT_PATH = "cof_assets/sounds/Player/player_hit.mp3";
+    public static readonly PLAYER_DEFEATED_KEY = "PLAYER_DEFEATED_KEY";
+    public static readonly PLAYER_DEFEATED_PATH = "cof_assets/sounds/Player/player_defeated.mp3";
+    public static readonly FIREBALL_THROWN_KEY = "FIREBALL_THROWN_KEY";
+    public static readonly FIREBALL_THROWN_PATH = "cof_assets/sounds/General/fireball_thrown.mp3";
+    public static readonly ENEMY_HIT_KEY = "ENEMY_HIT_KEY";
+    public static readonly ENEMY_HIT_PATH = "cof_assets/sounds/Enemies/enemy_hit.mp3";
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
@@ -175,8 +193,16 @@ export default class COFLevel extends Scene {
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
         
         this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/fireball.json");
-
         this.load.spritesheet("heal_marks", "cof_assets/spritesheets/Spells/healing.json");
+
+        this.load.audio(COFLevel.PLAYER_DAMAGED_KEY, COFLevel.PLAYER_DAMAGED_PATH)
+        this.load.audio(COFLevel.PLAYER_TELEPORTED_KEY, COFLevel.PLAYER_TELEPORTED_PATH)
+        this.load.audio(COFLevel.PLAYER_DASHED_KEY, COFLevel.PLAYER_DASHED_PATH)
+        this.load.audio(COFLevel.PLAYER_WHIFFED_KEY, COFLevel.PLAYER_WHIFFED_PATH)
+        this.load.audio(COFLevel.PLAYER_HIT_KEY, COFLevel.PLAYER_HIT_PATH)
+        this.load.audio(COFLevel.PLAYER_DEFEATED_KEY, COFLevel.PLAYER_DEFEATED_PATH)
+        this.load.audio(COFLevel.FIREBALL_THROWN_KEY, COFLevel.FIREBALL_THROWN_PATH)
+        this.load.audio(COFLevel.ENEMY_HIT_KEY, COFLevel.ENEMY_HIT_PATH)
     }
 
     public update(deltaT: number): void {
@@ -211,15 +237,13 @@ export default class COFLevel extends Scene {
         // Initialize the tilemaps
         this.initializeTilemap();
 
-        this.initializePlayerUI();
-
         // Initialize the player 
         this.initializePlayer("azazel");
 
         this.initObjectPools();
 
         // Enable player movement
-        Input.enableInput();
+        Input.disableInput();
 
         // this.initializeEnemyBoss("moondog", MoonDogController);
 
@@ -245,6 +269,8 @@ export default class COFLevel extends Scene {
             this.enemyBoss.setAIActive(true, {})
             this.player.setAIActive(true, {})
             this.viewport.follow(this.player)
+            this.initializePlayerUI();
+            this.initializeBossUI(this.enemyBossName);
             Input.enableInput();
         });
 
@@ -272,6 +298,7 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.BOSS_TOOK_DAMAGE: {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.ENEMY_HIT_KEY});
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }
@@ -353,8 +380,12 @@ export default class COFLevel extends Scene {
 
         // This should loop through all hitable object? and fire event.
         if (this.enemyBoss.collisionShape.overlaps(new AABB(swingPosition, playerSwingHitbox))) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_HIT_KEY});
             this.emitter.fireEvent(COFEvents.SWING_HIT, {id: this.enemyBoss.id, entity: COFEntities.BOSS});
         }
+
+        else
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_WHIFFED_KEY});
     }
     protected initObjectPools(): void {
 		

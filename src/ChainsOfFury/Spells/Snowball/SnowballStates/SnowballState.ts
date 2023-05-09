@@ -20,12 +20,6 @@ export default abstract class SnowballState extends State {
      * @param event the game event
      */
 	public handleInput(event: GameEvent): void {
-        switch(event.type) {
-            // Default - throw an error
-            default: {
-                throw new Error(`Unhandled event in IceMirrorState of type ${event.type}`);
-            }
-        }
 	}
 
 	public update(deltaT: number): void {

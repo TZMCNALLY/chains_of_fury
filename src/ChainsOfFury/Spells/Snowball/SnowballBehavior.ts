@@ -8,6 +8,7 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Spawn from "./SnowballStates/Spawn";
 import Despawn from "./SnowballStates/Despawn";
 import Inactive from "./SnowballStates/Inactive";
+import { SnowballEvents } from "./SnowballEvents";
 
 export const SnowballStates = {
     SPAWN: "SPAWN_SNOWBALL",
@@ -60,17 +61,11 @@ export default class SnowballBehavior extends StateMachineAI {
     public activate(options: Record<string, any>): void {}
 
     public handleEvent(event: GameEvent): void {
-        switch(event.type) {
-            default: {
-                throw new Error("Unhandled event caught in IceMirrorBehavior! Event type: " + event.type);
-            }
-        }
     }
 
     public update(deltaT: number): void {   
         super.update(deltaT);
         if (this.owner.visible) {
-            // Update position of the fireball
             this.owner.move(this.velocity.scaled(deltaT));
         }
     }

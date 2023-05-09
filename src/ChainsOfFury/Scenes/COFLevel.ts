@@ -314,7 +314,7 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.BOSS_HEALED: {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND,  {key: COFLevel.HEAL_KEY})
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.HEAL_KEY})
                 this.emitter.fireEvent(HealMarkEvents.DISPLAY_HEAL_MARKS, {location: (new Vec2()).copy(this.enemyBoss.position), scale: 2})
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;

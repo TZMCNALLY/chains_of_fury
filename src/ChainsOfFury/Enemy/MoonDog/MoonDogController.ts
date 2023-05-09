@@ -114,7 +114,9 @@ export default class MoonDogController extends EnemyController {
         this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
 
         if (this.health == 0) {
-            this.changeState(MoonDogStates.DEATH);
+            if (this.currentState != this.stateMap.get(MoonDogStates.DEATH)) {
+                this.changeState(MoonDogStates.DEATH);
+            }
         }
     }
 
@@ -132,7 +134,10 @@ export default class MoonDogController extends EnemyController {
         }
 
         if (this.health == 0) {
-            this.changeState(MoonDogStates.DEATH);
+
+            if (this.currentState != this.stateMap.get(MoonDogStates.DEATH)) {
+                this.changeState(MoonDogStates.DEATH);
+            }
         }
 
         this.health -= this.damageFromProjectile;

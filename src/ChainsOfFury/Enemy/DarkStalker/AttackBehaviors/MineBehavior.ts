@@ -23,6 +23,7 @@ export default class MineBehavior implements AI {
         this.owner = owner;
         this.velocity = new Vec2(0,0);
         this.receiver = new Receiver();
+        this.receiver.subscribe(DarkStalkerEvents.MINION_HIT);
         this.emitter = new Emitter();
         this.activate(options);
     }
@@ -37,6 +38,12 @@ export default class MineBehavior implements AI {
 
     public handleEvent(event: GameEvent): void {
         switch(event.type) {
+            case DarkStalkerEvents.MINION_HIT: {
+                if (event.data.get("node") == this.owner.id) {
+                    this.currCountdown = 0;
+                }
+                break;
+            }
             default: {
                 throw new Error("Unhandled event caught in FireballBehavior! Event type: " + event.type);
             }

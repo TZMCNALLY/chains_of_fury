@@ -103,12 +103,14 @@ export default class EyeballBehavior implements AI {
                     this.health -= 1;
                     // TODO play animation here.
 
-                    if (this.health <= 0) {
+                    if (this.health == 0) {
+                        this.health -= 1; // set to -1 so this don't run again.
                         this.owner.animation.play("HURT", false);
                         this.owner.tweens.play("death");
                         // this.owner.animation.play("DEATH", false, DarkStalkerEvents.EYEBALL_DEAD, {node: event.data.get("node")})
                     } else {
-                        this.owner.animation.play("HURT", false);
+                        if (this.health > 0)
+                            this.owner.animation.play("HURT", false);
                     }
                 }
                 break;
@@ -181,7 +183,13 @@ export default class EyeballBehavior implements AI {
         this.health = 2;
 
         this.circleVec = new Vec2(0, 150);
-        this.circleVec.rotateCCW(RandUtils.randFloat(0, 2) * Math.PI);
+        this.circleVec.rotateCCW(
+            this.circleVec.angleToCCW(
+                this.player.position.clone().sub(this.owner.position)
+            )
+        );
+
+        
 
         this.circleDir = 1;
     }

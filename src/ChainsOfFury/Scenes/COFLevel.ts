@@ -920,13 +920,10 @@ export default class COFLevel extends Scene {
         // Positions that the levelBegin transition will move to
         this.levelBeginEndPosition = new Vec2(800, 400)
 
-        this.viewport.setCenter(new Vec2(200, 480))
+        this.viewport.setCenter(new Vec2(400, 480))
         this.viewport.setFocus(this.viewport.getCenter())
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
-
-        console.log(this.viewport.getCenter())
-        console.log(this.viewport.getFocus())
     }
 
     private createBar(posX: number, posY: number, sizeX: number, sizeY: number, color: Color, font?: number) : Label {

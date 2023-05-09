@@ -16,6 +16,7 @@ import { SpellEffects } from "../Spells/SpellEffects";
 import SlashBehavior from "../Spells/Slash/SlashBehavior";
 import { SlashEvents } from "../Spells/Slash/SlashEvents";
 import MainMenu from "./MainMenu";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class COFLevel4 extends COFLevel {
 
@@ -38,6 +39,10 @@ export default class COFLevel4 extends COFLevel {
         this.load.spritesheet("reaper", "cof_assets/spritesheets/Enemies/reaper.json");
         this.load.spritesheet("death_circle", "cof_assets/spritesheets/Spells/death_circle.json")
         this.load.spritesheet("slash", "cof_assets/spritesheets/Spells/slash.json")
+
+        COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL4_MUSIC_KEY";
+        COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel4.mp3";
+        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
 
         this.load.audio(COFLevel4.DEATH_CIRCLE_KEY, COFLevel4.DEATH_CIRCLE_PATH);
         this.load.audio(COFLevel4.FIRE_SLASH_KEY, COFLevel4.FIRE_SLASH_PATH);

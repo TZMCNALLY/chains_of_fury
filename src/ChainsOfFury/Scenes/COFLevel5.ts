@@ -54,6 +54,10 @@ export default class COFLevel5 extends COFLevel {
         this.load.audio(COFLevel5.FRENZY_AUDIO_KEY, COFLevel5.FRENZY_AUDIO_PATH);
         this.load.audio(COFLevel5.BEAM_AUDIO_KEY, COFLevel5.BEAM_AUDIO_PATH);
 
+        COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL5_MUSIC_KEY";
+        COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel5.mp3";
+        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
+
         this.load.spritesheet("flying_sword", "cof_assets/spritesheets/Enemies/flying_sword.json");
         this.load.spritesheet("flying_sword_assist", "cof_assets/spritesheets/Enemies/flying_sword_assist.json");
         this.load.spritesheet("sword_beam", "cof_assets/spritesheets/Projectiles/sword_beam.json")

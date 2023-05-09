@@ -73,6 +73,10 @@ export default class COFLevel2 extends COFLevel {
         this.load.spritesheet("mine", "cof_assets/spritesheets/Spells/mines.json");
         this.load.spritesheet("eyeball", "cof_assets/spritesheets/Enemies/eyeball.json");
 
+        COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL2_MUSIC_KEY";
+        COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel2.mp3";
+        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
+
         this.load.audio(COFLevel2.BOOM_AUDIO, COFLevel2.BOOM_AUDIO);
     }
 

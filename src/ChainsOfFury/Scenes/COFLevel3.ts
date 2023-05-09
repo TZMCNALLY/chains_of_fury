@@ -37,9 +37,9 @@ export default class COFLevel3 extends COFLevel {
     /** Object pool for shadow demon summoning circles */
     private demonSummoningCircles: Array<AnimatedSprite> = new Array(5);
     /** Object pool for ice mirrors */
-    private iceMirrors: Array<AnimatedSprite> = new Array(1);
+    private iceMirrors: Array<AnimatedSprite> = new Array(2);
     /** Object pool for snowballs */
-    private snowballs: Array<AnimatedSprite> = new Array(1);
+    private snowballs: Array<AnimatedSprite> = new Array(2);
 
     /**
      * @see Scene.update()
@@ -320,11 +320,11 @@ export default class COFLevel3 extends COFLevel {
 
     protected despawnSnowball(id: number, hitEntity: String) {
         for (let i = 0; i < this.snowballs.length; i++) {
-            if (this.snowballs[i].id === id) {
+            if (this.snowballs[i].id === id && (!(this.snowballs[i]._ai as SnowballBehavior).isDespawning())) {
+                (this.snowballs[i]._ai as SnowballBehavior).changeState(SnowballStates.DESPAWN);
                 if (hitEntity === HitEntity.PLAYER) {
                     this.emitter.fireEvent(COFEvents.ENEMY_SPELL_HIT_PLAYER, {effect: SpellEffects.SLOW})
                 }
-                (this.snowballs[i]._ai as SnowballBehavior).changeState(SnowballStates.DESPAWN);
                 break;
             }
         }

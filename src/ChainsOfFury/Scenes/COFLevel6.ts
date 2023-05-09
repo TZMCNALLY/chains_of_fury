@@ -17,6 +17,7 @@ import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import Viewport from '../../Wolfie2D/SceneGraph/Viewport';
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
+import COFLevel4 from "./COFLevel4";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class COFLevel6 extends COFLevel {
@@ -26,12 +27,22 @@ export default class COFLevel6 extends COFLevel {
     private deathCircles: Array<AnimatedSprite>;
     private skulls: Array<AnimatedSprite>;
 
+    public static readonly LIGHTNING_STRIKE_AUDIO_KEY = "LIGHTNING_STRIKE_AUDIO_KEY";
+    public static readonly LIGHTNING_STRIKE_AUDIO_PATH = "cof_assets/sounds/Enemies/DemonKing/lightning_strike.mp3";
+    public static readonly THUNDER_AUDIO_KEY = "THUNDER_AUDIO_KEY";
+    public static readonly THUNDER_AUDIO_PATH = "cof_assets/sounds/Enemies/DemonKing/thunder.mp3";
+
     /**
      * @see Scene.update()
      */
     public loadScene(): void {
         // Load enemy
         super.loadScene();
+
+        this.load.audio(COFLevel6.LIGHTNING_STRIKE_AUDIO_KEY, COFLevel6.LIGHTNING_STRIKE_AUDIO_PATH);
+        this.load.audio(COFLevel6.THUNDER_AUDIO_KEY, COFLevel6.THUNDER_AUDIO_PATH);
+        this.load.audio(COFLevel4.DEATH_CIRCLE_KEY, COFLevel4.DEATH_CIRCLE_PATH)
+
         this.load.spritesheet("wraith", "cof_assets/spritesheets/Enemies/wraith.json");
         this.load.spritesheet("lightning_strike", "cof_assets/spritesheets/Spells/lightning_strike.json")
         this.load.spritesheet("death_circle", "cof_assets/spritesheets/Spells/death_circle.json")
@@ -124,6 +135,11 @@ export default class COFLevel6 extends COFLevel {
             }
             case DemonKingEvents.SWIPED: {
                 this.handleSwipe(event.data.get("lastFace"))
+                break;
+            }
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss6Defeated = true;
+                this.sceneManager.changeToScene(MainMenu);
                 break;
             }
             case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {

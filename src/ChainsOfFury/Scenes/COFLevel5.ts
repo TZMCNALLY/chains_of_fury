@@ -19,6 +19,7 @@ import SceneManager from '../../Wolfie2D/Scene/SceneManager';
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import { AssistEvents } from "../Enemy/Sword/AssistEvents";
 import MainMenu from "./MainMenu";
+import COFLevel4 from "./COFLevel4";
 
 export default class COFLevel5 extends COFLevel {
 
@@ -168,8 +169,9 @@ export default class COFLevel5 extends COFLevel {
                 this.despawnFireballs(event.data.get("node"))
                 break;
             }
-            case COFEvents.BOSS_DEFEATED: {
-                this.handleLevelEnd();
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss5Defeated = true;
+                this.sceneManager.changeToScene(COFLevel6);
                 break;
             }
         }
@@ -337,11 +339,5 @@ export default class COFLevel5 extends COFLevel {
         this.receiver.subscribe(COFEvents.ENEMY_PROJECTILE_HIT_WALL);
         this.receiver.subscribe(SwordEvents.SPIN_BEGAN);
         this.receiver.subscribe(SwordEvents.SPIN_ENDED);
-    }
-
-    protected handleLevelEnd(): void {
-        super.handleLevelEnd();
-        MainMenu.boss5Defeated = true;
-        this.sceneManager.changeToScene(COFLevel6)
     }
 }

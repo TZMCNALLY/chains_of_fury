@@ -64,6 +64,7 @@ export default class DemonKingController extends EnemyController {
         this.addState(DemonKingStates.DAMAGED, new Damaged(this, this.owner))
         this.addState(DemonKingStates.DEAD, new Dead(this, this.owner))
         
+        this.lastFace = -1;
         this.initialize(DemonKingStates.WALK);
 
         this.walkTime = new Date()

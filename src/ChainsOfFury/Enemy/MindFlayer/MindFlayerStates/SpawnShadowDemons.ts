@@ -7,11 +7,9 @@ import { DemonSummoningCircleEvents } from "../../../Spells/DemonSummonCircle/De
 export default class SpawnShadowDemons extends MindFlayerState {
 
 	public onEnter(options: Record<string, any>): void {
-		if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount) {
-            this.owner.animation.play(MindFlayerAnimation.SPAWN_SHADOW_DEMONS);
-            this.spawnShadowDemons(this.parent.maxShadowDemonCount - this.parent.shadowDemonCount);
-            this.parent.shadowDemonCount = this.parent.maxShadowDemonCount;
-        }
+		this.owner.animation.play(MindFlayerAnimation.SPAWN_SHADOW_DEMONS);
+		this.spawnShadowDemons(this.parent.maxShadowDemonCount - this.parent.shadowDemonCount);
+		this.parent.shadowDemonCount = this.parent.maxShadowDemonCount;
 	}
 
 	public update(deltaT: number): void {

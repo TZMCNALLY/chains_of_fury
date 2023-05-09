@@ -135,15 +135,16 @@ export default class EyeballBehavior implements AI {
                 this.laserTimer.start();
             }
 
-            if (Math.abs(this.owner.position.x - this.player.position.x) < 75 &&
-                Math.abs(this.owner.position.y - this.player.position.y) < 75) {
-                    if (!this.owner.animation.isPlaying("HURT")) {
-                        this.owner.animation.playIfNotAlready("FLASH");
-                    }
+            /** Not gonna implement. */
+            // if (Math.abs(this.owner.position.x - this.player.position.x) < 75 &&
+            //     Math.abs(this.owner.position.y - this.player.position.y) < 75) {
+            //         if (!this.owner.animation.isPlaying("HURT")) {
+            //             this.owner.animation.playIfNotAlready("FLASH");
+            //         }
 
-                    // Signal explosion
-                    return;
-            }
+            //         // Signal explosion
+            //         return;
+            // }
 
             // Circle around player (ehh)
             if (!this.exploding && !this.aimingLine.visible) {

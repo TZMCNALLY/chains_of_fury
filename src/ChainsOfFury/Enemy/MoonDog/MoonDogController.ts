@@ -38,7 +38,7 @@ export const MoonDogAnimation = {
     CHARGE: "CHARGE",
     PREPARING_MAGIC: "PREPARING_MAGIC",
     MAGIC: "MAGIC",
-    SUMMON: "DAMAGE_LEFT", // TODO: change these later.
+    SUMMON: "DAMAGE_LEFT",
     POUND: "POUND",
     WALKING: "WALKING_LEFT",
     DEATH: "DEATH"

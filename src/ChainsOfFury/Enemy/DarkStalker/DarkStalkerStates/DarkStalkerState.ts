@@ -34,10 +34,6 @@ export default abstract class DarkStalkerState extends State {
 	}
 
 	public update(deltaT: number): void {
-        if (this.parent.health === 0) {
-			this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
-		}
-
         this.owner.invertX = MathUtils.sign(this.owner.position.x - this.parent.player.position.x) < 0;
     }
 

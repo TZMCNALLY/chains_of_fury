@@ -76,6 +76,20 @@ export default class COFLevel1 extends COFLevel {
         super.initializeBossUI("Moon Dog");
         this.initializeEnemyBoss("moondog", MoonDogController, 1, [750, 480], -15, -15);
 
+        // Adding tween here b/c I don't want to override the initializeboss method
+        this.enemyBoss.tweens.add("invul", {
+            startDelay: 0,
+            duration: 1000,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 1,
+                    end: .3,
+                    ease: EaseFunctionType.OUT_IN_QUAD
+                }
+            ]
+        });
+
         this.initLittleOnes();
         this.initMoons();
 
@@ -249,20 +263,22 @@ export default class COFLevel1 extends COFLevel {
                 // Sets the minion to a position on a random point on a circle around the boss.
                 let aroundBoss = new Vec2(80,80);
                 aroundBoss.rotateCCW(Math.PI * RandUtils.randFloat(0, 2));
-                this.minions[i].position.copy(this.enemyBoss.position.clone().add(aroundBoss));
 
                 // check bound. (flip direction of the around boss if out of bounce.)
-                if (this.enemyBoss.position.clone().add(aroundBoss).y > 740 || 
-                    this.enemyBoss.position.clone().add(aroundBoss).y < 230) {
+                if (this.enemyBoss.position.clone().add(aroundBoss).y > 780 || 
+                    this.enemyBoss.position.clone().add(aroundBoss).y < 180) {
                         aroundBoss.y *= -1;
                 }
-                if (this.enemyBoss.position.clone().add(aroundBoss).x > 990 || 
-                    this.enemyBoss.position.clone().add(aroundBoss).x < 270) {
+                if (this.enemyBoss.position.clone().add(aroundBoss).x > 1040 || 
+                    this.enemyBoss.position.clone().add(aroundBoss).x < 240) {
                         aroundBoss.x *= -1;
                 }
 
+                this.minions[i].position.copy(this.enemyBoss.position.clone().add(aroundBoss));
+
                 this.minions[i].visible = true;
                 this.minions[i].tweens.play("summon");
+                (this.minions[i]._ai as SmallDogBehavior).reset();
 
                 (this.enemyBoss._ai as MoonDogController).minionCount += 1;
             }
@@ -378,7 +394,9 @@ export default class COFLevel1 extends COFLevel {
             if (this.minions[i].id == id) {
                 this.minions[i].visible = false;
                 this.minions[i].animation.stop();
+                this.minions[i].position.copy(Vec2.ZERO);
                 (this.enemyBoss._ai as MoonDogController).minionCount -= 1;
+                return;
             }
         }
     }

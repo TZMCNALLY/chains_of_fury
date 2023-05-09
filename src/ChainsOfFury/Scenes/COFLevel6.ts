@@ -22,8 +22,8 @@ export default class COFLevel6 extends COFLevel {
 
     protected lightningStrike: AnimatedSprite;
     /** Object pool for death circles*/
-    private deathCircles: Array<AnimatedSprite> = new Array(5);
-    private skulls: Array<AnimatedSprite> = new Array(100);
+    private deathCircles: Array<AnimatedSprite>;
+    private skulls: Array<AnimatedSprite>;
 
     /**
      * @see Scene.update()
@@ -141,6 +141,9 @@ export default class COFLevel6 extends COFLevel {
         this.lightningStrike = this.add.animatedSprite("lightning_strike", COFLayers.PRIMARY);
         this.lightningStrike.scale.set(1,9)
         this.lightningStrike.visible = false;
+
+        this.deathCircles = new Array(5);
+        this.skulls = new Array(100);
 
         for (let i = 0; i < this.deathCircles.length; i++) {
 			this.deathCircles[i] = this.add.animatedSprite("death_circle", COFLayers.PRIMARY);

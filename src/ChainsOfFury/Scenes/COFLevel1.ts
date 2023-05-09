@@ -30,6 +30,9 @@ export default class COFLevel1 extends COFLevel {
 
     private groundCracks: AnimatedSprite;
 
+    public static readonly MOON_AUDIO_PATH = "cof_assets/sounds/Enemies/Moon Dog/meteor.wav";
+    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/Demon King/lightning_strike.wav";
+
     /** Overrides collision matrix so enemy projectiles can pass through */
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 
@@ -70,6 +73,13 @@ export default class COFLevel1 extends COFLevel {
         this.load.spritesheet("moon", "cof_assets/spritesheets/Spells/moon.json");
         this.load.spritesheet("moon_indicator", "cof_assets/spritesheets/Spells/moon_indicator.json");
         this.load.spritesheet("ground_crack", "cof_assets/spritesheets/Spells/ground_crack.json");
+
+        COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL1_MUSIC_KEY";
+        COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel1.mp3";
+        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
+
+        this.load.audio(COFLevel1.MOON_AUDIO_PATH, COFLevel1.MOON_AUDIO_PATH);
+        this.load.audio(COFLevel1.BOOM_AUDIO, COFLevel1.BOOM_AUDIO);
     }
 
     public startScene(): void {
@@ -251,7 +261,7 @@ export default class COFLevel1 extends COFLevel {
         for (let i = 0; i < 5; i++) {
             // Checks if max amount of minions is reached.
             if ((this.enemyBoss._ai as MoonDogController).minionCount >= 3 && 
-            (this.enemyBoss._ai as MoonDogController).health > 300) {
+            (this.enemyBoss._ai as MoonDogController).health > 500) {
                 return;
             }
 
@@ -303,6 +313,8 @@ export default class COFLevel1 extends COFLevel {
     private rainMoons(): void {
         // Summon 8 moons to drop on the player
         let offset = 0;
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel1.MOON_AUDIO_PATH});
+
         for (let i = 0; i < 8; i++) {
             let moonTimer = new Timer(RandUtils.randInt(offset+800, offset+1250), () => {
                 this.individualMoon();
@@ -312,7 +324,7 @@ export default class COFLevel1 extends COFLevel {
         }
     }
 
-    private individualMoon(): void {
+    private individualMoon(): void {        
         for (let i = 0; i < 8; i++) {
             if (this.moonIndicators[i].visible) {
                 continue;
@@ -350,6 +362,7 @@ export default class COFLevel1 extends COFLevel {
         this.moons[index].position.copy(Vec2.ZERO);
 
         this.moonIndicators[index].animation.play("EXPLODE");
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel1.BOOM_AUDIO});
 
         // The original hitbox moved downwards by half.
         let hitbox2 = this.moonIndicators[index].boundary.clone();

@@ -10,6 +10,8 @@ import { COFEvents } from "../../COFEvents";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import { DarkStalkerEvents } from "./DarkStalkerEvents";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import COFLevel from "../../Scenes/COFLevel";
 
 export const DarkStalkerStates = {
     IDLE: "IDLE",
@@ -60,7 +62,7 @@ export default class DarkStalkerController extends EnemyController {
 
         this.receiver.subscribe(DarkStalkerEvents.TELEPORT);
 
-        this.maxHealth = 10000;
+        this.maxHealth = 2200;
         this.health = this.maxHealth;
 
         this._walkVelocity = new Vec2(75, 75);
@@ -85,7 +87,8 @@ export default class DarkStalkerController extends EnemyController {
         this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
 
         if (this.health == 0) {
-            this.changeState(DarkStalkerStates.DEATH);
+            if (this.currentState != this.stateMap.get(DarkStalkerStates.DEATH))
+                this.changeState(DarkStalkerStates.DEATH);
         }
 
         this._walkVelocity = new Vec2(0, 0);
@@ -111,16 +114,21 @@ export default class DarkStalkerController extends EnemyController {
 
     public handleEnemyFireballHit(id: number, entity: string): void {
         if (id !== this.owner.id) {
+            // Two event to kill minion with fireball.
             this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
+            this.emitter.fireEvent(DarkStalkerEvents.MINION_HIT, {node: id});
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.ENEMY_HIT_KEY});
             return;
         }
 
-        if (this.health == 0) {
-            this.changeState(DarkStalkerStates.DEATH);
-        }
 
         this.health -= this.damageFromProjectile;
         this.emitter.fireEvent(COFEvents.BOSS_TOOK_DAMAGE, {currHealth: this.health, maxHealth: this.maxHealth});
+
+        if (this.health == 0) {
+            if (this.currentState != this.stateMap.get(DarkStalkerStates.DEATH))
+                this.changeState(DarkStalkerStates.DEATH);
+        }
     }
 
     public handleEvent(event: GameEvent): void {

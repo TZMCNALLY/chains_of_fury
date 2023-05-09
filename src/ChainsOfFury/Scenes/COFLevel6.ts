@@ -18,6 +18,7 @@ import Viewport from '../../Wolfie2D/SceneGraph/Viewport';
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import COFLevel4 from "./COFLevel4";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class COFLevel6 extends COFLevel {
 
@@ -46,6 +47,10 @@ export default class COFLevel6 extends COFLevel {
         this.load.spritesheet("lightning_strike", "cof_assets/spritesheets/Spells/lightning_strike.json")
         this.load.spritesheet("death_circle", "cof_assets/spritesheets/Spells/death_circle.json")
         this.load.spritesheet("flameskull", "cof_assets/spritesheets/Projectiles/flameskull.json")
+
+        COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL6_MUSIC_KEY";
+        COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel6.mp3";
+        this.load.audio(COFLevel.LEVEL_MUSIC_KEY, COFLevel.LEVEL_MUSIC_PATH);
     }
 
     public startScene(): void {
@@ -135,6 +140,10 @@ export default class COFLevel6 extends COFLevel {
             case COFEvents.LEVEL_END: {
                 MainMenu.boss6Defeated = true;
                 this.sceneManager.changeToScene(MainMenu);
+                break;
+            }
+            case COFEvents.ENEMY_PROJECTILE_HIT_WALL: {
+                event.data.get("node");
                 break;
             }
         }
@@ -296,5 +305,12 @@ export default class COFLevel6 extends COFLevel {
         this.receiver.subscribe(DemonKingEvents.SKULLS_SPAWN);
         this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE);
         this.receiver.subscribe(DemonKingEvents.SWIPED);
+    }
+
+    protected handleLevelEnd(): void {
+        super.handleLevelEnd();
+        MainMenu.boss6Defeated = true;
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true});
+        this.sceneManager.changeToScene(MainMenu)
     }
 }

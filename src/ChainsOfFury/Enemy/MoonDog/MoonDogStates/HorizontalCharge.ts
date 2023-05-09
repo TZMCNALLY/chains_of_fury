@@ -33,6 +33,10 @@ export default class HorizontalCharge extends MoonDogState {
 
             this.parent.speed = this.parent.chargeSpeed; // Charge speed
             
+            if (this.parent.health > 500) {
+                this.parent.speed *= 1.2;
+            }
+            
             // Calculate target location.
             if (this._target === undefined) {
                 this._target = new Vec2(
@@ -43,7 +47,7 @@ export default class HorizontalCharge extends MoonDogState {
                 )
 
                 // Adjust target to other side if still in phase 1
-                if (this.parent.health > 300) {
+                if (this.parent.health > 500) {
                     this._target.x = (this.owner.position.x > 600 ? 400 : 800);
                 }
             }
@@ -55,7 +59,7 @@ export default class HorizontalCharge extends MoonDogState {
                 this._target = undefined;
                 this.owner.setGroup(COFPhysicsGroups.ENEMY); // Disable contact damage.
                 
-                if (this.parent.health > 300) {
+                if (this.parent.health > 500) {
                     this.finished(MoonDogStates.IDLE);
                 } else {
                     this.finished(MoonDogStates.POUND);
@@ -85,6 +89,10 @@ export default class HorizontalCharge extends MoonDogState {
             // Boss need to reposition.
 
             this.parent.speed = this.parent.walkSpeed; // Reposition walk speed
+
+            if (this.parent.health < 500) {
+                this.parent.speed *= 1.2;
+            }
 
             // x component of movement, moves faster when close, slow when far.
             let xComponent = (this.owner.position.x - this.parent.player.position.x);

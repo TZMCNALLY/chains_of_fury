@@ -17,20 +17,19 @@ export default class StageA extends DarkStalkerState {
         this.owner.animation.play(DarkStalkerAnimations.IDLE);
 
 		this.actionWaitTime = 2;
+
+		this.actionWaitTime -= this.parent.health / 1500 * .75;
 	}
 
 	public update(deltaT: number): void {
 		super.update(deltaT);
 
 		/**
-		 * To be implemented:
+		 * 
 		 * This boss will just spam magic attack over and over again (emit event)
 		 * Walk away from player
 		 * Have a chance to teleport when the boss have been hit. (Scale by damage taken since last teleport)
 		 * Minions will be of higher as the bosses health decrease.
-		 * 
-		 * -- Scaped idea that might be implemented if there is still time.
-		 * Transition to rapid melee sword attack + teleportation instead when low on health.
 		 */
 
 		if (this.actionWaitTime > 0) {

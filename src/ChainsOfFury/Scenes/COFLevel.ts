@@ -128,8 +128,8 @@ export default class COFLevel extends Scene {
     protected walls: OrthogonalTilemap;
 
     /** Sound and music */
-    public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = ""; // up to each level to decide
+    public static LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
+    public static LEVEL_MUSIC_PATH = ""; // up to each level to decide
     public static readonly PLAYER_DAMAGED_KEY = "PLAYER_DAMAGED_KEY";
     public static readonly PLAYER_DAMAGED_PATH = "cof_assets/sounds/Player/player_damaged.mp3";
     public static readonly PLAYER_TELEPORTED_KEY = "PLAYER_TELEPORTED_KEY";
@@ -291,6 +291,8 @@ export default class COFLevel extends Scene {
 
         // Start the black screen fade out
         this.levelTransitionScreen.tweens.play("fadeOut");
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY, loop: true, holdReference: true});
     }
 
     /* Update method for the scene */
@@ -360,6 +362,8 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.PLAYER_DEAD: {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
@@ -483,6 +487,7 @@ export default class COFLevel extends Scene {
 
     protected handleLevelEnd(): void {
         this.levelEndLabel.tweens.play("slideIn")
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY});
     }
 
     /**
@@ -567,10 +572,6 @@ export default class COFLevel extends Scene {
 		this.enemyHealthBar.position.set(this.enemyHealthBarBg.position.x - (unit / 2 / this.getViewScale()) * (maxHealth - currentHealth), this.enemyHealthBarBg.position.y);
 	}
 
-    // currently generating a pause menu every time esc is pressed
-    // for some reason the unpause button does not work when clicked on
-    // the button appears to be elsewhere on the screen, as when i randomly clicked around
-    // i eventually found the onclick area of the button
     protected handlePauseGame() {
         if (!this.paused) {
             this.paused = true;
@@ -584,7 +585,6 @@ export default class COFLevel extends Scene {
             // Stop actors that need to be stopped.
             for (let i = 0; i < this.aiManager.actors.length; i++) {
                 if (this.aiManager.actors[i].aiActive) {
-                    console.log(this.aiManager.actors[i].aiActive);
                     this.pausedActors[i] = true;
                     this.aiManager.actors[i].setAIActive(false, {});
                 } else {
@@ -1005,7 +1005,7 @@ export default class COFLevel extends Scene {
         // Positions that the levelBegin transition will move to
         this.levelBeginEndPosition = new Vec2(800, 400)
 
-        this.viewport.setCenter(new Vec2(400, 480))
+        this.viewport.setCenter(new Vec2(200, 480))
         this.viewport.setFocus(this.viewport.getCenter())
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);

@@ -3,6 +3,7 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
+import AudioManager, { AudioChannelType } from "../../Wolfie2D/Sound/AudioManager";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import MainMenu from "./MainMenu";

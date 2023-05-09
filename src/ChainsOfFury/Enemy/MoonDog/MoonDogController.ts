@@ -75,7 +75,7 @@ export default class MoonDogController extends EnemyController {
 
         this.initialize(MoonDogStates.SUMMON);
 
-        this.maxHealth = 500;
+        this.maxHealth = 1000;
         this.health = this.maxHealth;
         this.walkSpeed = 4;
         this.chargeSpeed = 18;

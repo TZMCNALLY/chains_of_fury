@@ -252,7 +252,7 @@ export default class COFLevel1 extends COFLevel {
         for (let i = 0; i < 5; i++) {
             // Checks if max amount of minions is reached.
             if ((this.enemyBoss._ai as MoonDogController).minionCount >= 3 && 
-            (this.enemyBoss._ai as MoonDogController).health > 300) {
+            (this.enemyBoss._ai as MoonDogController).health > 500) {
                 return;
             }
 

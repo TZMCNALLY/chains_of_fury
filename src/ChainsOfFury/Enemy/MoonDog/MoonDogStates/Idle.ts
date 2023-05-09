@@ -17,6 +17,10 @@ export default class Idle extends MoonDogState {
 
 		this.lastActionTime = 5; // How many seconds it takes until it goes into new state.
 
+		if (this.parent.health < 500) {
+			this.lastActionTime -= 1; // Slightly decrease action time cooldown
+		}
+
 		this.repositioningSpeed = new Vec2(50,50);
 	}
 
@@ -27,7 +31,7 @@ export default class Idle extends MoonDogState {
 		if (this.lastActionTime < deltaT) {
 			let rnd = RandUtils.randInt(1, 101);
 
-			if (this.parent.health > 300) {
+			if (this.parent.health > 500) {
 				// Stage 1
 
 				// Make it more like to dash if player is close and boss is backed up in the corner. (up to 60%)

@@ -4,8 +4,9 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import MainMenu from "./MainMenu";
 import { MenuLayers } from "./MainMenu";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import MainMenu from "./MainMenu";
 
 import COFLevel1 from "./COFLevel1";
 import COFLevel2 from "./COFLevel2";
@@ -81,33 +82,45 @@ export default class LevelSelect extends Scene {
 
         // Scene transitions:
         level1.onClick = () => {
-            if (MainMenu.boss1Defeated)
+            if (MainMenu.boss1Defeated) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel1);
+            }
         };
 
         level2.onClick = () => {
-            if (MainMenu.boss2Defeated)
+            if (MainMenu.boss2Defeated) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel2);
+            }
         };
 
         level3.onClick = () => {
-            if (MainMenu.boss3Defeated)
+            if (MainMenu.boss3Defeated) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel3);
+            }
         };
 
         level4.onClick = () => {
-            if (MainMenu.boss4Defeated)
+            if (MainMenu.boss4Defeated) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel4);
+            }
         };
 
         level5.onClick = () => {
-            if (MainMenu.boss5Defeated)
+            if (MainMenu.boss5Defeated) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel5);
+            }
         };
         
         level6.onClick = () => {
-            if (MainMenu.boss6Defeated)
+            if (MainMenu.boss6Defeated) {
+                this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel6);
+            }
         };
 
         // Back button:

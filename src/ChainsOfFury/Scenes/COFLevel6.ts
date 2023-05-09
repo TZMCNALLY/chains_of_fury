@@ -17,6 +17,7 @@ import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import Viewport from '../../Wolfie2D/SceneGraph/Viewport';
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export default class COFLevel6 extends COFLevel {
 
@@ -285,6 +286,7 @@ export default class COFLevel6 extends COFLevel {
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
         MainMenu.boss6Defeated = true;
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
         this.sceneManager.changeToScene(MainMenu)
     }
 }

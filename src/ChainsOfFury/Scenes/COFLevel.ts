@@ -146,6 +146,8 @@ export default class COFLevel extends Scene {
     public static readonly FIREBALL_THROWN_PATH = "cof_assets/sounds/General/fireball_thrown.mp3";
     public static readonly ENEMY_HIT_KEY = "ENEMY_HIT_KEY";
     public static readonly ENEMY_HIT_PATH = "cof_assets/sounds/Enemies/enemy_hit.mp3";
+    public static readonly HEAL_KEY = "HEAL_KEY";
+    public static readonly HEAL_PATH = "cof_assets/sounds/General/healing.mp3";
 
     private paused: boolean;
     private pausedActors: Array<boolean>;
@@ -208,6 +210,7 @@ export default class COFLevel extends Scene {
         this.load.audio(COFLevel.PLAYER_DEFEATED_KEY, COFLevel.PLAYER_DEFEATED_PATH)
         this.load.audio(COFLevel.FIREBALL_THROWN_KEY, COFLevel.FIREBALL_THROWN_PATH)
         this.load.audio(COFLevel.ENEMY_HIT_KEY, COFLevel.ENEMY_HIT_PATH)
+        this.load.audio(COFLevel.HEAL_KEY, COFLevel.HEAL_PATH)
     }
 
     public update(deltaT: number): void {
@@ -296,7 +299,7 @@ export default class COFLevel extends Scene {
     }
 
     /**
-     * Handle game events. 
+     * Handle game events.
      * @param event the game event
      */
     protected handleEvent(event: GameEvent): void {
@@ -311,6 +314,8 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.BOSS_HEALED: {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND,  {key: COFLevel.HEAL_KEY})
+                this.emitter.fireEvent(HealMarkEvents.DISPLAY_HEAL_MARKS, {location: (new Vec2()).copy(this.enemyBoss.position), scale: 2})
                 this.handleBossHealthChange(event.data.get("currHealth"), event.data.get("maxHealth"));
                 break;
             }

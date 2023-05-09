@@ -54,7 +54,7 @@ export default class BasicAttack extends SwordState {
 					this.owner.animation.play(SwordAnimations.ATTACK_LEFT);
 				}
 
-				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: (this.owner.getScene() as COFLevel5).getBasicAttackAudio()})
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel5.basicAttackAudioKey})
 				this.hitboxTimer.start();
 				this.numSlashes++;
 			}

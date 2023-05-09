@@ -6,6 +6,8 @@ import RandUtils from "../../../../Wolfie2D/Utils/RandUtils";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import { AssistEvents } from "../AssistEvents";
+import COFLevel5 from "../../../Scenes/COFLevel5";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 export default class ThrowBeam extends AssistState {
 
@@ -37,6 +39,7 @@ export default class ThrowBeam extends AssistState {
 				}
                 this.numThrows++;
                 this.emitter.fireEvent(AssistEvents.BEAM_THROWN)
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel5.BEAM_AUDIO_KEY})
                 this.throwTimer.start()
             }
         }

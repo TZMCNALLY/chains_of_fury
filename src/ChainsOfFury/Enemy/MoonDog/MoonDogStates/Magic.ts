@@ -11,6 +11,7 @@ export default class Magic extends MoonDogState {
 
 	public onEnter(options: Record<string, any>): void {
         this.owner.animation.play(MoonDogAnimation.PREPARING_MAGIC, false, MoonDogEvents.MAGIC);
+		this.owner.tweens.play("invul");
         this.owner.animation.queue(MoonDogAnimation.MAGIC, true);
 
         this._stateTime = 10; // 10 seconds in this state?
@@ -23,6 +24,7 @@ export default class Magic extends MoonDogState {
 		if (this._stateTime > 0) {
 			this._stateTime -= deltaT;
 		} else {
+			this.owner.alpha = 1;
 			this.finished(MoonDogStates.IDLE);
 		}
 

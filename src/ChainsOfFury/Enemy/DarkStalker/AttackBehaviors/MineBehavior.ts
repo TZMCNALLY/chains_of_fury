@@ -4,6 +4,7 @@ import Emitter from "../../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import Receiver from "../../../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
 import { DarkStalkerEvents } from "../DarkStalkerEvents";
 
 export default class MineBehavior implements AI {
@@ -15,6 +16,8 @@ export default class MineBehavior implements AI {
     private explodeCountdown: number;
     private currCountdown: number;
     private emitter: Emitter;
+
+    public exploding: boolean;
 
     public initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
@@ -46,7 +49,7 @@ export default class MineBehavior implements AI {
         }
 
         if (this._owner.visible) {
-            if (this.currCountdown > 0) {
+            if (this.currCountdown > 0 && !this.exploding) {
                 // Play animation depending of if it will explode soon
                 if (this.currCountdown < 1) {
                     this.owner.animation.playIfNotAlready("FLASH", true);
@@ -59,9 +62,11 @@ export default class MineBehavior implements AI {
                 }
                 this.currCountdown -= deltaT;
             } else {
-                // Play explode animation
-                this.emitter.fireEvent(DarkStalkerEvents.MINE_EXPLODED, {"node": this._owner.id});
-                this.currCountdown = this.explodeCountdown;
+                if (!this.exploding) {
+                    this.emitter.fireEvent(DarkStalkerEvents.MINE_EXPLODED, {"node": this._owner.id});
+                    this.exploding = true;
+                    this.currCountdown = this.explodeCountdown;
+                }
             }
 
             this.owner.move(this.velocity.scaled(deltaT));

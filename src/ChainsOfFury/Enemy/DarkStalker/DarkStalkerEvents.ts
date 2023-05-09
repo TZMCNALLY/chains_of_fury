@@ -18,5 +18,8 @@ export const DarkStalkerEvents = {
     /** with data: node */
     MINION_HIT: "MINION_HIT",
 
-    EYEBALL_DEAD: "EYEBALL_DEAD"
+    EYEBALL_DEAD: "EYEBALL_DEAD",
+
+    /** with data: origin: Vec2, dir: Vec2 */
+    SHOOT_MISSLE: "SHOOT_MISSLE",
 }

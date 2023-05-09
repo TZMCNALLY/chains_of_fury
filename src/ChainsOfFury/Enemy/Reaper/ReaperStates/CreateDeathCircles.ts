@@ -4,6 +4,8 @@ import { ReaperStates } from "../ReaperController";
 import { ReaperEvents } from "../ReaperEvents";
 import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
+import COFLevel4 from "../../../Scenes/COFLevel4";
 
 export default class CreateDeathCircles extends ReaperState {
 
@@ -30,6 +32,7 @@ export default class CreateDeathCircles extends ReaperState {
 
                 this.deathCirclesToSpawn--;
                 this.owner.animation.play(ReaperAnimation.SPAWN_DEATH_CIRCLES);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel4.DEATH_CIRCLE_KEY});
                 this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: spawn, radius: 200});
             }
             else {

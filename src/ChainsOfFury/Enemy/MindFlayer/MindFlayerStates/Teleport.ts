@@ -2,6 +2,8 @@ import { MindFlayerStates } from "../MindFlayerController";
 import MindFlayerState from "./MindFlayerState";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import { MindFlayerEvents } from "../MindFlayerEvents";
+import COFLevel from "../../../Scenes/COFLevel";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 export default class Teleport extends MindFlayerState {
 
@@ -13,6 +15,7 @@ export default class Teleport extends MindFlayerState {
         this.emitter.fireEvent(MindFlayerEvents.MIND_FLAYER_TELEPORT, {location: locationToTeleportTo});
 
 		this.parent.lastActionTime = new Date();
+		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.PLAYER_TELEPORTED_KEY});
         this.finished(MindFlayerStates.IDLE);
 	}
 

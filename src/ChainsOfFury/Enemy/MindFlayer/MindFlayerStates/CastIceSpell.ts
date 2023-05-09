@@ -4,6 +4,7 @@ import { MindFlayerEvents } from "../MindFlayerEvents";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 export default class CastIceSpell extends MindFlayerState {
+
 	public onEnter(options: Record<string, any>): void {
 		this.owner.animation.play(MindFlayerAnimation.CAST_ICE_SPELL);
 		let location = new Vec2(this.owner.position.x, this.owner.position.y)

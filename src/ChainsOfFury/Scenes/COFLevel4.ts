@@ -25,6 +25,11 @@ export default class COFLevel4 extends COFLevel {
     /** Object pool for slashes */
     private slashes: Array<AnimatedSprite> = new Array(5);
 
+    public static readonly DEATH_CIRCLE_KEY = "DEATH_CIRCLE_KEY";
+    public static readonly DEATH_CIRCLE_PATH = "cof_assets/sounds/General/death_circle.mp3";
+    public static readonly FIRE_SLASH_KEY = "FIRE_SLASH_KEY";
+    public static readonly FIRE_SLASH_PATH = "cof_assets/sounds/General/fire_slash.mp3";
+
     /**
      * @see Scene.update()
      */
@@ -33,6 +38,9 @@ export default class COFLevel4 extends COFLevel {
         this.load.spritesheet("reaper", "cof_assets/spritesheets/Enemies/reaper.json");
         this.load.spritesheet("death_circle", "cof_assets/spritesheets/Spells/death_circle.json")
         this.load.spritesheet("slash", "cof_assets/spritesheets/Spells/slash.json")
+
+        this.load.audio(COFLevel4.DEATH_CIRCLE_KEY, COFLevel4.DEATH_CIRCLE_PATH);
+        this.load.audio(COFLevel4.FIRE_SLASH_KEY, COFLevel4.FIRE_SLASH_PATH);
     }
 
     public startScene(): void {

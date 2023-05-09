@@ -30,7 +30,7 @@ export default class COFLevel2 extends COFLevel {
     private eyeBalls: Array<AnimatedSprite>;
     private portals: Array<AnimatedSprite>;
 
-    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/Demon King/lightning_strike.wav";
+    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/DemonKing/lightning_strike.mp3";
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
 

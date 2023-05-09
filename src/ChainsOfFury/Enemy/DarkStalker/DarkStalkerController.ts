@@ -62,7 +62,7 @@ export default class DarkStalkerController extends EnemyController {
 
         this.receiver.subscribe(DarkStalkerEvents.TELEPORT);
 
-        this.maxHealth = 1000;
+        this.maxHealth = 1500;
         this.health = this.maxHealth;
 
         this._walkVelocity = new Vec2(75, 75);

@@ -16,6 +16,8 @@ import Summon from "./MoonDogStates/Summon";
 import Pound from "./MoonDogStates/Pound";
 import Death from "./MoonDogStates/Death";
 import { MoonDogEvents } from "./MoonDogEvents";
+import COFLevel from "../../Scenes/COFLevel";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export const MoonDogStates = {
     // RUN: "RUN",
@@ -118,7 +120,10 @@ export default class MoonDogController extends EnemyController {
 
     public handleEnemyFireballHit(id: number, entity: string): void {
         if (id !== this.owner.id) {
+            // Double emit to simulate 100 damage.
             this.emitter.fireEvent(MoonDogEvents.MINION_HIT, {node: id});
+            this.emitter.fireEvent(MoonDogEvents.MINION_HIT, {node: id});
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.ENEMY_HIT_KEY});
             return;
         }
 

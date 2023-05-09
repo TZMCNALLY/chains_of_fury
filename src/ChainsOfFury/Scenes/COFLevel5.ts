@@ -19,6 +19,7 @@ import SceneManager from '../../Wolfie2D/Scene/SceneManager';
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import { AssistEvents } from "../Enemy/Sword/AssistEvents";
 import MainMenu from "./MainMenu";
+import COFLevel4 from "./COFLevel4";
 
 export default class COFLevel5 extends COFLevel {
 

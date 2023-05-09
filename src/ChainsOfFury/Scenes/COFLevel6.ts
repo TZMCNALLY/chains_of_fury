@@ -17,6 +17,7 @@ import { COFPhysicsGroups } from "../COFPhysicsGroups";
 import Viewport from '../../Wolfie2D/SceneGraph/Viewport';
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
+import COFLevel4 from "./COFLevel4";
 
 export default class COFLevel6 extends COFLevel {
 
@@ -39,6 +40,7 @@ export default class COFLevel6 extends COFLevel {
 
         this.load.audio(COFLevel6.LIGHTNING_STRIKE_AUDIO_KEY, COFLevel6.LIGHTNING_STRIKE_AUDIO_PATH);
         this.load.audio(COFLevel6.THUNDER_AUDIO_KEY, COFLevel6.THUNDER_AUDIO_PATH);
+        this.load.audio(COFLevel4.DEATH_CIRCLE_KEY, COFLevel4.DEATH_CIRCLE_PATH)
 
         this.load.spritesheet("wraith", "cof_assets/spritesheets/Enemies/wraith.json");
         this.load.spritesheet("lightning_strike", "cof_assets/spritesheets/Spells/lightning_strike.json")

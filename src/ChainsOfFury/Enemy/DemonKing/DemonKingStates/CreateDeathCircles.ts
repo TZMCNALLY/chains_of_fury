@@ -6,6 +6,8 @@ import MathUtils from "../../../../Wolfie2D/Utils/MathUtils";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import Timer from '../../../../Wolfie2D/Timing/Timer';
 import { DemonKingEvents } from "../DemonKingEvents";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
+import COFLevel4 from "../../../Scenes/COFLevel4";
 
 export default class CreateDeathCircles extends DemonKingState {
 
@@ -35,6 +37,7 @@ export default class CreateDeathCircles extends DemonKingState {
                 this.deathCirclesToSpawn--;
                 this.owner.animation.play(DemonKingAnimations.DANCING);
                 this.emitter.fireEvent(DemonKingEvents.SPAWN_DEATH_CIRCLE, {location: spawn});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel4.DEATH_CIRCLE_KEY});
                 this.timeBetweenSpawns.start();
             }
             else {

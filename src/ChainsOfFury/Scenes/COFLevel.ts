@@ -184,13 +184,14 @@ export default class COFLevel extends Scene {
         if(this.isLevelBeginTransitioning) {
 
             if(this.viewport.getCenter().x <= this.levelBeginEndPosition.x) {
-                console.log(this.viewport.getCenter().x)
-                console.log(this.viewport.getFocus().x)
-                this.viewport.setFocus(new Vec2(this.viewport.getCenter().x += 3, this.viewport.getCenter().y))
-                //this.viewport.setFocus(new Vec2(this.viewport.getCenter().x + 3, this.viewport.getCenter().y))
+                this.viewport.naniTF = false;
+                this.viewport.setFocus(new Vec2(this.viewport.getCenter().x+3, this.viewport.getCenter().clone().y))
+                this.viewport.setCenter(new Vec2(this.viewport.getCenter().x+3, this.viewport.getCenter().clone().y));
             }
 
             else {
+                this.viewport.naniTF = true;
+
                 this.isLevelBeginTransitioning = false;
                 this.levelTransitionScreen.tweens.play("fadeIn")
                 this.levelBeginTimer.start();

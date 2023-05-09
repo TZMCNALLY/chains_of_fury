@@ -37,6 +37,8 @@ export default class Viewport {
     /** The size of the canvas */
     private canvasSize: Vec2;
 
+    public naniTF: boolean;
+
     constructor(canvasSize: Vec2, zoomLevel: number){
         this.view = new AABB(Vec2.ZERO, Vec2.ZERO);
         this.boundary = new AABB(Vec2.ZERO, Vec2.ZERO);
@@ -56,6 +58,8 @@ export default class Viewport {
         // Set the center (and make the viewport stay there)
         this.setCenter(this.view.halfSize.clone());
         this.setFocus(this.view.halfSize.clone());
+
+        this.naniTF = true;
     }
 
     /** Enables the viewport to zoom in and out */
@@ -245,7 +249,8 @@ export default class Viewport {
         pos.x = Math.floor(pos.x);
         pos.y = Math.floor(pos.y);
         
-        this.view.center.copy(pos);
+        if (this.naniTF)
+            this.view.center.copy(pos);
     }
 
     update(deltaT: number): void {

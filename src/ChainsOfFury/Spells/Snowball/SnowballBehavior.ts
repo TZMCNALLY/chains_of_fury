@@ -8,7 +8,6 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Spawn from "./SnowballStates/Spawn";
 import Despawn from "./SnowballStates/Despawn";
 import Inactive from "./SnowballStates/Inactive";
-import { SnowballEvents } from "./SnowballEvents";
 
 export const SnowballStates = {
     SPAWN: "SPAWN_SNOWBALL",
@@ -43,6 +42,10 @@ export default class SnowballBehavior extends StateMachineAI {
     }
     public set location(loc: Vec2) {
         this._location = loc;
+    }
+
+    public isDespawning() {
+        return (this.currentState === this.stateMap.get(SnowballStates.DESPAWN));
     }
 
     public initializeAI(owner: COFAnimatedSprite, options: Record<string, any>): void {

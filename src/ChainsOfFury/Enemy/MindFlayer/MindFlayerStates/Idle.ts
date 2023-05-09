@@ -26,19 +26,19 @@ export default class Idle extends MindFlayerState {
 		}
 		// otherwise, spawn shadow demons or shoot fireballs
 		else if (timeSinceLastAction > this.parent.actionDelay) {
-			// if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-2) {
-			// 	this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
-			// }
-			if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
+			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-2) {
+				this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
+			}
+			else if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
 				this.finished(MindFlayerStates.HEALING);
 			}
 			else {
-				// if (Math.random() > 0.5) {
+				if (Math.random() > 0.5) {
 					this.finished(MindFlayerStates.CAST_ICE_SPELL);
-				// }
-				// else {
-				// 	this.finished(MindFlayerStates.CAST_FIREBALLS);
-				// }
+				}
+				else {
+				 	this.finished(MindFlayerStates.CAST_FIREBALLS);
+				}
 			}
 		}
 	}

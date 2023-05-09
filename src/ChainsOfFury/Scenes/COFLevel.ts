@@ -183,8 +183,11 @@ export default class COFLevel extends Scene {
 
         if(this.isLevelBeginTransitioning) {
 
-            if(this.viewport.getFocus().x <= this.levelBeginEndPosition.x) {
-                this.viewport.setFocus(new Vec2(this.viewport.getCenter().x + 3, this.viewport.getCenter().y))
+            if(this.viewport.getCenter().x <= this.levelBeginEndPosition.x) {
+                console.log(this.viewport.getCenter().x)
+                console.log(this.viewport.getFocus().x)
+                this.viewport.setFocus(new Vec2(this.viewport.getCenter().x += 3, this.viewport.getCenter().y))
+                //this.viewport.setFocus(new Vec2(this.viewport.getCenter().x + 3, this.viewport.getCenter().y))
             }
 
             else {
@@ -215,7 +218,7 @@ export default class COFLevel extends Scene {
         this.initObjectPools();
 
         // Enable player movement
-        Input.disableInput();
+        Input.enableInput();
 
         // this.initializeEnemyBoss("moondog", MoonDogController);
 
@@ -803,7 +806,6 @@ export default class COFLevel extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: COFEvents.LEVEL_START
         });
     }
 
@@ -819,7 +821,7 @@ export default class COFLevel extends Scene {
         this.player.scale.set(.4, .4);
         this.player.position.copy(this.playerSpawn);
 
-        // Give the player it's AI
+        // Give the player its AI
         this.player.addAI(AzazelController);
         // Set AI to stop state at first while level begin transition is happening
         this.player.setAIActive(false, {})
@@ -917,10 +919,13 @@ export default class COFLevel extends Scene {
         // Positions that the levelBegin transition will move to
         this.levelBeginEndPosition = new Vec2(800, 400)
 
-        this.viewport.setCenter(new Vec2(200, this.player.position.y))
-        this.viewport.setFocus(new Vec2(200, this.player.position.y))
+        this.viewport.setCenter(new Vec2(200, 480))
+        this.viewport.setFocus(this.viewport.getCenter())
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);
+
+        console.log(this.viewport.getCenter())
+        console.log(this.viewport.getFocus())
     }
 
     private createBar(posX: number, posY: number, sizeX: number, sizeY: number, color: Color, font?: number) : Label {

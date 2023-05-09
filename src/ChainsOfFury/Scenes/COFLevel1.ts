@@ -31,7 +31,7 @@ export default class COFLevel1 extends COFLevel {
     private groundCracks: AnimatedSprite;
 
     public static readonly MOON_AUDIO_PATH = "cof_assets/sounds/Enemies/Moon Dog/meteor.wav";
-    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/Demon King/lightning_strike.wav";
+    public static readonly BOOM_AUDIO = "cof_assets/sounds/Enemies/DemonKing/lightning_strike.mp3";
 
     /** Overrides collision matrix so enemy projectiles can pass through */
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {

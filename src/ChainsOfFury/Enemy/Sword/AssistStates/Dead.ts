@@ -15,6 +15,7 @@ export default class Dead extends AssistState {
 
 		if (!this.owner.animation.isPlaying(AssistAnimations.DYING) && 
         !this.owner.animation.isPlaying(AssistAnimations.DEAD)) {
+			this.owner.alpha = 0;
             this.emitter.fireEvent(COFEvents.BOSS_DEFEATED);
         }
 	}

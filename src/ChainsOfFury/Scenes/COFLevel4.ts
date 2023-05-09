@@ -73,12 +73,6 @@ export default class COFLevel4 extends COFLevel {
 	    }
     }
 
-    protected handleLevelEnd(): void {
-        super.handleLevelEnd();
-        MainMenu.boss4Defeated = true;
-        this.sceneManager.changeToScene(COFLevel5)
-    }
-
     /**
      * Handles all subscriptions to events
      */
@@ -126,6 +120,11 @@ export default class COFLevel4 extends COFLevel {
             }
             case SlashEvents.DESPAWN_SLASH: {
                 this.handleDespawnSlash(event.data.get("id"));
+                break;
+            }
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss4Defeated = true;
+                this.sceneManager.changeToScene(COFLevel5);
                 break;
             }
         }

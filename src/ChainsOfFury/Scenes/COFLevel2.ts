@@ -128,13 +128,12 @@ export default class COFLevel2 extends COFLevel {
                 this.shootMissle(event.data.get("origin"), event.data.get("dir"));
                 break;
             }
+            case COFEvents.LEVEL_END: {
+                MainMenu.boss2Defeated = true;
+                this.sceneManager.changeToScene(COFLevel3);
+                break;
+            }
         }
-    }
-
-    protected handleLevelEnd(): void {
-        super.handleLevelEnd();
-        MainMenu.boss2Defeated = true;
-        this.sceneManager.changeToScene(COFLevel3)
     }
 
     protected initObjectPools(): void {

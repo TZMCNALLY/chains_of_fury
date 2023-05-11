@@ -17,7 +17,7 @@ export default class Healing extends MindFlayerState {
 	public update(deltaT: number): void {
 		super.update(deltaT);
 		if (!this.owner.animation.isPlaying(MindFlayerAnimation.HEALING)) {
-            if (this.parent.health < 1500 && this.timesToHeal > 0) {
+            if (this.parent.health < 1000 && this.timesToHeal > 0) {
                 this.timesToHeal--;
                 this.emitter.fireEvent(COFEvents.BOSS_RECEIVE_HEAL, {id: this.owner.id, heal: 50});
                 this.owner.animation.play(MindFlayerAnimation.HEALING);

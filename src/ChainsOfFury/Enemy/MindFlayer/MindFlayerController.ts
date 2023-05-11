@@ -87,7 +87,7 @@ export default class MindFlayerController extends EnemyController {
         this.lastActionTime = new Date();
         this.actionDelay = 3500;
 
-        this.maxHealth = 2000;
+        this.maxHealth = 1500;
         this.health = this.maxHealth;
     }    
 

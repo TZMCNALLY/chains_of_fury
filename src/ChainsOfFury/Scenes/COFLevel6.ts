@@ -311,7 +311,6 @@ export default class COFLevel6 extends COFLevel {
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
         MainMenu.boss6Defeated = true;
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true});
         this.sceneManager.changeToScene(MainMenu)
     }
 }

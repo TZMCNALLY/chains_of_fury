@@ -29,7 +29,7 @@ export default class Idle extends MindFlayerState {
 			if (this.parent.shadowDemonCount < this.parent.maxShadowDemonCount-2) {
 				this.finished(MindFlayerStates.SPAWN_SHADOW_DEMONS);
 			}
-			else if (this.parent.health < 1500 && this.parent.health > 500 && Math.random() > 0.5) {
+			else if (this.parent.health < 1000 && this.parent.health > 500 && Math.random() > 0.5) {
 				this.finished(MindFlayerStates.HEALING);
 			}
 			else {

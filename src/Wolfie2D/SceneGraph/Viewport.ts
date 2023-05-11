@@ -229,6 +229,7 @@ export default class Viewport {
      */
     follow(node: GameNode): void {
         this.following = node;
+        this.naniTF = true;
     }
 
     updateView(): void {

@@ -56,7 +56,6 @@ export default class SplashScreen extends Scene {
         // When the play button is clicked, go to the main menu
         this.playBtn.onClick = () => {
             this.sceneManager.changeToScene(MainMenu, null, {viewportPosition: this.viewport.getCenter(), viewportObjective: this.viewportObjective});
-            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
         };
 
         this.blinkTimer = new Timer(500);

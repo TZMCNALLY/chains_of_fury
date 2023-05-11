@@ -109,6 +109,9 @@ export default class MainMenu extends Scene {
 
         // Scene has started, so start playing music
         //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
     }
 
     // Creates a button and appends it onto main layer.

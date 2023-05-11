@@ -51,7 +51,7 @@ export default class DemonKingController extends EnemyController {
         super.initializeAI(owner, options);
 
         this.receiver.subscribe(DemonKingEvents.SKULLS_SPAWN)
-        this.receiver.subscribe(COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE)
+        this.receiver.subscribe(DemonKingEvents.SKULL_DESPAWNED)
 
         this.addState(DemonKingStates.IDLE, new Idle(this, this.owner));
         this.addState(DemonKingStates.WALK, new Walk(this, this.owner))
@@ -94,8 +94,9 @@ export default class DemonKingController extends EnemyController {
 
                 break;
             }
-            case COFEvents.FIREBALL_HIT_ENEMY_PROJECTILE: {
+            case DemonKingEvents.SKULL_DESPAWNED: {
                 this.numSkulls--;
+                break;
             }
 		}
 	}

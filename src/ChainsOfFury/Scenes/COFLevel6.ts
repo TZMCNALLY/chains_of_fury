@@ -75,10 +75,10 @@ export default class COFLevel6 extends COFLevel {
             [0,0,0,1,0,1,1],
             [0,0,0,1,1,1,0],
             [0,0,0,1,1,1,0],
-            [1,1,1,0,0,1,1],
+            [1,1,1,0,0,1,0],
             [0,1,1,0,0,0,0],
             [1,1,1,1,0,0,1],
-            [1,0,0,1,0,1,0]
+            [1,0,0,0,0,1,0]
         ];
 
 
@@ -248,10 +248,11 @@ export default class COFLevel6 extends COFLevel {
 
         for(let i = 0; i < this.skulls.length; i++) {
 
-            if(this.skulls[i].id == node) {
+            if(this.skulls[i].id == node && this.skulls[i].visible) {
 
                 this.skulls[i].position.copy(Vec2.ZERO);
                 this.skulls[i].visible = false;
+                this.emitter.fireEvent(DemonKingEvents.SKULL_DESPAWNED)
                 break;
             }
         }

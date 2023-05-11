@@ -8,6 +8,8 @@ export const DemonKingEvents = {
 
     SKULLS_SPAWN: "SKULLS_SPAWN",
 
+    SKULL_DESPAWNED: "SKULL_DESPAWNED",
+
     SKULLS_EXPANDED: "SKULLS_EXPANDED",
 
     SWIPED: "SWIPED",

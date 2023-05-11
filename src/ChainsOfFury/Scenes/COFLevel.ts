@@ -224,7 +224,7 @@ export default class COFLevel extends Scene {
             }
 
             else {
-                this.viewport.naniTF = true;
+                // this.viewport.naniTF = true;
 
                 this.viewport.setFocus(new Vec2(this.viewport.getCenter().x+3, this.viewport.getCenter().clone().y))
                 this.viewport.setCenter(new Vec2(this.viewport.getCenter().x+3, this.viewport.getCenter().clone().y));

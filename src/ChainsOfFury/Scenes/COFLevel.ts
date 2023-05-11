@@ -372,7 +372,6 @@ export default class COFLevel extends Scene {
                 break;
             }
             case COFEvents.BOSS_DEFEATED: {
-                console.log("BOSS_DEFEATED")
                 this.handleLevelEnd();
                 break;
             }

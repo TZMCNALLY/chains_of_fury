@@ -293,7 +293,7 @@ export default class COFLevel2 extends COFLevel {
 
 
                 // Despawn this portal after 200ms.
-                let despawnTimer = new Timer(400, () => {
+                let despawnTimer = new Timer(800, () => {
                     // Play despawn animation and play an event which destroys the portal??
                     this.despawnProtalSingular(i); // Make this for singular portal
                 })
@@ -410,7 +410,6 @@ export default class COFLevel2 extends COFLevel {
                 return;
             }
         }
-        console.log("Project to despawn not found!");
     }
 
     /** Remove a trigger for projectiles */
@@ -450,7 +449,6 @@ export default class COFLevel2 extends COFLevel {
                 return;
             }
         }
-        console.log("Mine to be exploded not found!");
     }
 
     private despawnPortals(): void {

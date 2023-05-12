@@ -126,6 +126,7 @@ export default class Controls extends Scene {
         // Scene transitions:
 
         back.onClick = () => {
+            MainMenu.notFromMenu = false;
             this.sceneManager.changeToScene(MainMenu);
         }
     }

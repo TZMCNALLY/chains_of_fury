@@ -275,33 +275,32 @@ export default class COFLevel2 extends COFLevel {
 
             let speedVec = new Vec2(150, 150);
 
-            let missleTimer1 = new Timer(timeOffset+RandUtils.randInt(100, 150), () => {
+            let missleTimer1 = new Timer(timeOffset+50, () => {
                 this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
                     origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
                 this.portals[i].animation.queue("IDLE");
                 
             });
-            let missleTimer2 = new Timer(timeOffset+RandUtils.randInt(500, 550), () => {
+            let missleTimer2 = new Timer(timeOffset+800, () => {
                 this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
                     origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
                 this.portals[i].animation.queue("IDLE");
             });
-            let missleTimer3 = new Timer(timeOffset+RandUtils.randInt(900, 1000), () => {
+            let missleTimer3 = new Timer(timeOffset+1350, () => {
                 this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
                     origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
                 this.portals[i].animation.queue("IDLE");
-
-
-                // Despawn this portal after 200ms.
-                let despawnTimer = new Timer(800, () => {
-                    // Play despawn animation and play an event which destroys the portal??
-                    this.despawnProtalSingular(i); // Make this for singular portal
-                })
-                despawnTimer.start();
             });
             missleTimer1.start();
             missleTimer2.start();
             missleTimer3.start();
+
+            // Despawn this portal after 200ms.
+            let despawnTimer = new Timer(timeOffset+1600, () => {
+                // Play despawn animation and play an event which destroys the portal??
+                this.despawnProtalSingular(i); // Make this for singular portal
+            })
+            despawnTimer.start();
 
             timeOffset += RandUtils.randInt(1500, 3000);
         }

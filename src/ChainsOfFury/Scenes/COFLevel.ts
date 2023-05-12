@@ -353,7 +353,6 @@ export default class COFLevel extends Scene {
             }
             case COFEvents.PLAYER_DEAD: {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY});
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }

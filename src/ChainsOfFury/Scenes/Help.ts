@@ -56,22 +56,22 @@ export default class Help extends Scene {
         this.createBackground(size.x-170, size.y+175, 800, 200);
         this.createText(size.x-170, size.y+115, "Enemies");
         
-        MainMenu.boss1Defeated ? this.createText(size.x-425, size.y+165, "Moon Dog").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.MOON_DOG})}
+        MainMenu.boss1Unlocked ? this.createText(size.x-425, size.y+165, "Moon Dog").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.MOON_DOG})}
                                : this.createText(size.x-425, size.y+165, "???")
 
-        MainMenu.boss2Defeated ? this.createText(size.x-170, size.y+165, "Dark Stalker").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.DARK_STALKER})}
+        MainMenu.boss2Unlocked ? this.createText(size.x-170, size.y+165, "Dark Stalker").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.DARK_STALKER})}
                                : this.createText(size.x-170, size.y+165, "???")
 
-        MainMenu.boss3Defeated ? this.createText(size.x+85, size.y+165, "Lord Reyalf").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.LORD_REYALF})}
+        MainMenu.boss3Unlocked ? this.createText(size.x+85, size.y+165, "Lord Reyalf").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.LORD_REYALF})}
                                : this.createText(size.x+85, size.y+165, "???")
 
-        MainMenu.boss4Defeated ? this.createText(size.x-425, size.y+225, "Reaper").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.REAPER})}
+        MainMenu.boss4Unlocked ? this.createText(size.x-425, size.y+225, "Reaper").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.REAPER})}
                                : this.createText(size.x-425, size.y+225, "???")
 
-        MainMenu.boss5Defeated ? this.createText(size.x-170, size.y+225, "Satan's Blade").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.SATANS_BLADE})}
+        MainMenu.boss5Unlocked ? this.createText(size.x-170, size.y+225, "Satan's Blade").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.SATANS_BLADE})}
                                : this.createText(size.x-170, size.y+225, "???")
 
-        MainMenu.boss6Defeated ? this.createText(size.x+85, size.y+225, "Demon King").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.DEMON_KING})}
+        MainMenu.boss6Unlocked ? this.createText(size.x+85, size.y+225, "Demon King").onClick = () => {this.sceneManager.changeToScene(EnemyScreen, null, {enemy: EnemyMenus.DEMON_KING})}
                                : this.createText(size.x+85, size.y+225, "???")
         
         // Enemies Section

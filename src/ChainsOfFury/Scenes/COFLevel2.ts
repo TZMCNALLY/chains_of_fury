@@ -281,20 +281,12 @@ export default class COFLevel2 extends COFLevel {
                 this.portals[i].animation.queue("IDLE");
                 
             });
-            let missleTimer2 = new Timer(timeOffset+800, () => {
-                if (this.portals[i].animation.isPlaying("FIRE")) {
-                    console.log("Second missle shoots too early");
-                }
-
+            let missleTimer2 = new Timer(timeOffset+3000, () => {
                 this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
                     origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
                 this.portals[i].animation.queue("IDLE");
             });
-            let missleTimer3 = new Timer(timeOffset+1350, () => {
-                if (this.portals[i].animation.isPlaying("FIRE")) {
-                    console.log("Third missle shoots too early");
-                }
-
+            let missleTimer3 = new Timer(timeOffset+6000, () => {
                 this.portals[i].animation.play("FIRE", false, DarkStalkerEvents.SHOOT_MISSLE, {
                     origin: this.portals[i].position.clone(), dir: speedVec.clone().rotateCCW(RandUtils.randFloat(0, Math.PI))});
                 this.portals[i].animation.queue("IDLE");
@@ -304,11 +296,7 @@ export default class COFLevel2 extends COFLevel {
             missleTimer3.start();
 
             // Despawn this portal after 200ms.
-            let despawnTimer = new Timer(timeOffset+1600, () => {
-                if (this.portals[i].animation.isPlaying("FIRE")) {
-                    console.log("Portal close too early");
-                }
-
+            let despawnTimer = new Timer(timeOffset+10000, () => {
                 // Play despawn animation and play an event which destroys the portal??
                 this.despawnProtalSingular(i); // Make this for singular portal
             })

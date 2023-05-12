@@ -140,24 +140,28 @@ export default class COFLevel2 extends COFLevel {
         super.initObjectPools();
 
         this.mineBalls = new Array(12);
-        this.missles = new Array(12);
+        this.missles = new Array(24);
         this.eyeBalls = new Array(4);
         this.portals = new Array(4);
 
-        /** mineBalls and missles initialization */
+        /** mineBalls initialization */
         for (let i = 0; i < 12; i++) {
-            // TODO make a sprite for this!!!
             this.mineBalls[i] = this.add.animatedSprite("mine", COFLayers.PRIMARY);
-            this.missles[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
 
             this.mineBalls[i].visible = false; // Turns them off.
-            this.missles[i].visible = false;
 
             // Each mine will have a pre-determined count down to explode.
             this.mineBalls[i].addAI(MineBehavior, {countdown: RandUtils.randFloat(5,9)});
-            this.missles[i].addAI(MissleBehavior, {player: this.player});
 
             // physics group / aabb collision will be handle when they are activated.
+        }
+
+        /** init missles */
+        for (let i = 0; i < this.missles.length; i++) {
+            this.missles[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
+            this.missles[i].visible = false;
+            this.missles[i].addAI(MissleBehavior, {player: this.player});
+
         }
 
         /** portal and eyeBall initialization */
@@ -228,7 +232,7 @@ export default class COFLevel2 extends COFLevel {
     }
 
     protected shootMissle(origin: Vec2, dir: Vec2): void {
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < this.missles.length; i++) {
             if (!this.missles[i].visible) {
                 // Move object to enemy boss position.
                 this.missles[i].position.copy(origin);
@@ -399,7 +403,7 @@ export default class COFLevel2 extends COFLevel {
     }
 
     private despawnProjectile(node: number): void {
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < this.missles.length; i++) {
             if (this.missles[i].id == node) {
                 this.missles[i].visible = false;
                 this.missles[i].position.copy(Vec2.ZERO);
@@ -473,6 +477,7 @@ export default class COFLevel2 extends COFLevel {
                 this.eyeBalls[i].visible = false;
                 this.eyeBalls[i].position = Vec2.ZERO;
                 this.eyeBalls[i].animation.stop();
+                (this.enemyBoss._ai as DarkStalkerController).activeEyes--;
             }
         }
     }

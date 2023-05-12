@@ -1,6 +1,6 @@
 {
-	"name": "Fireball",
-	"spriteSheetImage": "fireball.png",
+	"name": "Enemy Fireball",
+	"spriteSheetImage": "enemy_fireball.png",
 	"spriteWidth": 10,
 	"spriteHeight": 10,
 	"leftBuffer": 0,

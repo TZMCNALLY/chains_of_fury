@@ -49,7 +49,7 @@ export default class EyeballBehavior implements AI {
 
         this.receiver.subscribe(DarkStalkerEvents.MINION_HIT);
 
-        this.laserTimer = new Timer(RandUtils.randInt(8000, 12000), () => {
+        this.laserTimer = new Timer(RandUtils.randInt(2000, 4000), () => {
             // Calculates the aiming line.
 
             // Stops too far of a laser (since lasers don't render when origin is offscreen)

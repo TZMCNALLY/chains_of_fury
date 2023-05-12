@@ -199,7 +199,7 @@ export default class COFLevel extends Scene {
         // Load the tilemap
         this.load.tilemap("level", "cof_assets/tilemaps/chainsoffurydemo2.json");
         
-        this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/fireball.json");
+        this.load.spritesheet("fireball", "cof_assets/spritesheets/Projectiles/azazel_fireball.json");
         this.load.spritesheet("heal_marks", "cof_assets/spritesheets/Spells/healing.json");
 
         this.load.audio(COFLevel.PLAYER_DAMAGED_KEY, COFLevel.PLAYER_DAMAGED_PATH)
@@ -833,7 +833,7 @@ export default class COFLevel extends Scene {
         // Add a tween to move the label on screen
         this.levelEndLabel.tweens.add("slideIn", {
             startDelay: 0,
-            duration: 1000,
+            duration: 2000,
             effects: [
                 {
                     property: TweenableProperties.posX,
@@ -993,7 +993,7 @@ export default class COFLevel extends Scene {
         // Positions that the levelBegin transition will move to
         this.levelBeginEndPosition = new Vec2(800, 400)
 
-        this.viewport.setCenter(new Vec2(200, 480))
+        this.viewport.setCenter(new Vec2(400, 480))
         this.viewport.setFocus(this.viewport.getCenter())
         this.viewport.setZoomLevel(1.5);
         this.viewport.setBounds(0, 0, 1280, 960);

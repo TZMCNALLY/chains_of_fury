@@ -77,7 +77,7 @@ export default class MineBehavior implements AI {
             }
 
             this.owner.move(this.velocity.scaled(deltaT));
-            this.velocity = this.velocity.scaled(.99); // Slow down the mine.
+            this.velocity = this.velocity.scaled(.97); // Slow down the mine.
         }
     }
 

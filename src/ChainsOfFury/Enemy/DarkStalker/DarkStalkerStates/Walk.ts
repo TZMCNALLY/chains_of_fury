@@ -37,7 +37,8 @@ export default class Walk extends DarkStalkerState {
     
             movementVector = movementVector.normalized().mult(this.parent.walkVelocity);
     
-            this.owner.move(movementVector.scaled(deltaT)); 
+            if (this.parent.player.position.distanceTo(this.owner.position) < 150)
+                this.owner.move(movementVector.scaled(deltaT)); 
 		} else {
             // Decides whether the boss should teleport.
 

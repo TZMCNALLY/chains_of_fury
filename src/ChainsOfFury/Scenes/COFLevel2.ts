@@ -473,6 +473,7 @@ export default class COFLevel2 extends COFLevel {
                 this.eyeBalls[i].visible = false;
                 this.eyeBalls[i].position = Vec2.ZERO;
                 this.eyeBalls[i].animation.stop();
+                (this.enemyBoss._ai as DarkStalkerController).activeEyes--;
             }
         }
     }

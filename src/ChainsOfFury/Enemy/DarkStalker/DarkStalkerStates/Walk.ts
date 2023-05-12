@@ -24,7 +24,10 @@ export default class Walk extends DarkStalkerState {
 		 */
 
         if (!this.owner.animation.isPlaying(DarkStalkerAnimations.TAKING_DAMAGE) && !this.owner.animation.isPlaying(DarkStalkerAnimations.RUN)) {
-            this.owner.animation.play(DarkStalkerAnimations.RUN, true);
+            if (this.parent.player.position.distanceTo(this.owner.position) < 150)
+                this.owner.animation.play(DarkStalkerAnimations.RUN, true);
+            else
+                this.owner.animation.play(DarkStalkerAnimations.IDLE, true);
         }
 
 		if (this.walkTime > 0) {

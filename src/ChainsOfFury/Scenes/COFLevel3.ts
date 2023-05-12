@@ -59,6 +59,7 @@ export default class COFLevel3 extends COFLevel {
         this.load.spritesheet("demon_summoning_circle", "cof_assets/spritesheets/Spells/demon_summoning_circle.json");
         this.load.spritesheet("ice_mirror", "cof_assets/spritesheets/Spells/ice_mirror.json");
         this.load.spritesheet("snowball", "cof_assets/spritesheets/Spells/snowball.json");
+        this.load.spritesheet("enemy_fireball", "cof_assets/spritesheets/Projectiles/enemy_fireball.json")
 
         COFLevel.LEVEL_MUSIC_KEY = "COFLEVEL3_MUSIC_KEY";
         COFLevel.LEVEL_MUSIC_PATH = "cof_assets/music/cofmusiclevel3.mp3";
@@ -170,7 +171,7 @@ export default class COFLevel3 extends COFLevel {
 		// Init boss fireball object pool
 		this.bossFireballs = new Array(5);
 		for (let i = 0; i < this.bossFireballs.length; i++) {
-			this.bossFireballs[i] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
+			this.bossFireballs[i] = this.add.animatedSprite("enemy_fireball", COFLayers.PRIMARY);
 
             // Make our fireballs inactive by default
 			this.bossFireballs[i].visible = false;
@@ -191,7 +192,7 @@ export default class COFLevel3 extends COFLevel {
             /** Init shadow demon object pools */
             this.shadowDemonFireballs[i] = new Array(3);
 		    for (let j = 0; j < this.shadowDemonFireballs[i].length; j++) {
-                this.shadowDemonFireballs[i][j] = this.add.animatedSprite("fireball", COFLayers.PRIMARY);
+                this.shadowDemonFireballs[i][j] = this.add.animatedSprite("enemy_fireball", COFLayers.PRIMARY);
 
                 // Make our fireballs inactive by default
                 this.shadowDemonFireballs[i][j].visible = false;

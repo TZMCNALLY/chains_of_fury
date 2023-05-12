@@ -12,6 +12,7 @@ import COFLevel3 from "./COFLevel3";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { AzazelAnimations } from "../Player/AzazelController";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import AudioManager from "../../Wolfie2D/Sound/AudioManager";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -34,6 +35,8 @@ export default class MainMenu extends Scene {
     public static boss4Defeated: boolean;
     public static boss5Defeated: boolean;
     public static boss6Defeated: boolean;
+
+    public static notFromMenu = true;
 
     // TODO:
     // - Background
@@ -107,11 +110,9 @@ export default class MainMenu extends Scene {
             }
         };
 
-        // Scene has started, so start playing music
-        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
-
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        if (MainMenu.notFromMenu) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        }
     }
 
     // Creates a button and appends it onto main layer.

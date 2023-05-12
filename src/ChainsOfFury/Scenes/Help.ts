@@ -120,6 +120,7 @@ export default class Help extends Scene {
         // Scene transitions:
 
         back.onClick = () => {
+            MainMenu.notFromMenu = false;
             this.sceneManager.changeToScene(MainMenu);
         }
     }

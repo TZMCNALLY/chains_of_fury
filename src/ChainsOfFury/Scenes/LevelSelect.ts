@@ -141,6 +141,7 @@ export default class LevelSelect extends Scene {
         back.size.set(100, 60);
 
         back.onClick = () => {
+            MainMenu.notFromMenu = false;
             this.sceneManager.changeToScene(MainMenu);
         }
 

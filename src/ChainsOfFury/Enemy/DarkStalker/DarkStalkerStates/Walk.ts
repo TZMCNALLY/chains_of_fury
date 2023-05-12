@@ -42,7 +42,7 @@ export default class Walk extends DarkStalkerState {
             // Decides whether the boss should teleport.
 
             // Scale chance with how much hits the boss have taken.
-            let teleportChance = (this.parent.lastTPHitCount * 15) + 10;
+            let teleportChance = (this.parent.lastTPHitCount * 15) + 30;
             let rnd = RandUtils.randInt(0, 100);
             
             // Double teleportation chance if backed up against a wall.

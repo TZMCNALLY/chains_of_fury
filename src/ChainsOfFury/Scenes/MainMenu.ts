@@ -44,10 +44,9 @@ export default class MainMenu extends Scene {
     // - Sprite/logo on top.
 
     public loadScene(): void {
-        if(MainMenu.boss1Defeated && MainMenu.boss2Defeated && MainMenu.boss3Defeated
-            && MainMenu.boss4Defeated && MainMenu.boss5Defeated && MainMenu.boss6Defeated)
+        if (MainMenu.boss1Unlocked && MainMenu.boss2Unlocked && MainMenu.boss3Unlocked
+            && MainMenu.boss4Unlocked && MainMenu.boss5Unlocked && MainMenu.boss6Unlocked)
             this.load.spritesheet("azazel", "cof_assets/spritesheets/Player/chain_devil_won.json");
-
         else
             this.load.spritesheet("azazel", "cof_assets/spritesheets/Player/chain_devil.json");
     }

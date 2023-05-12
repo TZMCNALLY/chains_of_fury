@@ -81,7 +81,7 @@ export default class ReaperController extends EnemyController {
         this.berserkState = false;
         this.hitCounter = 0;
 
-        this.maxHealth = 2000;
+        this.maxHealth = 2500;
         this.health = this.maxHealth;
     }    
 
@@ -102,6 +102,7 @@ export default class ReaperController extends EnemyController {
 			}
             case COFEvents.FIREBALL_HIT_ENEMY: {
                 this.handleFireballHit(event.data.get("other"));
+                break;
             }
             case ReaperEvents.REAPER_DEAD: {
                 this.handleReaperDead();

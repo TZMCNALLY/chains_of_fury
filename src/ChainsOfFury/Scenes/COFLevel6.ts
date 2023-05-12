@@ -138,7 +138,7 @@ export default class COFLevel6 extends COFLevel {
                 break;
             }
             case COFEvents.LEVEL_END: {
-                MainMenu.boss6Defeated = true;
+                MainMenu.finalBossDefeated = true;
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }
@@ -310,7 +310,8 @@ export default class COFLevel6 extends COFLevel {
 
     protected handleLevelEnd(): void {
         super.handleLevelEnd();
-        MainMenu.boss6Defeated = true;
+        MainMenu.finalBossDefeated = true;
+        MainMenu.notFromMenu = true;
         this.sceneManager.changeToScene(MainMenu)
     }
 }

@@ -33,7 +33,7 @@ export default class Idle extends MindFlayerState {
 				this.finished(MindFlayerStates.HEALING);
 			}
 			else {
-				if (Math.random() > 0.5) {
+				if (Math.random() > 0.7) {
 					this.finished(MindFlayerStates.CAST_ICE_SPELL);
 				}
 				else {

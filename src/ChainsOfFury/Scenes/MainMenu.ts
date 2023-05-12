@@ -12,6 +12,7 @@ import COFLevel3 from "./COFLevel3";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { AzazelAnimations } from "../Player/AzazelController";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import AudioManager from "../../Wolfie2D/Sound/AudioManager";
 
 // Layers for the main menu scene
 export const MenuLayers = {
@@ -28,22 +29,24 @@ export default class MainMenu extends Scene {
     protected nextScene: number // number denoting which scene to transition to. 0 for start game, 1 for level select,
                                 // 2 for controls, 3 for help
 
-    public static boss1Defeated: boolean;
-    public static boss2Defeated: boolean;
-    public static boss3Defeated: boolean;
-    public static boss4Defeated: boolean;
-    public static boss5Defeated: boolean;
-    public static boss6Defeated: boolean;
+    public static boss1Unlocked: boolean;
+    public static boss2Unlocked: boolean;
+    public static boss3Unlocked: boolean;
+    public static boss4Unlocked: boolean;
+    public static boss5Unlocked: boolean;
+    public static boss6Unlocked: boolean;
+    public static finalBossDefeated: boolean;
+
+    public static notFromMenu = true;
 
     // TODO:
     // - Background
     // - Sprite/logo on top.
 
     public loadScene(): void {
-        if(MainMenu.boss1Defeated && MainMenu.boss2Defeated && MainMenu.boss3Defeated
-            && MainMenu.boss4Defeated && MainMenu.boss5Defeated && MainMenu.boss6Defeated)
+        if (MainMenu.boss1Unlocked && MainMenu.boss2Unlocked && MainMenu.boss3Unlocked
+            && MainMenu.boss4Unlocked && MainMenu.boss5Unlocked && MainMenu.boss6Unlocked)
             this.load.spritesheet("azazel", "cof_assets/spritesheets/Player/chain_devil_won.json");
-
         else
             this.load.spritesheet("azazel", "cof_assets/spritesheets/Player/chain_devil.json");
     }
@@ -51,6 +54,8 @@ export default class MainMenu extends Scene {
     public startScene(): void {
         this.addUILayer(MenuLayers.MAIN);
         this.addUILayer(MenuLayers.SPRITES);
+        
+        MainMenu.boss1Unlocked = true;
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
@@ -112,11 +117,9 @@ export default class MainMenu extends Scene {
             }
         };
 
-        // Scene has started, so start playing music
-        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
-
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        if (MainMenu.notFromMenu) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
+        }
     }
 
     // Creates a button and appends it onto main layer.

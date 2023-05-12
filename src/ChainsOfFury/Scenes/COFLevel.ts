@@ -267,16 +267,6 @@ export default class COFLevel extends Scene {
       
         this.initializeLevelTransitionUI();
 
-        
-        // Initialize the ends of the levels - must be initialized after the primary layer has been added
-        //this.initializeLevelEnds();
-
-        // this.levelTransitionTimer = new Timer(500);
-        // this.levelEndTimer = new Timer(3000, () => {
-        //     // After the level end timer ends, fade to black and then go to the next scene
-        //     this.levelTransitionScreen.tweens.play("fadeIn");
-        // });
-
         this.levelBeginTimer = new Timer(750, () => {
             this.levelTransitionScreen.tweens.play("fadeOut");
             this.enemyBoss.setAIActive(true, {})
@@ -363,7 +353,6 @@ export default class COFLevel extends Scene {
             }
             case COFEvents.PLAYER_DEAD: {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: COFLevel.LEVEL_MUSIC_KEY});
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: MainMenu.MUSIC_KEY, loop: true, holdReference: true});
                 this.sceneManager.changeToScene(MainMenu);
                 break;
             }

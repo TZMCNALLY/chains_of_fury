@@ -19,7 +19,7 @@ export default class Healing extends MindFlayerState {
 		if (!this.owner.animation.isPlaying(MindFlayerAnimation.HEALING)) {
             if (this.parent.health < 1000 && this.timesToHeal > 0) {
                 this.timesToHeal--;
-                this.emitter.fireEvent(COFEvents.BOSS_RECEIVE_HEAL, {id: this.owner.id, heal: 50});
+                this.emitter.fireEvent(COFEvents.BOSS_RECEIVE_HEAL, {id: this.owner.id, heal: 30});
                 this.owner.animation.play(MindFlayerAnimation.HEALING);
 
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel.HEAL_KEY});

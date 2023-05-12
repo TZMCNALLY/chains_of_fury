@@ -124,8 +124,8 @@ export default class Controls extends Scene {
         back.size.set(100, 60);
         
         // Scene transitions:
-
         back.onClick = () => {
+            MainMenu.notFromMenu = false;
             this.sceneManager.changeToScene(MainMenu);
         }
     }

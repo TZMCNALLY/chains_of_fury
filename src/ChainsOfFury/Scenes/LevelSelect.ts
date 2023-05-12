@@ -16,6 +16,7 @@ import COFLevel5 from "./COFLevel5";
 import COFLevel6 from "./COFLevel6";
 import { COFCheats } from "../COFCheats";
 import Input from "../../Wolfie2D/Input/Input";
+import AudioManager from "../../Wolfie2D/Sound/AudioManager";
 
 export default class LevelSelect extends Scene {
     public static readonly MUSIC_KEY = "MAIN_MENU_MUSIC";
@@ -82,42 +83,42 @@ export default class LevelSelect extends Scene {
 
         // Scene transitions:
         level1.onClick = () => {
-            if (MainMenu.boss1Defeated) {
+            if (MainMenu.boss1Unlocked) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel1);
             }
         };
 
         level2.onClick = () => {
-            if (MainMenu.boss2Defeated) {
+            if (MainMenu.boss2Unlocked) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel2);
             }
         };
 
         level3.onClick = () => {
-            if (MainMenu.boss3Defeated) {
+            if (MainMenu.boss3Unlocked) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel3);
             }
         };
 
         level4.onClick = () => {
-            if (MainMenu.boss4Defeated) {
+            if (MainMenu.boss4Unlocked) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel4);
             }
         };
 
         level5.onClick = () => {
-            if (MainMenu.boss5Defeated) {
+            if (MainMenu.boss5Unlocked) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel5);
             }
         };
         
         level6.onClick = () => {
-            if (MainMenu.boss6Defeated) {
+            if (MainMenu.boss6Unlocked) {
                 this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
                 this.sceneManager.changeToScene(COFLevel6);
             }
@@ -141,6 +142,7 @@ export default class LevelSelect extends Scene {
         back.size.set(100, 60);
 
         back.onClick = () => {
+            MainMenu.notFromMenu = false;
             this.sceneManager.changeToScene(MainMenu);
         }
 
@@ -153,12 +155,12 @@ export default class LevelSelect extends Scene {
     public update(deltaT: number): void {
         super.update(deltaT);
         if (Input.isJustPressed(COFCheats.UNLOCK_ALL)) {
-            MainMenu.boss1Defeated = true;
-            MainMenu.boss2Defeated = true;
-            MainMenu.boss3Defeated = true;
-            MainMenu.boss4Defeated = true;
-            MainMenu.boss5Defeated = true;
-            MainMenu.boss6Defeated = true;
+            MainMenu.boss1Unlocked = true;
+            MainMenu.boss2Unlocked = true;
+            MainMenu.boss3Unlocked = true;
+            MainMenu.boss4Unlocked = true;
+            MainMenu.boss5Unlocked = true;
+            MainMenu.boss6Unlocked = true;
 
 
             // Reloads this scene to refresh everything (inefficient but oh well)
@@ -191,7 +193,7 @@ export default class LevelSelect extends Scene {
     private generateLevelImages() {
         let size = this.viewport.getHalfSize();
 
-        if (!MainMenu.boss1Defeated) {
+        if (!MainMenu.boss1Unlocked) {
             this.createSprite(size.x-350, size.y-100, 1.5, 1.5, "moondog_silhouette", "IDLE");
             this.createLock(size.x-350, size.y-100);
         }
@@ -199,7 +201,7 @@ export default class LevelSelect extends Scene {
             this.createSprite(size.x-350, size.y-100, 1.5, 1.5, "moondog", "IDLE");
         }
 
-        if (!MainMenu.boss2Defeated) {
+        if (!MainMenu.boss2Unlocked) {
             this.createSprite(size.x, size.y-100, 1.5, 1.5, "darkstalker_silhouette", "IDLE");
             this.createLock(size.x, size.y-100);
         }
@@ -207,7 +209,7 @@ export default class LevelSelect extends Scene {
             this.createSprite(size.x, size.y-100, 1.5, 1.5, "darkstalker", "IDLE");
         }
 
-        if (!MainMenu.boss3Defeated) {
+        if (!MainMenu.boss3Unlocked) {
             this.createSprite(size.x+350, size.y-100, 0.7, 0.7, "mind_flayer_silhouette", "IDLE");
             this.createLock(size.x+350, size.y-100);
         }
@@ -215,7 +217,7 @@ export default class LevelSelect extends Scene {
             this.createSprite(size.x+350, size.y-100, 0.7, 0.7, "mind_flayer", "IDLE");
         }
 
-        if (!MainMenu.boss4Defeated) {
+        if (!MainMenu.boss4Unlocked) {
             this.createSprite(size.x-350, size.y+200, 1.5, 1.5, "reaper_silhouette", "IDLE");
             this.createLock(size.x-350, size.y+200);
         }
@@ -223,7 +225,7 @@ export default class LevelSelect extends Scene {
             this.createSprite(size.x-350, size.y+200, 1.5, 1.5, "reaper", "IDLE");
         }
 
-        if (!MainMenu.boss5Defeated) {
+        if (!MainMenu.boss5Unlocked) {
             this.createSprite(size.x, size.y+200, 1.5, 1.5, "flying_sword_silhouette", "IDLE");
             this.createLock(size.x, size.y+200);
         }
@@ -231,7 +233,7 @@ export default class LevelSelect extends Scene {
             this.createSprite(size.x, size.y+200, 1.5, 1.5, "flying_sword", "IDLE");
         }
 
-        if (!MainMenu.boss6Defeated) {
+        if (!MainMenu.boss6Unlocked) {
             this.createSprite(size.x+350, size.y+200, 1.5, 1.5, "wraith_silhouette", "IDLE");
             this.createLock(size.x+350, size.y+200);
         }

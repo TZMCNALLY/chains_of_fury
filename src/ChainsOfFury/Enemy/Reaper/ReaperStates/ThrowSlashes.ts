@@ -18,11 +18,21 @@ export default class ThrowSlashes extends ReaperState {
 
 		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel4.DEATH_CIRCLE_KEY});
 		if (this.parent.lastFace < 0) {
-			this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: new Vec2(270, 500), radius: 330})
+			if (this.parent.berserkState) {
+				this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: new Vec2(270, 500), radius: 400})
+			}
+			else {
+				this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: new Vec2(270, 500), radius: 330})
+			}
 			this.locationOfSlashes = [new Vec2(940, 280), new Vec2(940, 390), new Vec2(940, 500), new Vec2(940, 610), new Vec2(940, 720)]
 		}
 		else {
-			this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: new Vec2(990, 500), radius: 330})
+			if (this.parent.berserkState) {
+				this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: new Vec2(990, 500), radius: 400})
+			}
+			else {
+				this.emitter.fireEvent(ReaperEvents.SPAWN_DEATH_CIRCLE, {location: new Vec2(990, 500), radius: 330})
+			}
 			this.locationOfSlashes = [new Vec2(320, 280), new Vec2(320, 390), new Vec2(320, 500), new Vec2(320, 610), new Vec2(320, 720)]
 		}
 	}
@@ -62,7 +72,7 @@ export default class ThrowSlashes extends ReaperState {
 		if (this.parent.getDistanceFromPlayer() > 450) {
 			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: COFLevel4.FIRE_SLASH_KEY});
 			this.parent.lastActionTime = new Date();
-			this.finished(ReaperStates.WALK);
+			this.finished(ReaperStates.IDLE);
 		}
 	}
 

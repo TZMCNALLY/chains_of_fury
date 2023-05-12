@@ -29,12 +29,13 @@ export default class MainMenu extends Scene {
     protected nextScene: number // number denoting which scene to transition to. 0 for start game, 1 for level select,
                                 // 2 for controls, 3 for help
 
-    public static boss1Defeated: boolean;
-    public static boss2Defeated: boolean;
-    public static boss3Defeated: boolean;
-    public static boss4Defeated: boolean;
-    public static boss5Defeated: boolean;
-    public static boss6Defeated: boolean;
+    public static boss1Unlocked: boolean;
+    public static boss2Unlocked: boolean;
+    public static boss3Unlocked: boolean;
+    public static boss4Unlocked: boolean;
+    public static boss5Unlocked: boolean;
+    public static boss6Unlocked: boolean;
+    public static finalBossDefeated: boolean;
 
     public static notFromMenu = true;
 
@@ -49,6 +50,8 @@ export default class MainMenu extends Scene {
     public startScene(): void {
         this.addUILayer(MenuLayers.MAIN);
         this.addUILayer(MenuLayers.SPRITES);
+        
+        MainMenu.boss1Unlocked = true;
 
         // Center the viewport
         let size = this.viewport.getHalfSize();

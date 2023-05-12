@@ -163,7 +163,7 @@ export default class COFLevel3 extends COFLevel {
                 break;
             }
             case COFEvents.LEVEL_END: {
-                MainMenu.boss3Defeated = true;
+                MainMenu.boss4Unlocked = true;
                 this.sceneManager.changeToScene(COFLevel4);
                 break;
             }

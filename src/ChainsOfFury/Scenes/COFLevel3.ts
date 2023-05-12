@@ -39,9 +39,9 @@ export default class COFLevel3 extends COFLevel {
     /** Object pool for shadow demon summoning circles */
     private demonSummoningCircles: Array<AnimatedSprite> = new Array(5);
     /** Object pool for ice mirrors */
-    private iceMirrors: Array<AnimatedSprite> = new Array(2);
+    private iceMirrors: Array<AnimatedSprite> = new Array(10);
     /** Object pool for snowballs */
-    private snowballs: Array<AnimatedSprite> = new Array(2);
+    private snowballs: Array<AnimatedSprite> = new Array(10);
 
     public static readonly FIRE_SNOWBALL_KEY = "FIRE_SNOWBALL_KEY";
     public static readonly FIRE_SNOWBALL_PATH = "cof_assets/sounds/General/fire_snowball.mp3";
@@ -91,6 +91,7 @@ export default class COFLevel3 extends COFLevel {
         this.receiver.subscribe(DemonSummoningCircleEvents.DESPAWN_CIRCLE);
         this.receiver.subscribe(IceMirrorEvents.DESPAWN_MIRROR);
         this.receiver.subscribe(IceMirrorEvents.SPAWN_SNOWBALL);
+        this.receiver.subscribe(SnowballEvents.DESPAWN_SNOWBALL);
     }
 
     /**
@@ -118,6 +119,10 @@ export default class COFLevel3 extends COFLevel {
             }
             case IceMirrorEvents.SPAWN_SNOWBALL: {
                 this.spawnSnowball(event.data.get("location"));
+                break;
+            }
+            case SnowballEvents.DESPAWN_SNOWBALL: {
+                this.despawnSnowball(event.data.get("id"), HitEntity.WALL);
                 break;
             }
             case DemonSummoningCircleEvents.SPAWN_CIRCLE: {

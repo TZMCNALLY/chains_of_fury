@@ -10,11 +10,7 @@ export default class Damaged extends MindFlayerState {
 	public update(deltaT: number): void {
 		super.update(deltaT);
 		if (!this.owner.animation.isPlaying(MindFlayerAnimation.TAKING_DAMAGE)) {
-			// If target is too close, teleport away to a safe distance
-			if ((this.parent.getDistanceFromPlayer() < 200)) {
-				this.finished(MindFlayerStates.TELEPORT);
-			}
-			this.finished(MindFlayerStates.IDLE);
+			this.finished(MindFlayerStates.TELEPORT);
 		}
 	}
 
